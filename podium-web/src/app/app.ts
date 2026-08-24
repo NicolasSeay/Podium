@@ -1,12 +1,22 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { dashboardFeature, DashboardRange, setActiveNav, setRange } from './dashboard/dashboard.store';
+import { MetricCardComponent } from './dashboard/metric-card.component';
+import { ProgressChartComponent } from './dashboard/progress-chart.component';
+import { RecentDaysComponent } from './dashboard/recent-days.component';
 
 @Component({
-  imports: [RouterOutlet],
   selector: 'app-root',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MetricCardComponent, ProgressChartComponent, RecentDaysComponent],
   styleUrl: './app.scss',
   templateUrl: './app.html',
 })
 export class App {
-  protected readonly title = signal('podium-web');
+  private readonly store = inject(Store);
+  protected readonly activeNav = this.store.selectSignal(dashboardFeature.selectActiveNav);
+  protected readonly range = this.store.selectSignal(dashboardFeature.selectRange);
+  protected readonly navigation = ['Dashboard', 'Track Days', 'Sessions', 'Analytics', 'Tracks', 'Vehicles', 'Records', 'Goals', 'Settings'];
+  protected changeNav(item: string) { this.store.dispatch(setActiveNav(item)); }
+  protected changeRange(event: Event) { this.store.dispatch(setRange((event.target as HTMLSelectElement).value as DashboardRange)); }
 }
