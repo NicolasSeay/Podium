@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class PodiumApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(PodiumApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(PodiumApplication.class, args);
+    }
 
 }

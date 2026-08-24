@@ -1,0 +1,3 @@
+package com.nico.podium.service;
+import com.nico.podium.domain.PodiumModels.Lap; import java.util.List; import java.util.Map;
+public interface LapService { List<Lap> list(String userId,String sessionId); Lap get(String userId,String id); Lap create(String userId,String sessionId,Map<String,Object> body); Lap update(String userId,String id,Map<String,Object> body); void delete(String userId,String id); }

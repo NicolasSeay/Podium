@@ -1,0 +1,10 @@
+package com.nico.podium.controller;
+import com.nico.podium.domain.PodiumModels.*; import com.nico.podium.service.*; import org.springframework.http.HttpStatus; import org.springframework.web.bind.annotation.*; import java.util.List; import java.util.Map;
+@RestController @RequestMapping("/api/sessions") public class SessionController extends ControllerSupport {
+ private final SessionService sessions; private final LapService laps; public SessionController(AuthService auth,SessionService sessions,LapService laps){super(auth);this.sessions=sessions;this.laps=laps;}
+ @GetMapping("/{id}") public Map<String,Object> get(@PathVariable String id,@RequestHeader(value="Authorization",required=false)String a,@RequestHeader(value="X-User-Id",required=false)String h){String u=userId(a,h);return Map.of("session",sessions.get(u,id),"laps",laps.list(u,id));}
+ @PatchMapping("/{id}") public Session update(@PathVariable String id,@RequestHeader(value="Authorization",required=false)String a,@RequestHeader(value="X-User-Id",required=false)String h,@RequestBody Map<String,Object>b){return sessions.update(userId(a,h),id,b);}
+ @DeleteMapping("/{id}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String id,@RequestHeader(value="Authorization",required=false)String a,@RequestHeader(value="X-User-Id",required=false)String h){sessions.delete(userId(a,h),id);}
+ @GetMapping("/{id}/laps") public List<Lap> listLaps(@PathVariable String id,@RequestHeader(value="Authorization",required=false)String a,@RequestHeader(value="X-User-Id",required=false)String h){return laps.list(userId(a,h),id);}
+ @PostMapping("/{id}/laps") public Lap createLap(@PathVariable String id,@RequestHeader(value="Authorization",required=false)String a,@RequestHeader(value="X-User-Id",required=false)String h,@RequestBody Map<String,Object>b){return laps.create(userId(a,h),id,b);}
+}

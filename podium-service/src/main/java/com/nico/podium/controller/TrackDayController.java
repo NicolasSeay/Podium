@@ -1,0 +1,12 @@
+package com.nico.podium.controller;
+import com.nico.podium.domain.PodiumModels.*; import com.nico.podium.service.*; import org.springframework.http.HttpStatus; import org.springframework.web.bind.annotation.*; import java.time.LocalDate; import java.util.List; import java.util.Map;
+@RestController @RequestMapping("/api/track-days") public class TrackDayController extends ControllerSupport {
+ private final TrackDayService days; private final SessionService sessions; public TrackDayController(AuthService auth,TrackDayService days,SessionService sessions){super(auth);this.days=days;this.sessions=sessions;}
+ @GetMapping public List<TrackDay> list(@RequestParam(required=false)String trackId,@RequestParam(required=false)String vehicleId,@RequestParam(required=false)LocalDate from,@RequestParam(required=false)LocalDate to,@RequestHeader(value="Authorization",required=false)String a,@RequestHeader(value="X-User-Id",required=false)String h){return days.list(userId(a,h),trackId,vehicleId,from,to);}
+ @PostMapping public TrackDay create(@RequestHeader(value="Authorization",required=false)String a,@RequestHeader(value="X-User-Id",required=false)String h,@RequestBody Map<String,Object>b){return days.create(userId(a,h),b);}
+ @GetMapping("/{id}") public Map<String,Object> get(@PathVariable String id,@RequestHeader(value="Authorization",required=false)String a,@RequestHeader(value="X-User-Id",required=false)String h){String u=userId(a,h);return Map.of("trackDay",days.get(u,id),"sessions",sessions.list(u,id));}
+ @PatchMapping("/{id}") public TrackDay update(@PathVariable String id,@RequestHeader(value="Authorization",required=false)String a,@RequestHeader(value="X-User-Id",required=false)String h,@RequestBody Map<String,Object>b){return days.update(userId(a,h),id,b);}
+ @DeleteMapping("/{id}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String id,@RequestHeader(value="Authorization",required=false)String a,@RequestHeader(value="X-User-Id",required=false)String h){days.delete(userId(a,h),id);}
+ @GetMapping("/{id}/sessions") public List<Session> listSessions(@PathVariable String id,@RequestHeader(value="Authorization",required=false)String a,@RequestHeader(value="X-User-Id",required=false)String h){return sessions.list(userId(a,h),id);}
+ @PostMapping("/{id}/sessions") public Session createSession(@PathVariable String id,@RequestHeader(value="Authorization",required=false)String a,@RequestHeader(value="X-User-Id",required=false)String h,@RequestBody Map<String,Object>b){return sessions.create(userId(a,h),id,b);}
+}
