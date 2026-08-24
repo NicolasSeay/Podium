@@ -1,0 +1,7 @@
+package com.nico.podium.service.Impl;
+import com.nico.podium.domain.PodiumModels.*; import com.nico.podium.repository.*; import com.nico.podium.service.DashboardService; import com.nico.podium.service.PersonalRecordService; import org.springframework.stereotype.Service; import java.util.*;
+@Service public class DashboardServiceImpl implements DashboardService {
+ private final TrackDayRepository days; private final SessionRepository sessions; private final LapRepository laps; private final PersonalRecordService records;
+ public DashboardServiceImpl(TrackDayRepository days,SessionRepository sessions,LapRepository laps,PersonalRecordService records){this.days=days;this.sessions=sessions;this.laps=laps;this.records=records;}
+ public Map<String,Object> get(String userId){List<TrackDay>d=days.findByUserId(userId);List<Session>s=d.stream().flatMap(day->sessions.findByTrackDayId(day.id()).stream()).toList();List<Lap>l=s.stream().flatMap(session->laps.findBySessionId(session.id()).stream()).toList();return Map.of("personalRecords",records.list(userId),"totalTrackDays",d.size(),"totalSessions",s.size(),"totalLaps",l.size(),"totalLapTimeMillis",l.stream().mapToLong(Lap::timeMillis).sum(),"recentTrackDays",d.stream().sorted(Comparator.comparing(TrackDay::date).reversed()).limit(5).toList());}
+}

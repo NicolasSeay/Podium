@@ -1,0 +1,3 @@
+package com.nico.podium.service;
+import com.nico.podium.domain.PodiumModels.TrackDay; import java.time.LocalDate; import java.util.List; import java.util.Map;
+public interface TrackDayService { List<TrackDay> list(String userId,String trackId,String vehicleId,LocalDate from,LocalDate to); TrackDay get(String userId,String id); TrackDay create(String userId,Map<String,Object> body); TrackDay update(String userId,String id,Map<String,Object> body); void delete(String userId,String id); }
