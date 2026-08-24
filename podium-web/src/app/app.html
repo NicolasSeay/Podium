@@ -1,0 +1,22 @@
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark">P</span><span>TRACKLOG</span></div>
+    <div class="workspace-label">MY WORKSPACE</div>
+    <nav aria-label="Primary navigation">
+      @for (item of navigation; track item) {
+        <button type="button" class="nav-item" [class.active]="activeNav() === item" (click)="changeNav(item)"><span class="nav-icon">{{ item === 'Dashboard' ? '▦' : item === 'Track Days' ? '◫' : item === 'Sessions' ? '◌' : item === 'Analytics' ? '⌁' : item === 'Tracks' ? '⌖' : item === 'Vehicles' ? '▱' : item === 'Records' ? '◇' : item === 'Goals' ? '◎' : '⚙' }}</span>{{ item }}</button>
+      }
+    </nav>
+    <div class="sidebar-bottom"><div class="profile-avatar">JD</div><div><strong>Jordan Davis</strong><span>View Profile</span></div><span class="dots">•••</span></div>
+  </aside>
+  <main class="content-area">
+    <header class="topbar"><div><span class="eyebrow">Overview of your performance</span><h1>Dashboard</h1></div><div class="top-actions"><button class="outline-button" type="button">⌕ <span>Search</span></button><button class="primary-button" type="button">+ New Track Day</button><button class="avatar-button" type="button">JD</button></div></header>
+    <div class="content-body">
+      <div class="section-bar"><div><span class="eyebrow">Performance snapshot</span><h2>Welcome back, Jordan</h2></div><select class="range-select" [value]="range()" (change)="changeRange($event)" aria-label="Dashboard time range"><option>Last 12 Months</option><option>Last 6 Months</option><option>This Year</option></select></div>
+      <div class="metrics-grid"><app-metric-card label="Best lap" value="2:38.421" detail="VIR Full Course" icon="↗" [positive]="true" /><app-metric-card label="Track days" value="24" detail="This year" icon="◷" [positive]="true" /><app-metric-card label="Total laps" value="642" detail="Across all tracks" icon="⌁" /><app-metric-card label="Seat time" value="18h 42m" detail="Driving time" icon="◒" /></div>
+      <div class="feature-grid"><app-progress-chart [range]="range()" /><aside class="panel record-panel"><div class="eyebrow">Last track day</div><h2>VIR Full Course</h2><span class="muted">April 18, 2026</span><div class="record-time">2:38.421</div><div class="record-detail"><span class="record-trophy">★</span><div><strong>New personal best</strong><span>Improved by 1.31s</span></div></div><button class="primary-button full" type="button">View details <span>→</span></button></aside></div>
+      <app-recent-days />
+      <div class="bottom-grid"><div class="panel quick-panel"><span class="eyebrow">Your focus</span><h2>Keep the momentum</h2><p>Your average lap has improved <strong>4.8%</strong> since this time last year.</p><div class="progress"><span></span></div><span class="muted">12 of 24 track days logged</span></div><div class="panel next-panel"><div><span class="eyebrow">Next session</span><h2>Summit Point Main</h2><span class="muted">June 14, 2026 · 6 days away</span></div><button class="outline-button" type="button">Prepare →</button></div></div>
+    </div>
+  </main>
+</div>

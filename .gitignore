@@ -1,4 +1,9 @@
 target/
+node_modules/
+.angular/
+dist/
+.idea/
+.vscode/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
