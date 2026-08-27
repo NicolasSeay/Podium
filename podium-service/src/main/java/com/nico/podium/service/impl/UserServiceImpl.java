@@ -1,10 +1,10 @@
-package com.nico.podium.service.Impl;
+package com.nico.podium.service.impl;
 import com.nico.podium.domain.PodiumModels.User;
 import com.nico.podium.repository.UserRepository;
 import com.nico.podium.service.UserService;
 import org.springframework.stereotype.Service;
 import java.util.Map;
-import static com.nico.podium.service.Impl.ServiceSupportImpl.*;
+import static com.nico.podium.service.impl.ServiceSupportImpl.*;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository users;

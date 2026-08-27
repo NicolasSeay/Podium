@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { dashboardFeature, DashboardRange, setActiveNav, setRange } from './dashboard/dashboard.store';
-import { MetricCardComponent } from './dashboard/metric-card.component';
-import { ProgressChartComponent } from './dashboard/progress-chart.component';
-import { RecentDaysComponent } from './dashboard/recent-days.component';
+import { MetricCardComponent } from './dashboard/metric-card/metric-card.component';
+import { ProgressChartComponent } from './dashboard/progress-chart/progress-chart.component';
+import { RecentDaysComponent } from './dashboard/recent-days/recent-days.component';
 
 @Component({
   selector: 'app-root',

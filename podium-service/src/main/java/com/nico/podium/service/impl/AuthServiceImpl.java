@@ -1,4 +1,4 @@
-package com.nico.podium.service.Impl;
+package com.nico.podium.service.impl;
 
 import com.nico.podium.domain.PodiumModels.User;
 import com.nico.podium.repository.UserRepository;
@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import static com.nico.podium.service.Impl.ServiceSupportImpl.*;
+import static com.nico.podium.service.impl.ServiceSupportImpl.*;
 
 @Service
 public class AuthServiceImpl implements AuthService {

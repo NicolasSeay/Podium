@@ -3,16 +3,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 @Component({
   selector: 'app-recent-days',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <section class="panel recent-panel">
-      <div class="panel-heading"><div><span class="eyebrow">Track days</span><h2>Recent Track Days</h2></div><button class="ghost-button" type="button">View all <span>→</span></button></div>
-      <div class="recent-list">
-        @for (day of days; track day.date) {
-          <div class="recent-row"><div class="date-block"><strong>{{ day.date }}</strong><span>{{ day.year }}</span></div><div class="day-main"><strong>{{ day.track }}</strong><span>{{ day.vehicle }} · {{ day.sessions }} sessions</span></div><div class="lap-block"><strong>{{ day.best }}</strong><span>Best lap</span></div><div class="improvement" [class.down]="day.improvement.startsWith('-')">{{ day.improvement }}</div><span class="weather">{{ day.weather }}</span></div>
-        }
-      </div>
-    </section>
-  `,
+  templateUrl: './recent-days.component.html',
+  styleUrl: './recent-days.component.scss',
 })
 export class RecentDaysComponent {
   readonly days = [

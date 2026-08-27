@@ -1,5 +1,5 @@
-package com.nico.podium.service.Impl;
-import com.nico.podium.domain.PodiumModels.Lap; import com.nico.podium.repository.LapRepository; import com.nico.podium.service.LapService; import com.nico.podium.service.PersonalRecordService; import com.nico.podium.service.SessionService; import org.springframework.http.HttpStatus; import org.springframework.stereotype.Service; import java.util.List; import java.util.Map; import static com.nico.podium.service.Impl.ServiceSupportImpl.*;
+package com.nico.podium.service.impl;
+ import com.nico.podium.domain.PodiumModels.Lap; import com.nico.podium.repository.LapRepository; import com.nico.podium.service.LapService; import com.nico.podium.service.PersonalRecordService; import com.nico.podium.service.SessionService; import org.springframework.http.HttpStatus; import org.springframework.stereotype.Service; import java.util.List; import java.util.Map; import static com.nico.podium.service.impl.ServiceSupportImpl.*;
 @Service public class LapServiceImpl implements LapService {
  private final LapRepository laps; private final SessionService sessions; private final PersonalRecordService records;
  public LapServiceImpl(LapRepository laps,SessionService sessions,PersonalRecordService records){this.laps=laps;this.sessions=sessions;this.records=records;}

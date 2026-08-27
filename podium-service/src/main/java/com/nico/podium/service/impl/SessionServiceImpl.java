@@ -1,5 +1,5 @@
-package com.nico.podium.service.Impl;
-import com.nico.podium.domain.PodiumModels.Session; import com.nico.podium.repository.SessionRepository; import com.nico.podium.service.SessionService; import com.nico.podium.service.TrackDayService; import org.springframework.stereotype.Service; import java.util.List; import java.util.Map; import static com.nico.podium.service.Impl.ServiceSupportImpl.*;
+package com.nico.podium.service.impl;
+ import com.nico.podium.domain.PodiumModels.Session; import com.nico.podium.repository.SessionRepository; import com.nico.podium.service.SessionService; import com.nico.podium.service.TrackDayService; import org.springframework.stereotype.Service; import java.util.List; import java.util.Map; import static com.nico.podium.service.impl.ServiceSupportImpl.*;
 @Service public class SessionServiceImpl implements SessionService {
  private final SessionRepository sessions; private final TrackDayService days;
  public SessionServiceImpl(SessionRepository sessions,TrackDayService days){this.sessions=sessions;this.days=days;}

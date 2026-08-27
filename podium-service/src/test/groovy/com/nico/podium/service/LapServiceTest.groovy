@@ -2,7 +2,7 @@ package com.nico.podium.service
 
 import com.nico.podium.domain.PodiumModels.*
 import com.nico.podium.repository.LapRepository
-import com.nico.podium.service.Impl.LapServiceImpl
+import com.nico.podium.service.impl.LapServiceImpl
 import org.junit.jupiter.api.Test
 
 import static org.junit.jupiter.api.Assertions.*

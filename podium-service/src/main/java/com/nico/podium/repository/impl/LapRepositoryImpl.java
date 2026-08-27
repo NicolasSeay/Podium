@@ -1,4 +1,4 @@
-package com.nico.podium.repository.Impl;
+package com.nico.podium.repository.impl;
 
 import com.nico.podium.domain.PodiumModels.Lap;
 import com.nico.podium.repository.LapRepository;

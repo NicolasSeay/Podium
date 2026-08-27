@@ -1,5 +1,5 @@
-package com.nico.podium.service.Impl;
-import com.nico.podium.domain.PodiumModels.*; import com.nico.podium.repository.*; import com.nico.podium.service.PersonalRecordService; import org.springframework.stereotype.Service; import java.util.Comparator; import java.util.List; import static com.nico.podium.service.Impl.ServiceSupportImpl.id;
+package com.nico.podium.service.impl;
+ import com.nico.podium.domain.PodiumModels.*; import com.nico.podium.repository.*; import com.nico.podium.service.PersonalRecordService; import org.springframework.stereotype.Service; import java.util.Comparator; import java.util.List; import static com.nico.podium.service.impl.ServiceSupportImpl.id;
 @Service public class PersonalRecordServiceImpl implements PersonalRecordService {
  private final PersonalRecordRepository records; private final SessionRepository sessions; private final TrackDayRepository days;
  public PersonalRecordServiceImpl(PersonalRecordRepository records,SessionRepository sessions,TrackDayRepository days){this.records=records;this.sessions=sessions;this.days=days;}

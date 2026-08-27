@@ -1,4 +1,4 @@
-package com.nico.podium.service.Impl;
+package com.nico.podium.service.impl;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;

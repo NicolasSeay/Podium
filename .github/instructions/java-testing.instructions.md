@@ -26,7 +26,7 @@ The Maven build compiles Groovy tests with GMavenPlus. Keep tests compatible wit
 package com.nico.podium.service
 
 import com.nico.podium.repository.TrackRepository
-import com.nico.podium.service.Impl.TrackServiceImpl
+import com.nico.podium.service.impl.TrackServiceImpl
 import org.junit.jupiter.api.Test
 
 import static org.junit.jupiter.api.Assertions.assertTrue

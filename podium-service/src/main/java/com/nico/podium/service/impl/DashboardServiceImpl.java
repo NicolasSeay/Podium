@@ -1,4 +1,4 @@
-package com.nico.podium.service.Impl;
+package com.nico.podium.service.impl;
 import com.nico.podium.domain.PodiumModels.*; import com.nico.podium.repository.*; import com.nico.podium.service.DashboardService; import com.nico.podium.service.PersonalRecordService; import org.springframework.stereotype.Service; import java.util.*;
 @Service public class DashboardServiceImpl implements DashboardService {
  private final TrackDayRepository days; private final SessionRepository sessions; private final LapRepository laps; private final PersonalRecordService records;

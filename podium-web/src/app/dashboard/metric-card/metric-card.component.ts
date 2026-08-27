@@ -3,13 +3,8 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 @Component({
   selector: 'app-metric-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <article class="metric-card">
-      <div class="metric-label">{{ label() }} <span class="metric-icon">{{ icon() }}</span></div>
-      <div class="metric-value">{{ value() }}</div>
-      <div class="metric-foot" [class.positive]="positive()">{{ detail() }}</div>
-    </article>
-  `,
+  templateUrl: './metric-card.component.html',
+  styleUrl: './metric-card.component.scss',
 })
 export class MetricCardComponent {
   readonly label = input.required<string>();

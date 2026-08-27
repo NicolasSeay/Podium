@@ -12,12 +12,11 @@ Use the existing root package `com.nico.podium` and keep responsibilities separa
 
 - `controller`: HTTP endpoints and request/response handling.
 - `service`: service interfaces and business-facing contracts.
-- `service.Impl`: current service implementations.
+- `service.impl`: current service implementations.
 - `repository`: repository interfaces and data-access contracts.
-- `repository.Impl`: current repository implementations.
+- `repository.impl`: current repository implementations.
 - `domain`: domain models, currently grouped in `PodiumModels`.
 
-The existing implementation packages use the exact uppercase spelling `.Impl`. Preserve that convention in this repository; do not perform unrelated package normalization.
 
 ## Spring Patterns
 
