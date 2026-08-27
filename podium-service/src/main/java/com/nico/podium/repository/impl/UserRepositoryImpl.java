@@ -1,15 +1,29 @@
 package com.nico.podium.repository.impl;
 
 import com.nico.podium.domain.PodiumModels.User;
+import com.nico.podium.domain.entity.UserEntity;
 import com.nico.podium.repository.UserRepository;
+import com.nico.podium.repository.jpa.UserJpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
-    private final InMemoryDataStoreImpl store;
-    public UserRepositoryImpl(InMemoryDataStoreImpl store) { this.store = store; }
-    public User save(User user) { store.users.put(user.id(), user); return user; }
-    public Optional<User> findById(String id) { return Optional.ofNullable(store.users.get(id)); }
-    public Optional<User> findByEmail(String email) { return store.users.values().stream().filter(user -> user.email().equalsIgnoreCase(email)).findFirst(); }
+    private final UserJpaRepository repository;
+
+    public UserRepositoryImpl(UserJpaRepository repository) {
+        this.repository = repository;
+    }
+
+    public User save(User user) {
+        return repository.save(new UserEntity(user)).toDomain();
+    }
+
+    public Optional<User> findById(String id) {
+        return repository.findById(id).map(UserEntity::toDomain);
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return repository.findByEmailIgnoreCase(email).map(UserEntity::toDomain);
+    }
 }

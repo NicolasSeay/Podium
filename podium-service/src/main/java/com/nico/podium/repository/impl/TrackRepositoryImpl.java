@@ -1,19 +1,50 @@
 package com.nico.podium.repository.impl;
 
 import com.nico.podium.domain.PodiumModels.*;
+import com.nico.podium.domain.entity.TrackConfigurationEntity;
+import com.nico.podium.domain.entity.TrackEntity;
 import com.nico.podium.repository.TrackRepository;
+import com.nico.podium.repository.jpa.TrackConfigurationJpaRepository;
+import com.nico.podium.repository.jpa.TrackJpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class TrackRepositoryImpl implements TrackRepository {
-    private final InMemoryDataStoreImpl store;
-    public TrackRepositoryImpl(InMemoryDataStoreImpl store) { this.store = store; }
-    public Track save(Track value) { store.tracks.put(value.id(), value); return value; }
-    public Optional<Track> findById(String id) { return Optional.ofNullable(store.tracks.get(id)); }
-    public List<Track> findByUserId(String userId) { return store.tracks.values().stream().filter(value -> value.userId().equals(userId)).toList(); }
-    public void deleteById(String id) { store.tracks.remove(id); }
-    public TrackConfiguration saveConfiguration(TrackConfiguration value) { store.configurations.put(value.id(), value); return value; }
-    public List<TrackConfiguration> findConfigurations(String trackId) { return store.configurations.values().stream().filter(value -> value.trackId().equals(trackId)).toList(); }
+    private final TrackJpaRepository tracks;
+    private final TrackConfigurationJpaRepository configurations;
+
+    public TrackRepositoryImpl(TrackJpaRepository tracks, TrackConfigurationJpaRepository configurations) {
+        this.tracks = tracks;
+        this.configurations = configurations;
+    }
+
+    public Track save(Track value) {
+        return tracks.save(new TrackEntity(value)).toDomain();
+    }
+
+    public Optional<Track> findById(String id) {
+        return tracks.findById(id).map(TrackEntity::toDomain);
+    }
+
+    public List<Track> findByUserId(String userId) {
+        return tracks.findByUserId(userId).stream()
+                .map(TrackEntity::toDomain)
+                .toList();
+    }
+
+    public void deleteById(String id) {
+        tracks.deleteById(id);
+    }
+
+    public TrackConfiguration saveConfiguration(TrackConfiguration value) {
+        return configurations.save(new TrackConfigurationEntity(value)).toDomain();
+    }
+
+    public List<TrackConfiguration> findConfigurations(String trackId) {
+        return configurations.findByTrackId(trackId).stream()
+                .map(TrackConfigurationEntity::toDomain)
+                .toList();
+    }
 }

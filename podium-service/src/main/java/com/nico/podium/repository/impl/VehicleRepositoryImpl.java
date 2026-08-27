@@ -1,17 +1,36 @@
 package com.nico.podium.repository.impl;
 
 import com.nico.podium.domain.PodiumModels.Vehicle;
+import com.nico.podium.domain.entity.VehicleEntity;
 import com.nico.podium.repository.VehicleRepository;
+import com.nico.podium.repository.jpa.VehicleJpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class VehicleRepositoryImpl implements VehicleRepository {
-    private final InMemoryDataStoreImpl store;
-    public VehicleRepositoryImpl(InMemoryDataStoreImpl store) { this.store = store; }
-    public Vehicle save(Vehicle value) { store.vehicles.put(value.id(), value); return value; }
-    public Optional<Vehicle> findById(String id) { return Optional.ofNullable(store.vehicles.get(id)); }
-    public List<Vehicle> findByUserId(String userId) { return store.vehicles.values().stream().filter(value -> value.userId().equals(userId)).toList(); }
-    public void deleteById(String id) { store.vehicles.remove(id); }
+    private final VehicleJpaRepository repository;
+
+    public VehicleRepositoryImpl(VehicleJpaRepository repository) {
+        this.repository = repository;
+    }
+
+    public Vehicle save(Vehicle value) {
+        return repository.save(new VehicleEntity(value)).toDomain();
+    }
+
+    public Optional<Vehicle> findById(String id) {
+        return repository.findById(id).map(VehicleEntity::toDomain);
+    }
+
+    public List<Vehicle> findByUserId(String userId) {
+        return repository.findByUserId(userId).stream()
+                .map(VehicleEntity::toDomain)
+                .toList();
+    }
+
+    public void deleteById(String id) {
+        repository.deleteById(id);
+    }
 }

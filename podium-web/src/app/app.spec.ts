@@ -1,10 +1,13 @@
 import { TestBed } from '@angular/core/testing';
+import { provideStore } from '@ngrx/store';
 import { App } from './app';
+import { dashboardFeature } from './dashboard/dashboard.store';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [provideStore({ [dashboardFeature.name]: dashboardFeature.reducer })],
     })
       .compileComponents();
   });
@@ -19,6 +22,6 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, podium-web');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Dashboard');
   });
 });

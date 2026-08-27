@@ -2,15 +2,21 @@ package com.nico.podium.repository
 
 import com.nico.podium.domain.PodiumModels.TrackDay
 import com.nico.podium.repository.impl.*
+import com.nico.podium.repository.jpa.TrackDayJpaRepository
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
 import static org.junit.jupiter.api.Assertions.*
 
+@SpringBootTest
 class TrackDayRepositoryTest {
+    @Autowired TrackDayJpaRepository trackDays
+
     @Test
     void managesTrackDaysByOwner() {
-        def repository = new TrackDayRepositoryImpl(new InMemoryDataStoreImpl())
+        def repository = new TrackDayRepositoryImpl(trackDays)
         def day = new TrackDay('d1', 'u1', 't1', 'v1', LocalDate.of(2026, 8, 24), 'notes', 'dry')
         repository.save(day)
         assertEquals(day, repository.findById('d1').orElseThrow())
