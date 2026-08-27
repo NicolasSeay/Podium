@@ -1,7 +1,7 @@
 package com.nico.podium.repository
 
 import com.nico.podium.domain.PodiumModels.User
-import com.nico.podium.repository.Impl.InMemoryDataStoreImpl
+import com.nico.podium.repository.impl.InMemoryDataStoreImpl
 import org.junit.jupiter.api.Test
 
 import static org.junit.jupiter.api.Assertions.*

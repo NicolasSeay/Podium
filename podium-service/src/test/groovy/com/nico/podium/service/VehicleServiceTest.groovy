@@ -2,7 +2,7 @@ package com.nico.podium.service
 
 import com.nico.podium.domain.PodiumModels.Vehicle
 import com.nico.podium.repository.VehicleRepository
-import com.nico.podium.service.Impl.VehicleServiceImpl
+import com.nico.podium.service.impl.VehicleServiceImpl
 import org.junit.jupiter.api.Test
 
 import static org.junit.jupiter.api.Assertions.*

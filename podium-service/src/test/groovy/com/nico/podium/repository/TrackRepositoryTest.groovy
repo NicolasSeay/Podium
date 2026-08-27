@@ -1,7 +1,7 @@
 package com.nico.podium.repository
 
 import com.nico.podium.domain.PodiumModels.*
-import com.nico.podium.repository.Impl.*
+import com.nico.podium.repository.impl.*
 import org.junit.jupiter.api.Test
 
 import static org.junit.jupiter.api.Assertions.*

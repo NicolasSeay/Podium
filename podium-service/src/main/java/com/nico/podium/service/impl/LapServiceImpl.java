@@ -1,0 +1,9 @@
+package com.nico.podium.service.impl;
+ import com.nico.podium.domain.PodiumModels.Lap; import com.nico.podium.repository.LapRepository; import com.nico.podium.service.LapService; import com.nico.podium.service.PersonalRecordService; import com.nico.podium.service.SessionService; import org.springframework.http.HttpStatus; import org.springframework.stereotype.Service; import java.util.List; import java.util.Map; import static com.nico.podium.service.impl.ServiceSupportImpl.*;
+@Service public class LapServiceImpl implements LapService {
+ private final LapRepository laps; private final SessionService sessions; private final PersonalRecordService records;
+ public LapServiceImpl(LapRepository laps,SessionService sessions,PersonalRecordService records){this.laps=laps;this.sessions=sessions;this.records=records;}
+ public List<Lap> list(String userId,String sessionId){sessions.get(userId,sessionId);return laps.findBySessionId(sessionId);} public Lap get(String userId,String id){Lap l=laps.findById(id).orElseThrow(()->missing("lap"));sessions.get(userId,l.sessionId());return l;}
+ public Lap create(String userId,String sessionId,Map<String,Object>b){sessions.get(userId,sessionId);Long time=number(b,"timeMillis");if(time==null||time<=0)throw error(HttpStatus.BAD_REQUEST,"timeMillis must be positive");Lap l=laps.save(new Lap(id(),sessionId,integer(b,"lapNumber",laps.findBySessionId(sessionId).size()+1),time));records.refresh(userId,l.id(),sessionId,time);return l;}
+ public Lap update(String userId,String id,Map<String,Object>b){Lap c=get(userId,id);Long time=number(b,"timeMillis");Lap l=laps.save(new Lap(c.id(),c.sessionId(),integer(b,"lapNumber",c.lapNumber()),time==null?c.timeMillis():time));records.refresh(userId,l.id(),l.sessionId(),l.timeMillis());return l;} public void delete(String userId,String id){get(userId,id);laps.deleteById(id);}
+}

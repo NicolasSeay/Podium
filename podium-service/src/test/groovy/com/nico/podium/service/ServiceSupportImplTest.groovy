@@ -1,6 +1,6 @@
 package com.nico.podium.service
 
-import com.nico.podium.service.Impl.ServiceSupportImpl
+import com.nico.podium.service.impl.ServiceSupportImpl
 import org.junit.jupiter.api.Test
 
 import java.time.LocalDate
