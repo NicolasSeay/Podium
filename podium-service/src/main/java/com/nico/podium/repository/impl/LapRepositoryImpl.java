@@ -1,17 +1,36 @@
 package com.nico.podium.repository.impl;
 
 import com.nico.podium.domain.PodiumModels.Lap;
+import com.nico.podium.domain.entity.LapEntity;
 import com.nico.podium.repository.LapRepository;
+import com.nico.podium.repository.jpa.LapJpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class LapRepositoryImpl implements LapRepository {
-    private final InMemoryDataStoreImpl store;
-    public LapRepositoryImpl(InMemoryDataStoreImpl store) { this.store = store; }
-    public Lap save(Lap value) { store.laps.put(value.id(), value); return value; }
-    public Optional<Lap> findById(String id) { return Optional.ofNullable(store.laps.get(id)); }
-    public List<Lap> findBySessionId(String sessionId) { return store.laps.values().stream().filter(value -> value.sessionId().equals(sessionId)).toList(); }
-    public void deleteById(String id) { store.laps.remove(id); }
+    private final LapJpaRepository repository;
+
+    public LapRepositoryImpl(LapJpaRepository repository) {
+        this.repository = repository;
+    }
+
+    public Lap save(Lap value) {
+        return repository.save(new LapEntity(value)).toDomain();
+    }
+
+    public Optional<Lap> findById(String id) {
+        return repository.findById(id).map(LapEntity::toDomain);
+    }
+
+    public List<Lap> findBySessionId(String sessionId) {
+        return repository.findBySessionId(sessionId).stream()
+                .map(LapEntity::toDomain)
+                .toList();
+    }
+
+    public void deleteById(String id) {
+        repository.deleteById(id);
+    }
 }

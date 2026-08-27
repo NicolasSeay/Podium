@@ -49,6 +49,7 @@ public class TrackController extends ControllerSupport {
 ## Java Style
 
 - Use four spaces for indentation, braces, and explicit types consistent with nearby Java files.
+- Put one statement or declaration per line. Format constructors, methods, and lambdas across multiple lines when their signatures or bodies would otherwise be difficult to scan.
 - Prefer `final` fields and immutable return values where practical.
 - Use Java standard-library types already used by the module, such as `List`, `Map`, `LocalDate`, and `Optional` where appropriate.
 - Keep methods small and make business rules explicit.
