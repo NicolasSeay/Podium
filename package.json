@@ -2,6 +2,7 @@
     "name": "podium",
     "private": true,
     "scripts": {
+        "start": "npm --prefix podium-web start",
         "prepare": "husky"
     },
     "devDependencies": {

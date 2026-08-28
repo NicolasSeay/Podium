@@ -19,6 +19,9 @@ Run the backend from `podium-service` with `mvn spring-boot:run`. Hibernate
 creates or updates the JPA tables on startup. Tests use an in-memory H2 database
 instead of the local MySQL instance.
 
+Run the Angular frontend from the repository root with `npm start`. This
+delegates to `podium-web` and starts `ng serve` on port 4200.
+
 ## Test coverage
 
 Run `mvn clean verify` from `podium-service` to generate the JaCoCo report at

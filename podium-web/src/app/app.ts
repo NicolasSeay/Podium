@@ -10,11 +10,12 @@ import {
 } from './dashboard/dashboard.store';
 import { MetricCardComponent } from './dashboard/metric-card/metric-card.component';
 import { RecentDaysComponent } from './dashboard/recent-days/recent-days.component';
+import { TracksComponent } from './tracks/tracks.component';
 
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MetricCardComponent, RecentDaysComponent],
+  imports: [MetricCardComponent, RecentDaysComponent, TracksComponent],
   styleUrl: './app.scss',
   templateUrl: './app.html',
 })
