@@ -10,6 +10,7 @@ public final class ServiceSupportImpl {
     private ServiceSupportImpl() { }
     public static String id() { return UUID.randomUUID().toString(); }
     public static String required(Map<String, Object> body, String key) { String value = text(body, key, null); if (value == null || value.isBlank()) throw error(HttpStatus.BAD_REQUEST, key + " is required"); return value; }
+    public static Long numberRequired(Map<String, Object> body, String key) { Long value = number(body, key); if (value == null) throw error(HttpStatus.BAD_REQUEST, key + " is required"); return value; }
     public static String text(Map<String, Object> body, String key, String fallback) { Object value = body.get(key); return value == null ? fallback : String.valueOf(value); }
     public static Integer integer(Map<String, Object> body, String key, Integer fallback) { Object value = body.get(key); return value == null ? fallback : Integer.valueOf(String.valueOf(value)); }
     public static Long number(Map<String, Object> body, String key) { Object value = body.get(key); return value == null ? null : Long.valueOf(String.valueOf(value)); }

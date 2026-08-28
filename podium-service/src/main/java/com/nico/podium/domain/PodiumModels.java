@@ -9,29 +9,29 @@ public final class PodiumModels {
     private PodiumModels() {
     }
 
-    public record User(String id, String email, @JsonIgnore String password, String name) {
+    public record User(Long id, String email, @JsonIgnore String password, String firstName, String lastName) {
     }
 
-    public record Track(String id, String userId, String name, String location) {
+    public record Track(Long id, Long userId, String name, String location) {
     }
 
-    public record TrackConfiguration(String id, String trackId, String name, Integer lengthMeters) {
+    public record TrackConfiguration(Long id, Long trackId, String name, Integer lengthMeters) {
     }
 
-    public record Vehicle(String id, String userId, String name, String make, String model, Integer year) {
+    public record Vehicle(Long id, Long userId, String name, String make, String model, Integer year) {
     }
 
-    public record TrackDay(String id, String userId, String trackId, String vehicleId,
+    public record TrackDay(Long id, Long userId, Long trackId, Long vehicleId,
                            LocalDate date, String notes, String conditions) {
     }
 
-    public record Session(String id, String trackDayId, String name, String notes) {
+    public record Session(Long id, Long trackDayId, String name, String notes) {
     }
 
-    public record Lap(String id, String sessionId, Integer lapNumber, Long timeMillis) {
+    public record Lap(Long id, Long sessionId, Integer lapNumber, Long timeMillis) {
     }
 
-    public record PersonalRecord(String id, String userId, String lapId, String trackId,
-                                 String vehicleId, Long timeMillis) {
+    public record PersonalRecord(Long id, Long userId, Long lapId, Long trackId,
+                                 Long vehicleId, Long timeMillis) {
     }
 }

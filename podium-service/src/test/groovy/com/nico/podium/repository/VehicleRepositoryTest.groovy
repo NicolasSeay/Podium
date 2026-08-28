@@ -16,11 +16,10 @@ class VehicleRepositoryTest {
     @Test
     void managesVehiclesByOwner() {
         def repository = new VehicleRepositoryImpl(vehicles)
-        def vehicle = new Vehicle('v1', 'u1', 'MX-5', 'Mazda', 'ND', 2020)
-        repository.save(vehicle)
-        assertEquals(vehicle, repository.findById('v1').orElseThrow())
-        assertEquals([vehicle], repository.findByUserId('u1'))
-        repository.deleteById('v1')
-        assertTrue(repository.findById('v1').isEmpty())
+        def vehicle = repository.save(new Vehicle(null, 1L, 'MX-5', 'Mazda', 'ND', 2020))
+        assertEquals(vehicle, repository.findById(1L).orElseThrow())
+        assertEquals([vehicle], repository.findByUserId(1L))
+        repository.deleteById(vehicle.id())
+        assertTrue(repository.findById(vehicle.id()).isEmpty())
     }
 }

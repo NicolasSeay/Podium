@@ -19,6 +19,11 @@ Run the backend from `podium-service` with `mvn spring-boot:run`. Hibernate
 creates or updates the JPA tables on startup. Tests use an in-memory H2 database
 instead of the local MySQL instance.
 
+Useful MySQL maintenance scripts are collected in `SQL/utils.sql`: one section
+removes the application tables, one clears their data, and one reports table
+sizes and approximate row counts. Uncomment and run only the section you need;
+review destructive statements before running them.
+
 Run the Angular frontend from the repository root with `npm start`. This
 delegates to `podium-web` and starts `ng serve` on port 4200.
 

@@ -17,11 +17,11 @@ class DashboardServiceTest {
         def sessions = mock(SessionRepository)
         def laps = mock(LapRepository)
         def records = mock(PersonalRecordService)
-        when(days.findByUserId('u1')).thenReturn([new TrackDay('d1', 'u1', 't1', null, LocalDate.of(2026, 8, 24), null, null)])
-        when(sessions.findByTrackDayId('d1')).thenReturn([new Session('s1', 'd1', 'Open', null)])
-        when(laps.findBySessionId('s1')).thenReturn([new Lap('l1', 's1', 1, 95000L)])
-        when(records.list('u1')).thenReturn([])
-        def result = new DashboardServiceImpl(days, sessions, laps, records).get('u1')
+        when(days.findByUserId(1L)).thenReturn([new TrackDay(1L, 1L, 1L, null, LocalDate.of(2026, 8, 24), null, null)])
+        when(sessions.findByTrackDayId(1L)).thenReturn([new Session(1L, 1L, 'Open', null)])
+        when(laps.findBySessionId(1L)).thenReturn([new Lap(1L, 1L, 1, 95000L)])
+        when(records.list(1L)).thenReturn([])
+        def result = new DashboardServiceImpl(days, sessions, laps, records).get(1L)
         assertEquals(1, result.totalTrackDays)
         assertEquals(1, result.totalSessions)
         assertEquals(1, result.totalLaps)
@@ -34,10 +34,10 @@ class DashboardServiceTest {
         def sessions = mock(SessionRepository)
         def laps = mock(LapRepository)
         def records = mock(PersonalRecordService)
-        when(days.findByUserId('u1')).thenReturn([])
-        when(records.list('u1')).thenReturn([])
+        when(days.findByUserId(1L)).thenReturn([])
+        when(records.list(1L)).thenReturn([])
 
-        def result = new DashboardServiceImpl(days, sessions, laps, records).get('u1')
+        def result = new DashboardServiceImpl(days, sessions, laps, records).get(1L)
 
         assertEquals(0, result.totalTrackDays)
         assertEquals(0, result.totalSessions)
@@ -54,15 +54,15 @@ class DashboardServiceTest {
         def laps = mock(LapRepository)
         def records = mock(PersonalRecordService)
         def trackDays = (1..6).collect { day ->
-            new TrackDay("d${day}", 'u1', "t${day}", null, LocalDate.of(2026, 8, day), null, null)
+            new TrackDay(day as Long, 1L, day as Long, null, LocalDate.of(2026, 8, day), null, null)
         }
-        when(days.findByUserId('u1')).thenReturn(trackDays)
-        when(records.list('u1')).thenReturn([])
+        when(days.findByUserId(1L)).thenReturn(trackDays)
+        when(records.list(1L)).thenReturn([])
 
-        def result = new DashboardServiceImpl(days, sessions, laps, records).get('u1')
+        def result = new DashboardServiceImpl(days, sessions, laps, records).get(1L)
 
-        assertEquals(['d6', 'd5', 'd4', 'd3', 'd2'], result.recentTrackDays*.id())
-        verify(sessions).findByTrackDayId('d1')
-        verify(sessions).findByTrackDayId('d6')
+        assertEquals([6L, 5L, 4L, 3L, 2L], result.recentTrackDays*.id())
+        verify(sessions).findByTrackDayId(1L)
+        verify(sessions).findByTrackDayId(6L)
     }
 }

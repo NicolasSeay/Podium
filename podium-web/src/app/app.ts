@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { AuthService } from './auth.service';
+import { authFeature, authLoggedOut } from './auth.store';
 import {
   dashboardFeature,
   DashboardRange,
@@ -11,21 +14,34 @@ import {
 import { MetricCardComponent } from './dashboard/metric-card/metric-card.component';
 import { RecentDaysComponent } from './dashboard/recent-days/recent-days.component';
 import { TracksComponent } from './tracks/tracks.component';
+import { VehiclesComponent } from './vehicles/vehicles.component';
 
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MetricCardComponent, RecentDaysComponent, TracksComponent],
+  imports: [MetricCardComponent, RecentDaysComponent, TracksComponent, VehiclesComponent],
   styleUrl: './app.scss',
   templateUrl: './app.html',
 })
 export class App {
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
   private readonly store = inject(Store);
   protected readonly activeNav = this.store.selectSignal(dashboardFeature.selectActiveNav);
   protected readonly range = this.store.selectSignal(dashboardFeature.selectRange);
   protected readonly dashboard = this.store.selectSignal(dashboardFeature.selectData);
   protected readonly loading = this.store.selectSignal(dashboardFeature.selectLoading);
   protected readonly error = this.store.selectSignal(dashboardFeature.selectError);
+  protected readonly user = this.store.selectSignal(authFeature.selectUser);
+  protected readonly firstName = computed(() => this.user()?.firstName ?? 'Driver');
+  protected readonly sidebarName = computed(() => {
+    const user = this.user();
+    return user ? `${user.firstName} ${user.lastName.charAt(0)}.` : 'Driver';
+  });
+  protected readonly initials = computed(() => {
+    const user = this.user();
+    return user ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase() : 'D';
+  });
   protected readonly bestLap = computed(() => {
     const record = this.dashboard()?.personalRecords.reduce<PersonalRecord | null>(
       (best, current) => (best && best.timeMillis < current.timeMillis ? best : current),
@@ -58,6 +74,17 @@ export class App {
   }
   protected retry() {
     this.store.dispatch(dashboardLoadRequested());
+  }
+  protected logout(): void {
+    this.auth.logout().subscribe({
+      next: () => this.finishLogout(),
+      error: () => this.finishLogout(),
+    });
+  }
+
+  private finishLogout(): void {
+    this.store.dispatch(authLoggedOut());
+    void this.router.navigate(['/login']);
   }
 
   private formatLapTime(timeMillis: number): string {

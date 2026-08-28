@@ -4,6 +4,6 @@ import com.nico.podium.domain.entity.TrackDayEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
-public interface TrackDayJpaRepository extends JpaRepository<TrackDayEntity, String> {
-    List<TrackDayEntity> findByUserId(String userId);
+public interface TrackDayJpaRepository extends JpaRepository<TrackDayEntity, Long> {
+    List<TrackDayEntity> findByUserId(Long userId);
 }

@@ -17,12 +17,11 @@ class TrackRepositoryTest {
     @Test
     void managesTracksAndConfigurations() {
         def repository = new TrackRepositoryImpl(tracks, configurations)
-        def track = new Track('t1', 'u1', 'Road Atlanta', 'Georgia')
-        repository.save(track)
-        repository.saveConfiguration(new TrackConfiguration('c1', 't1', 'Full', 4088))
-        assertEquals([track], repository.findByUserId('u1'))
-        assertEquals(1, repository.findConfigurations('t1').size())
-        repository.deleteById('t1')
-        assertTrue(repository.findById('t1').isEmpty())
+        def track = repository.save(new Track(null, 1L, 'Road Atlanta', 'Georgia'))
+        repository.saveConfiguration(new TrackConfiguration(null, track.id(), 'Full', 4088))
+        assertEquals([track], repository.findByUserId(1L))
+        assertEquals(1, repository.findConfigurations(track.id()).size())
+        repository.deleteById(track.id())
+        assertTrue(repository.findById(track.id()).isEmpty())
     }
 }

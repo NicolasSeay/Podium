@@ -1,4 +1,4 @@
-# TrackLog --- Application Plan
+# Podium --- Application Plan
 
 ## Core Pages
 

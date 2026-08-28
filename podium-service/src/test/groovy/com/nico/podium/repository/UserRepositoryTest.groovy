@@ -16,9 +16,8 @@ class UserRepositoryTest {
     @Test
     void savesAndFindsUsersByIdAndEmail() {
         def repository = new UserRepositoryImpl(users)
-        def user = new User('u1', 'driver@example.com', 'secret', 'Driver')
-        repository.save(user)
-        assertEquals(user, repository.findById('u1').orElseThrow())
+        def user = repository.save(new User(null, 'driver@example.com', 'secret', 'Driver', 'Example'))
+        assertEquals(user, repository.findById(1L).orElseThrow())
         assertEquals(user, repository.findByEmail('DRIVER@example.com').orElseThrow())
     }
 }

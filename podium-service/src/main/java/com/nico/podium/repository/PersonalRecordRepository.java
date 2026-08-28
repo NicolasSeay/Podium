@@ -7,5 +7,5 @@ import java.util.List;
 public interface PersonalRecordRepository {
     PersonalRecord save(PersonalRecord record);
 
-    List<PersonalRecord> findByUserId(String userId);
+    List<PersonalRecord> findByUserId(Long userId);
 }

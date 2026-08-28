@@ -31,29 +31,29 @@ public class TrackController extends ControllerSupport {
     }
 
     @GetMapping("/{id}")
-    public Map<String, Object> get(@PathVariable String id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h) {
-        String u = userId(a, h);
+    public Map<String, Object> get(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h) {
+        Long u = userId(a, h);
         return Map.of("track", tracks.get(u, id), "configurations", tracks.configurations(u, id));
     }
 
     @PatchMapping("/{id}")
-    public Track update(@PathVariable String id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h, @RequestBody Map<String, Object> b) {
+    public Track update(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h, @RequestBody Map<String, Object> b) {
         return tracks.update(userId(a, h), id, b);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h) {
+    public void delete(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h) {
         tracks.delete(userId(a, h), id);
     }
 
     @GetMapping("/{id}/configurations")
-    public List<TrackConfiguration> configurations(@PathVariable String id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h) {
+    public List<TrackConfiguration> configurations(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h) {
         return tracks.configurations(userId(a, h), id);
     }
 
     @PostMapping("/{id}/configurations")
-    public TrackConfiguration createConfiguration(@PathVariable String id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h, @RequestBody Map<String, Object> b) {
+    public TrackConfiguration createConfiguration(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h, @RequestBody Map<String, Object> b) {
         return tracks.createConfiguration(userId(a, h), id, b);
     }
 }

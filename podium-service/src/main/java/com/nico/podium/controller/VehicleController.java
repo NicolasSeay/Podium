@@ -30,18 +30,18 @@ public class VehicleController extends ControllerSupport {
     }
 
     @GetMapping("/{id}")
-    public Vehicle get(@PathVariable String id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h) {
+    public Vehicle get(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h) {
         return vehicles.get(userId(a, h), id);
     }
 
     @PatchMapping("/{id}")
-    public Vehicle update(@PathVariable String id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h, @RequestBody Map<String, Object> b) {
+    public Vehicle update(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h, @RequestBody Map<String, Object> b) {
         return vehicles.update(userId(a, h), id, b);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h) {
+    public void delete(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h) {
         vehicles.delete(userId(a, h), id);
     }
 }

@@ -20,17 +20,17 @@ public class TrackDayRepositoryImpl implements TrackDayRepository {
         return repository.save(new TrackDayEntity(value)).toDomain();
     }
 
-    public Optional<TrackDay> findById(String id) {
+    public Optional<TrackDay> findById(Long id) {
         return repository.findById(id).map(TrackDayEntity::toDomain);
     }
 
-    public List<TrackDay> findByUserId(String userId) {
+    public List<TrackDay> findByUserId(Long userId) {
         return repository.findByUserId(userId).stream()
                 .map(TrackDayEntity::toDomain)
                 .toList();
     }
 
-    public void deleteById(String id) {
+    public void deleteById(Long id) {
         repository.deleteById(id);
     }
 }

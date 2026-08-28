@@ -3,14 +3,17 @@ package com.nico.podium.domain.entity;
 import com.nico.podium.domain.PodiumModels.TrackConfiguration;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "track_configurations")
 public class TrackConfigurationEntity {
     @Id
-    private String id;
-    private String trackId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long trackId;
     private String name;
     private Integer lengthMeters;
 
@@ -28,11 +31,11 @@ public class TrackConfigurationEntity {
         return new TrackConfiguration(id, trackId, name, lengthMeters);
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public String getTrackId() {
+    public Long getTrackId() {
         return trackId;
     }
 }

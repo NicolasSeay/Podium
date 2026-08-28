@@ -1,3 +1,3 @@
 package com.nico.podium.service;
 import com.nico.podium.domain.PodiumModels.Session; import java.util.List; import java.util.Map;
-public interface SessionService { List<Session> list(String userId,String trackDayId); Session get(String userId,String id); Session create(String userId,String trackDayId,Map<String,Object> body); Session update(String userId,String id,Map<String,Object> body); void delete(String userId,String id); }
+public interface SessionService { List<Session> list(Long userId,Long trackDayId); Session get(Long userId,Long id); Session create(Long userId,Long trackDayId,Map<String,Object> body); Session update(Long userId,Long id,Map<String,Object> body); void delete(Long userId,Long id); }

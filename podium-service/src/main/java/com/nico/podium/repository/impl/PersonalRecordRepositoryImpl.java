@@ -19,7 +19,7 @@ public class PersonalRecordRepositoryImpl implements PersonalRecordRepository {
         return repository.save(new PersonalRecordEntity(value)).toDomain();
     }
 
-    public List<PersonalRecord> findByUserId(String userId) {
+    public List<PersonalRecord> findByUserId(Long userId) {
         return repository.findByUserId(userId).stream()
                 .map(PersonalRecordEntity::toDomain)
                 .toList();

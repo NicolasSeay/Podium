@@ -3,17 +3,20 @@ package com.nico.podium.domain.entity;
 import com.nico.podium.domain.PodiumModels.PersonalRecord;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "personal_records")
 public class PersonalRecordEntity {
     @Id
-    private String id;
-    private String userId;
-    private String lapId;
-    private String trackId;
-    private String vehicleId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long userId;
+    private Long lapId;
+    private Long trackId;
+    private Long vehicleId;
     private Long timeMillis;
 
     protected PersonalRecordEntity() {
@@ -32,11 +35,11 @@ public class PersonalRecordEntity {
         return new PersonalRecord(id, userId, lapId, trackId, vehicleId, timeMillis);
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 }

@@ -20,17 +20,17 @@ public class LapRepositoryImpl implements LapRepository {
         return repository.save(new LapEntity(value)).toDomain();
     }
 
-    public Optional<Lap> findById(String id) {
+    public Optional<Lap> findById(Long id) {
         return repository.findById(id).map(LapEntity::toDomain);
     }
 
-    public List<Lap> findBySessionId(String sessionId) {
+    public List<Lap> findBySessionId(Long sessionId) {
         return repository.findBySessionId(sessionId).stream()
                 .map(LapEntity::toDomain)
                 .toList();
     }
 
-    public void deleteById(String id) {
+    public void deleteById(Long id) {
         repository.deleteById(id);
     }
 }

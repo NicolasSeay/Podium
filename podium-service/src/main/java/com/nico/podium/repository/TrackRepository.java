@@ -9,13 +9,13 @@ import java.util.Optional;
 public interface TrackRepository {
     Track save(Track track);
 
-    Optional<Track> findById(String id);
+    Optional<Track> findById(Long id);
 
-    List<Track> findByUserId(String userId);
+    List<Track> findByUserId(Long userId);
 
-    void deleteById(String id);
+    void deleteById(Long id);
 
     TrackConfiguration saveConfiguration(TrackConfiguration configuration);
 
-    List<TrackConfiguration> findConfigurations(String trackId);
+    List<TrackConfiguration> findConfigurations(Long trackId);
 }

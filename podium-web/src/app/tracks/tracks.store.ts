@@ -1,8 +1,8 @@
 import { createAction, createFeature, createReducer, on } from '@ngrx/store';
 
 export interface Track {
-  id: string;
-  userId: string;
+  id: number;
+  userId: number;
   name: string;
   location: string | null;
 }

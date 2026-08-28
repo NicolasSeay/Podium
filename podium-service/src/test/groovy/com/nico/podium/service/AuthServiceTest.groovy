@@ -14,11 +14,12 @@ class AuthServiceTest {
     void registersAndAuthenticatesUsers() {
         def users = mock(UserRepository)
         when(users.findByEmail('driver@example.com')).thenReturn(Optional.empty())
-        when(users.save(any(User))).thenAnswer { it.arguments[0] }
+        when(users.save(any(User))).thenAnswer { new User(1L, it.arguments[0].email(), it.arguments[0].password(), it.arguments[0].firstName(), it.arguments[0].lastName()) }
         def service = new AuthServiceImpl(users)
-        def result = service.register('driver@example.com', 'secret', 'Driver')
+        def result = service.register('driver@example.com', 'secret', 'Driver', 'Example')
         assertNotNull(result.token)
         assertEquals('driver@example.com', result.user.email())
+        assertEquals('Driver', result.user.firstName())
         when(users.findById(result.user.id())).thenReturn(Optional.of(result.user))
         when(users.findByEmail('driver@example.com')).thenReturn(Optional.of(result.user))
         assertEquals(result.user, service.currentUser("Bearer ${result.token}", null))

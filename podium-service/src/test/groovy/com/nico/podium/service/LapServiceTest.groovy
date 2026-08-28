@@ -15,9 +15,9 @@ class LapServiceTest {
         def laps = mock(LapRepository)
         def sessions = mock(SessionService)
         def records = mock(PersonalRecordService)
-        when(sessions.get('u1', 's1')).thenReturn(new Session('s1', 'd1', 'Open', null))
+        when(sessions.get(1L, 1L)).thenReturn(new Session(1L, 1L, 'Open', null))
         def service = new LapServiceImpl(laps, sessions, records)
-        assertThrows(Exception) { service.create('u1', 's1', [timeMillis: 0]) }
+        assertThrows(Exception) { service.create(1L, 1L, [timeMillis: 0]) }
         verify(laps, never()).save(any(Lap))
     }
 }

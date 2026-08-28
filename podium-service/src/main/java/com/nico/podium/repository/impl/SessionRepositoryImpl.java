@@ -20,17 +20,17 @@ public class SessionRepositoryImpl implements SessionRepository {
         return repository.save(new SessionEntity(value)).toDomain();
     }
 
-    public Optional<Session> findById(String id) {
+    public Optional<Session> findById(Long id) {
         return repository.findById(id).map(SessionEntity::toDomain);
     }
 
-    public List<Session> findByTrackDayId(String trackDayId) {
+    public List<Session> findByTrackDayId(Long trackDayId) {
         return repository.findByTrackDayId(trackDayId).stream()
                 .map(SessionEntity::toDomain)
                 .toList();
     }
 
-    public void deleteById(String id) {
+    public void deleteById(Long id) {
         repository.deleteById(id);
     }
 }

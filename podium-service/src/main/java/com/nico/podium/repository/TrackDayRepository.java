@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface TrackDayRepository {
     TrackDay save(TrackDay trackDay);
 
-    Optional<TrackDay> findById(String id);
+    Optional<TrackDay> findById(Long id);
 
-    List<TrackDay> findByUserId(String userId);
+    List<TrackDay> findByUserId(Long userId);
 
-    void deleteById(String id);
+    void deleteById(Long id);
 }

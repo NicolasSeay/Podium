@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 public interface VehicleService {
-    List<Vehicle> list(String userId);
+    List<Vehicle> list(Long userId);
 
-    Vehicle get(String userId, String id);
+    Vehicle get(Long userId, Long id);
 
-    Vehicle create(String userId, Map<String, Object> body);
+    Vehicle create(Long userId, Map<String, Object> body);
 
-    Vehicle update(String userId, String id, Map<String, Object> body);
+    Vehicle update(Long userId, Long id, Map<String, Object> body);
 
-    void delete(String userId, String id);
+    void delete(Long userId, Long id);
 }

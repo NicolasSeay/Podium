@@ -3,14 +3,17 @@ package com.nico.podium.domain.entity;
 import com.nico.podium.domain.PodiumModels.Lap;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "laps")
 public class LapEntity {
     @Id
-    private String id;
-    private String sessionId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long sessionId;
     private Integer lapNumber;
     private Long timeMillis;
 
@@ -28,11 +31,11 @@ public class LapEntity {
         return new Lap(id, sessionId, lapNumber, timeMillis);
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public String getSessionId() {
+    public Long getSessionId() {
         return sessionId;
     }
 }

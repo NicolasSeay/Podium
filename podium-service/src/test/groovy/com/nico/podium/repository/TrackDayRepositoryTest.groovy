@@ -17,11 +17,10 @@ class TrackDayRepositoryTest {
     @Test
     void managesTrackDaysByOwner() {
         def repository = new TrackDayRepositoryImpl(trackDays)
-        def day = new TrackDay('d1', 'u1', 't1', 'v1', LocalDate.of(2026, 8, 24), 'notes', 'dry')
-        repository.save(day)
-        assertEquals(day, repository.findById('d1').orElseThrow())
-        assertEquals([day], repository.findByUserId('u1'))
-        repository.deleteById('d1')
-        assertTrue(repository.findById('d1').isEmpty())
+        def day = repository.save(new TrackDay(null, 1L, 1L, 1L, LocalDate.of(2026, 8, 24), 'notes', 'dry'))
+        assertEquals(day, repository.findById(1L).orElseThrow())
+        assertEquals([day], repository.findByUserId(1L))
+        repository.deleteById(day.id())
+        assertTrue(repository.findById(day.id()).isEmpty())
     }
 }

@@ -9,7 +9,7 @@ abstract class ControllerSupport {
         this.auth = auth;
     }
 
-    protected String userId(String authorization, String header) {
+    protected Long userId(String authorization, String header) {
         return auth.currentUser(authorization, header).id();
     }
 }
