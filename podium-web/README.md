@@ -12,6 +12,10 @@ ng serve
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
+The dashboard requests `/api/dashboard` through the development proxy configured in
+`proxy.conf.json`. Start `podium-service` on `http://localhost:8080` before loading
+the dashboard so the API requests can resolve.
+
 ## Code scaffolding
 
 Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
@@ -43,6 +47,14 @@ To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use th
 ```bash
 ng test
 ```
+
+To run the tests and generate the coverage report, use:
+
+```bash
+npm run coverage
+```
+
+The HTML report is generated in `coverage/`.
 
 ## Running end-to-end tests
 

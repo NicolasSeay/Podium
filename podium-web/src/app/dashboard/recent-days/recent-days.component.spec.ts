@@ -1,0 +1,34 @@
+import { TestBed } from '@angular/core/testing';
+import { RecentDaysComponent } from './recent-days.component';
+
+describe('RecentDaysComponent', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({ imports: [RecentDaysComponent] }).compileComponents();
+  });
+
+  it('renders API track days without fabricated rows when empty', () => {
+    const fixture = TestBed.createComponent(RecentDaysComponent);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll('.recent-row')).toHaveLength(0);
+  });
+
+  it('renders supplied track day identifiers and metadata', () => {
+    const fixture = TestBed.createComponent(RecentDaysComponent);
+    fixture.componentRef.setInput('days', [
+      {
+        id: 'day-1',
+        userId: 'user-1',
+        trackId: 'track-1',
+        vehicleId: 'vehicle-1',
+        date: '2026-08-24',
+        notes: 'Dry',
+        conditions: 'Sunny',
+      },
+    ]);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('2026-08-24');
+    expect(fixture.nativeElement.textContent).toContain('Track track-1');
+    expect(fixture.nativeElement.textContent).toContain('Sunny');
+  });
+});
