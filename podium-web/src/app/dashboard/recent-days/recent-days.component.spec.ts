@@ -10,6 +10,9 @@ describe('RecentDaysComponent', () => {
     const fixture = TestBed.createComponent(RecentDaysComponent);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll('.recent-row')).toHaveLength(0);
+    expect((fixture.nativeElement.querySelector('button') as HTMLButtonElement).disabled).toBe(
+      true,
+    );
   });
 
   it('renders supplied track day identifiers and metadata', () => {

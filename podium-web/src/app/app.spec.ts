@@ -2,6 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideEffects } from '@ngrx/effects';
+import { provideRouter, Router } from '@angular/router';
 import { provideStore } from '@ngrx/store';
 import { Store } from '@ngrx/store';
 import { App } from './app';
@@ -22,6 +23,7 @@ describe('App', () => {
           [dashboardFeature.name]: dashboardFeature.reducer,
           [authFeature.name]: authFeature.reducer,
         }),
+        provideRouter([]),
       ],
     }).compileComponents();
   });
@@ -83,6 +85,40 @@ describe('App', () => {
     expect(fixture.nativeElement.textContent).toContain('Welcome back, Nicolas');
     expect(fixture.nativeElement.textContent).toContain('Nicolas S.');
     expect(fixture.nativeElement.textContent).toContain('NS');
+  });
+
+  it('navigates to the selected sidebar route', () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    const router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    const tracksButton = (
+      Array.from(fixture.nativeElement.querySelectorAll('button.nav-item')) as HTMLButtonElement[]
+    ).find((button) => button.textContent?.includes('Tracks'));
+
+    tracksButton?.click();
+
+    expect(router.navigate).toHaveBeenCalledWith(['tracks']);
+  });
+
+  it('disables sidebar destinations without implemented views', () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    const buttons = Array.from(
+      fixture.nativeElement.querySelectorAll('button.nav-item'),
+    ) as HTMLButtonElement[];
+    const tracksButton = buttons.find((button) => button.textContent?.includes('Tracks'));
+    const incompleteButtons = buttons.filter((button) =>
+      ['Track Days', 'Sessions', 'Analytics', 'Records', 'Goals', 'Settings'].some((item) =>
+        button.textContent?.includes(item),
+      ),
+    );
+
+    expect(tracksButton?.disabled).toBe(false);
+    expect(incompleteButtons).toHaveLength(6);
+    expect(incompleteButtons.every((button) => button.disabled)).toBe(true);
   });
 });
 

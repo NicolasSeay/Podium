@@ -63,11 +63,25 @@ export class App {
     'Goals',
     'Settings',
   ];
+  protected readonly navigationRoutes: Record<string, string> = {
+    Dashboard: 'dashboard',
+    'Track Days': 'track-days',
+    Sessions: 'sessions',
+    Analytics: 'analytics',
+    Tracks: 'tracks',
+    Vehicles: 'vehicles',
+    Records: 'records',
+    Goals: 'goals',
+    Settings: 'settings',
+  };
+  protected readonly implementedNavigation = new Set(['Dashboard', 'Tracks', 'Vehicles']);
   constructor() {
+    this.store.dispatch(setActiveNav(this.navigationLabelForUrl(this.router.url)));
     this.store.dispatch(dashboardLoadRequested());
   }
-  protected changeNav(item: string) {
+  protected changeNav(item: string): void {
     this.store.dispatch(setActiveNav(item));
+    void this.router.navigate([this.navigationRoutes[item]]).catch(() => undefined);
   }
   protected changeRange(event: Event) {
     this.store.dispatch(setRange((event.target as HTMLSelectElement).value as DashboardRange));
@@ -85,6 +99,13 @@ export class App {
   private finishLogout(): void {
     this.store.dispatch(authLoggedOut());
     void this.router.navigate(['/login']);
+  }
+
+  private navigationLabelForUrl(url: string): string {
+    const path = url.split('?')[0].split('/')[1] || 'dashboard';
+    return (
+      Object.entries(this.navigationRoutes).find(([, route]) => route === path)?.[0] ?? 'Dashboard'
+    );
   }
 
   private formatLapTime(timeMillis: number): string {
