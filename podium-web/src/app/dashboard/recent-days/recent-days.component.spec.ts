@@ -16,10 +16,10 @@ describe('RecentDaysComponent', () => {
     const fixture = TestBed.createComponent(RecentDaysComponent);
     fixture.componentRef.setInput('days', [
       {
-        id: 'day-1',
-        userId: 'user-1',
-        trackId: 'track-1',
-        vehicleId: 'vehicle-1',
+        id: 1,
+        userId: 1,
+        trackId: 1,
+        vehicleId: 1,
         date: '2026-08-24',
         notes: 'Dry',
         conditions: 'Sunny',
@@ -28,7 +28,7 @@ describe('RecentDaysComponent', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.textContent).toContain('2026-08-24');
-    expect(fixture.nativeElement.textContent).toContain('Track track-1');
+    expect(fixture.nativeElement.textContent).toContain('Track 1');
     expect(fixture.nativeElement.textContent).toContain('Sunny');
   });
 });

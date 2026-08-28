@@ -5,5 +5,5 @@ import com.nico.podium.domain.PodiumModels.User;
 import java.util.Map;
 
 public interface UserService {
-    User update(String userId, Map<String, Object> body);
+    User update(Long userId, Map<String, Object> body);
 }

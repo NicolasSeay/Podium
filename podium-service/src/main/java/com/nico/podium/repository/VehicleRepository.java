@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface VehicleRepository {
     Vehicle save(Vehicle vehicle);
 
-    Optional<Vehicle> findById(String id);
+    Optional<Vehicle> findById(Long id);
 
-    List<Vehicle> findByUserId(String userId);
+    List<Vehicle> findByUserId(Long userId);
 
-    void deleteById(String id);
+    void deleteById(Long id);
 }

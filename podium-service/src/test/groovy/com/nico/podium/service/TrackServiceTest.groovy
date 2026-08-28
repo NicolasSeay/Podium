@@ -15,9 +15,9 @@ class TrackServiceTest {
         def tracks = mock(TrackRepository)
         when(tracks.save(any(Track))).thenAnswer { it.arguments[0] }
         def service = new TrackServiceImpl(tracks)
-        def track = service.create('u1', [name: 'Road Atlanta'])
+        def track = service.create(1L, [name: 'Road Atlanta'])
         when(tracks.findById(track.id())).thenReturn(Optional.of(track))
-        assertEquals('u1', service.get('u1', track.id()).userId())
-        assertThrows(Exception) { service.get('u2', track.id()) }
+        assertEquals(1L, service.get(1L, track.id()).userId())
+        assertThrows(Exception) { service.get(2L, track.id()) }
     }
 }

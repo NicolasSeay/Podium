@@ -3,19 +3,19 @@ import { createAction, createFeature, createReducer, on } from '@ngrx/store';
 export type DashboardRange = 'Last 12 Months' | 'Last 6 Months' | 'This Year';
 
 export interface PersonalRecord {
-  id: string;
-  userId: string;
-  lapId: string;
-  trackId: string;
-  vehicleId: string;
+  id: number;
+  userId: number;
+  lapId: number;
+  trackId: number;
+  vehicleId: number;
   timeMillis: number;
 }
 
 export interface RecentTrackDay {
-  id: string;
-  userId: string;
-  trackId: string;
-  vehicleId: string;
+  id: number;
+  userId: number;
+  trackId: number;
+  vehicleId: number;
   date: string;
   notes: string | null;
   conditions: string | null;

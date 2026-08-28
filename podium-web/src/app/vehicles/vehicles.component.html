@@ -1,0 +1,68 @@
+<section class="vehicles-view" aria-labelledby="vehicles-title">
+  <div class="section-bar">
+    <div>
+      <span class="eyebrow">Your garage</span>
+      <h2 id="vehicles-title">Vehicles</h2>
+    </div>
+  </div>
+
+  <div class="vehicles-layout">
+    <form class="panel vehicle-form" [formGroup]="form" (ngSubmit)="createVehicle()">
+      <span class="eyebrow">Add a car</span>
+      <h3>New vehicle</h3>
+      <label for="vehicle-name">Vehicle name</label>
+      <input
+        id="vehicle-name"
+        type="text"
+        formControlName="name"
+        placeholder="e.g. Sunday Driver"
+      />
+      @if (form.controls.name.touched && form.controls.name.invalid) {
+        <span class="field-error">Enter a vehicle name.</span>
+      }
+      <label for="vehicle-make">Make <span class="muted">Optional</span></label>
+      <input id="vehicle-make" type="text" formControlName="make" placeholder="e.g. Mazda" />
+      <label for="vehicle-model">Model <span class="muted">Optional</span></label>
+      <input id="vehicle-model" type="text" formControlName="model" placeholder="e.g. MX-5 Miata" />
+      <label for="vehicle-year">Year <span class="muted">Optional</span></label>
+      <input id="vehicle-year" type="number" formControlName="year" placeholder="e.g. 2020" />
+      @if (form.controls.year.touched && form.controls.year.invalid) {
+        <span class="field-error">Enter a year between 1886 and 2100.</span>
+      }
+      <button class="primary-button" type="submit" [disabled]="saving()">
+        {{ saving() ? 'Saving...' : 'Add vehicle' }}
+      </button>
+      @if (error()) {
+        <p class="form-error" role="alert">{{ error() }}</p>
+      }
+    </form>
+
+    <div class="panel vehicle-list">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">Saved cars</span>
+          <h3>My vehicles</h3>
+        </div>
+        <span class="vehicle-count">{{ vehicles().length }}</span>
+      </div>
+      @if (loading()) {
+        <p class="muted" role="status">Loading vehicles...</p>
+      } @else if (vehicles().length === 0) {
+        <p class="empty-state">Your garage is ready for its first car.</p>
+      } @else {
+        <ul>
+          @for (vehicle of vehicles(); track vehicle.id) {
+            <li>
+              <strong>{{ vehicle.name }}</strong>
+              <span
+                >{{ vehicle.make || 'Make not added'
+                }}{{ vehicle.model ? ' · ' + vehicle.model : ''
+                }}{{ vehicle.year ? ' · ' + vehicle.year : '' }}</span
+              >
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </div>
+</section>

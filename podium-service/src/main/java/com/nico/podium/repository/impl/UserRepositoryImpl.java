@@ -19,7 +19,7 @@ public class UserRepositoryImpl implements UserRepository {
         return repository.save(new UserEntity(user)).toDomain();
     }
 
-    public Optional<User> findById(String id) {
+    public Optional<User> findById(Long id) {
         return repository.findById(id).map(UserEntity::toDomain);
     }
 

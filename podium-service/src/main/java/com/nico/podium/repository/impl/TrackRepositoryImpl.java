@@ -24,17 +24,17 @@ public class TrackRepositoryImpl implements TrackRepository {
         return tracks.save(new TrackEntity(value)).toDomain();
     }
 
-    public Optional<Track> findById(String id) {
+    public Optional<Track> findById(Long id) {
         return tracks.findById(id).map(TrackEntity::toDomain);
     }
 
-    public List<Track> findByUserId(String userId) {
+    public List<Track> findByUserId(Long userId) {
         return tracks.findByUserId(userId).stream()
                 .map(TrackEntity::toDomain)
                 .toList();
     }
 
-    public void deleteById(String id) {
+    public void deleteById(Long id) {
         tracks.deleteById(id);
     }
 
@@ -42,7 +42,7 @@ public class TrackRepositoryImpl implements TrackRepository {
         return configurations.save(new TrackConfigurationEntity(value)).toDomain();
     }
 
-    public List<TrackConfiguration> findConfigurations(String trackId) {
+    public List<TrackConfiguration> findConfigurations(Long trackId) {
         return configurations.findByTrackId(trackId).stream()
                 .map(TrackConfigurationEntity::toDomain)
                 .toList();

@@ -16,11 +16,10 @@ class SessionRepositoryTest {
     @Test
     void managesSessionsByTrackDay() {
         def repository = new SessionRepositoryImpl(sessions)
-        def session = new Session('s1', 'd1', 'Open', null)
-        repository.save(session)
-        assertEquals(session, repository.findById('s1').orElseThrow())
-        assertEquals([session], repository.findByTrackDayId('d1'))
-        repository.deleteById('s1')
-        assertTrue(repository.findById('s1').isEmpty())
+        def session = repository.save(new Session(null, 1L, 'Open', null))
+        assertEquals(session, repository.findById(1L).orElseThrow())
+        assertEquals([session], repository.findByTrackDayId(1L))
+        repository.deleteById(session.id())
+        assertTrue(repository.findById(session.id()).isEmpty())
     }
 }

@@ -16,11 +16,10 @@ class LapRepositoryTest {
     @Test
     void managesLapsBySession() {
         def repository = new LapRepositoryImpl(laps)
-        def lap = new Lap('l1', 's1', 1, 95000L)
-        repository.save(lap)
-        assertEquals(lap, repository.findById('l1').orElseThrow())
-        assertEquals([lap], repository.findBySessionId('s1'))
-        repository.deleteById('l1')
-        assertTrue(repository.findById('l1').isEmpty())
+        def lap = repository.save(new Lap(null, 1L, 1, 95000L))
+        assertEquals(lap, repository.findById(1L).orElseThrow())
+        assertEquals([lap], repository.findBySessionId(1L))
+        repository.deleteById(lap.id())
+        assertTrue(repository.findById(lap.id()).isEmpty())
     }
 }

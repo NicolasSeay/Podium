@@ -5,7 +5,7 @@ import com.nico.podium.domain.PodiumModels.User;
 import java.util.Map;
 
 public interface AuthService {
-    Map<String, Object> register(String email, String password, String name);
+    Map<String, Object> register(String email, String password, String firstName, String lastName);
 
     Map<String, Object> login(String email, String password);
 

@@ -3,6 +3,8 @@ package com.nico.podium.domain.entity;
 import com.nico.podium.domain.PodiumModels.TrackDay;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 
@@ -10,10 +12,11 @@ import java.time.LocalDate;
 @Table(name = "track_days")
 public class TrackDayEntity {
     @Id
-    private String id;
-    private String userId;
-    private String trackId;
-    private String vehicleId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long userId;
+    private Long trackId;
+    private Long vehicleId;
     private LocalDate date;
     private String notes;
     private String conditions;
@@ -35,11 +38,11 @@ public class TrackDayEntity {
         return new TrackDay(id, userId, trackId, vehicleId, date, notes, conditions);
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 }

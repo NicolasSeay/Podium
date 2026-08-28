@@ -3,14 +3,17 @@ package com.nico.podium.domain.entity;
 import com.nico.podium.domain.PodiumModels.Session;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "sessions")
 public class SessionEntity {
     @Id
-    private String id;
-    private String trackDayId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long trackDayId;
     private String name;
     private String notes;
 
@@ -28,11 +31,11 @@ public class SessionEntity {
         return new Session(id, trackDayId, name, notes);
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public String getTrackDayId() {
+    public Long getTrackDayId() {
         return trackDayId;
     }
 }

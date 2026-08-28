@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface LapRepository {
     Lap save(Lap lap);
 
-    Optional<Lap> findById(String id);
+    Optional<Lap> findById(Long id);
 
-    List<Lap> findBySessionId(String sessionId);
+    List<Lap> findBySessionId(Long sessionId);
 
-    void deleteById(String id);
+    void deleteById(Long id);
 }

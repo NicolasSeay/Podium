@@ -16,9 +16,8 @@ class PersonalRecordRepositoryTest {
     @Test
     void findsRecordsByOwner() {
         def repository = new PersonalRecordRepositoryImpl(records)
-        def record = new PersonalRecord('r1', 'u1', 'l1', 't1', 'v1', 95000L)
-        repository.save(record)
-        assertEquals([record], repository.findByUserId('u1'))
-        assertTrue(repository.findByUserId('u2').isEmpty())
+        def record = repository.save(new PersonalRecord(null, 1L, 1L, 1L, 1L, 95000L))
+        assertEquals([record], repository.findByUserId(1L))
+        assertTrue(repository.findByUserId(2L).isEmpty())
     }
 }

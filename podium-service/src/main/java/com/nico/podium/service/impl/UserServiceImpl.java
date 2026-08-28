@@ -9,5 +9,5 @@ import static com.nico.podium.service.impl.ServiceSupportImpl.*;
 public class UserServiceImpl implements UserService {
     private final UserRepository users;
     public UserServiceImpl(UserRepository users) { this.users = users; }
-    public User update(String userId, Map<String, Object> body) { User current = users.findById(userId).orElseThrow(() -> missing("user")); return users.save(new User(current.id(), current.email(), current.password(), text(body, "name", current.name()))); }
+    public User update(Long userId, Map<String, Object> body) { User current = users.findById(userId).orElseThrow(() -> missing("user")); return users.save(new User(current.id(), current.email(), current.password(), text(body, "firstName", current.firstName()), text(body, "lastName", current.lastName()))); }
 }

@@ -19,17 +19,17 @@ class SessionControllerTest {
 
     @Test
     void exposesSessionAndNestedLapEndpoints() {
-        when(auth.currentUser(any(), any())).thenReturn(new User('u1', 'driver@example.com', 'secret', 'Driver'))
-        def session = new Session('s1', 'd1', 'Open', null)
-        when(sessions.get(anyString(), eq('s1'))).thenReturn(session)
-        when(sessions.update(anyString(), eq('s1'), anyMap())).thenReturn(session)
-        when(laps.list(anyString(), eq('s1'))).thenReturn([])
-        when(laps.create(anyString(), eq('s1'), anyMap())).thenReturn(new Lap('l1', 's1', 1, 95000L))
+        when(auth.currentUser(any(), any())).thenReturn(new User(1L, 'driver@example.com', 'secret', 'Driver', 'Example'))
+        def session = new Session(1L, 1L, 'Open', null)
+        when(sessions.get(anyLong(), eq(1L))).thenReturn(session)
+        when(sessions.update(anyLong(), eq(1L), anyMap())).thenReturn(session)
+        when(laps.list(anyLong(), eq(1L))).thenReturn([])
+        when(laps.create(anyLong(), eq(1L), anyMap())).thenReturn(new Lap(1L, 1L, 1, 95000L))
 
-        mvc.perform(get('/api/sessions/s1').header('X-User-Id', 'u1')).andExpect(status().isOk())
-        mvc.perform(patch('/api/sessions/s1').header('X-User-Id', 'u1').contentType(MediaType.APPLICATION_JSON).content('{"name":"Race"}')).andExpect(status().isOk())
-        mvc.perform(delete('/api/sessions/s1').header('X-User-Id', 'u1')).andExpect(status().isNoContent())
-        mvc.perform(get('/api/sessions/s1/laps').header('X-User-Id', 'u1')).andExpect(status().isOk())
-        mvc.perform(post('/api/sessions/s1/laps').header('X-User-Id', 'u1').contentType(MediaType.APPLICATION_JSON).content('{"timeMillis":95000}')).andExpect(status().isOk())
+        mvc.perform(get('/api/sessions/1').header('X-User-Id', '1')).andExpect(status().isOk())
+        mvc.perform(patch('/api/sessions/1').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"name":"Race"}')).andExpect(status().isOk())
+        mvc.perform(delete('/api/sessions/1').header('X-User-Id', '1')).andExpect(status().isNoContent())
+        mvc.perform(get('/api/sessions/1/laps').header('X-User-Id', '1')).andExpect(status().isOk())
+        mvc.perform(post('/api/sessions/1/laps').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"timeMillis":95000}')).andExpect(status().isOk())
     }
 }

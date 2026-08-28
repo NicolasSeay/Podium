@@ -18,11 +18,11 @@ class UserControllerTest {
 
     @Test
     void exposesCurrentUserEndpoints() {
-        def user = new User('u1', 'driver@example.com', 'secret', 'Driver')
+        def user = new User(1L, 'driver@example.com', 'secret', 'Driver', 'Example')
         when(auth.currentUser(any(), any())).thenReturn(user)
-        when(users.update(anyString(), anyMap())).thenReturn(user)
+        when(users.update(anyLong(), anyMap())).thenReturn(user)
 
-        mvc.perform(get('/api/users/me').header('X-User-Id', 'u1')).andExpect(status().isOk())
-        mvc.perform(patch('/api/users/me').header('X-User-Id', 'u1').contentType(MediaType.APPLICATION_JSON).content('{"name":"Updated"}')).andExpect(status().isOk())
+        mvc.perform(get('/api/users/me').header('X-User-Id', '1')).andExpect(status().isOk())
+        mvc.perform(patch('/api/users/me').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"name":"Updated"}')).andExpect(status().isOk())
     }
 }

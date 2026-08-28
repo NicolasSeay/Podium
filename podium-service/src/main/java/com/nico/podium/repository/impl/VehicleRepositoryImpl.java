@@ -20,17 +20,17 @@ public class VehicleRepositoryImpl implements VehicleRepository {
         return repository.save(new VehicleEntity(value)).toDomain();
     }
 
-    public Optional<Vehicle> findById(String id) {
+    public Optional<Vehicle> findById(Long id) {
         return repository.findById(id).map(VehicleEntity::toDomain);
     }
 
-    public List<Vehicle> findByUserId(String userId) {
+    public List<Vehicle> findByUserId(Long userId) {
         return repository.findByUserId(userId).stream()
                 .map(VehicleEntity::toDomain)
                 .toList();
     }
 
-    public void deleteById(String id) {
+    public void deleteById(Long id) {
         repository.deleteById(id);
     }
 }

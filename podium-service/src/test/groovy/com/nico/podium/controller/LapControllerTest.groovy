@@ -18,9 +18,9 @@ class LapControllerTest {
 
     @Test
     void exposesLapUpdateAndDeleteEndpoints() {
-        when(auth.currentUser(any(), any())).thenReturn(new User('u1', 'driver@example.com', 'secret', 'Driver'))
-        when(laps.update(anyString(), eq('l1'), anyMap())).thenReturn(new Lap('l1', 's1', 1, 94000L))
-        mvc.perform(patch('/api/laps/l1').header('X-User-Id', 'u1').contentType(MediaType.APPLICATION_JSON).content('{"timeMillis":94000}')).andExpect(status().isOk())
-        mvc.perform(delete('/api/laps/l1').header('X-User-Id', 'u1')).andExpect(status().isNoContent())
+        when(auth.currentUser(any(), any())).thenReturn(new User(1L, 'driver@example.com', 'secret', 'Driver', 'Example'))
+        when(laps.update(anyLong(), eq(1L), anyMap())).thenReturn(new Lap(1L, 1L, 1, 94000L))
+        mvc.perform(patch('/api/laps/1').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"timeMillis":94000}')).andExpect(status().isOk())
+        mvc.perform(delete('/api/laps/1').header('X-User-Id', '1')).andExpect(status().isNoContent())
     }
 }

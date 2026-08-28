@@ -3,6 +3,8 @@ package com.nico.podium.domain.entity;
 import com.nico.podium.domain.PodiumModels.Vehicle;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 
@@ -10,8 +12,9 @@ import jakarta.persistence.Table;
 @Table(name = "vehicles")
 public class VehicleEntity {
     @Id
-    private String id;
-    private String userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long userId;
     private String name;
     private String make;
     private String model;
@@ -34,11 +37,11 @@ public class VehicleEntity {
         return new Vehicle(id, userId, name, make, model, year);
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 }

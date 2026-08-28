@@ -22,7 +22,11 @@ public class AuthController {
 
     @PostMapping("/register")
     public Map<String, Object> register(@RequestBody Map<String, Object> b) {
-        return auth.register(text(b, "email"), text(b, "password"), text(b, "name"));
+        return auth.register(
+            text(b, "email"),
+            text(b, "password"),
+            text(b, "firstName"),
+            text(b, "lastName"));
     }
 
     @PostMapping("/login")

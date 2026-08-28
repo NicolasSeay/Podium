@@ -1,6 +1,6 @@
 <div class="app-shell">
   <aside class="sidebar">
-    <div class="brand"><span class="brand-mark">P</span><span>TRACKLOG</span></div>
+    <div class="brand"><span class="brand-mark">P</span><span>Podium</span></div>
     <div class="workspace-label">MY WORKSPACE</div>
     <nav aria-label="Primary navigation">
       @for (item of navigation; track item) {
@@ -33,6 +33,16 @@
         </button>
       }
     </nav>
+    <div class="sidebar-bottom">
+      <div class="profile-avatar" aria-hidden="true">{{ initials() }}</div>
+      <div>
+        <strong>{{ sidebarName() }}</strong
+        ><span>Track driver</span>
+      </div>
+      <button class="logout-button" type="button" aria-label="Log out" (click)="logout()">
+        ↪ <span>Log out</span>
+      </button>
+    </div>
   </aside>
   <main class="content-area">
     <header class="topbar">
@@ -48,6 +58,8 @@
     <div class="content-body">
       @if (activeNav() === 'Tracks') {
         <app-tracks />
+      } @else if (activeNav() === 'Vehicles') {
+        <app-vehicles />
       } @else {
         @if (loading()) {
           <p class="muted" role="status">Loading dashboard...</p>
@@ -61,7 +73,7 @@
         <div class="section-bar">
           <div>
             <span class="eyebrow">Performance snapshot</span>
-            <h2>Welcome back, Jordan</h2>
+            <h2>Welcome back, {{ firstName() }}</h2>
           </div>
           <select
             class="range-select"

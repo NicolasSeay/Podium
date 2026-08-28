@@ -17,9 +17,9 @@ class DashboardControllerTest {
 
     @Test
     void exposesDashboardEndpoint() {
-        when(auth.currentUser(any(), any())).thenReturn(new User('u1', 'driver@example.com', 'secret', 'Driver'))
-        when(dashboard.get('u1')).thenReturn([totalTrackDays: 0])
-        mvc.perform(get('/api/dashboard').header('X-User-Id', 'u1')).andExpect(status().isOk())
-        verify(dashboard).get('u1')
+        when(auth.currentUser(any(), any())).thenReturn(new User(1L, 'driver@example.com', 'secret', 'Driver', 'Example'))
+        when(dashboard.get(1L)).thenReturn([totalTrackDays: 0])
+        mvc.perform(get('/api/dashboard').header('X-User-Id', '1')).andExpect(status().isOk())
+        verify(dashboard).get(1L)
     }
 }

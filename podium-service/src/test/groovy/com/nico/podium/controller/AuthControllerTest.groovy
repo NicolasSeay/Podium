@@ -17,7 +17,7 @@ class AuthControllerTest {
 
     @Test
     void exposesAuthenticationEndpoints() {
-        when(auth.register(any(), any(), any())).thenReturn([token: 'token'])
+        when(auth.register(any(), any(), any(), any())).thenReturn([token: 'token'])
         when(auth.login(any(), any())).thenReturn([token: 'token'])
         when(auth.refresh(anyString())).thenReturn([token: 'token'])
 

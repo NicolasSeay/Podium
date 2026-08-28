@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface SessionRepository {
     Session save(Session session);
 
-    Optional<Session> findById(String id);
+    Optional<Session> findById(Long id);
 
-    List<Session> findByTrackDayId(String trackDayId);
+    List<Session> findByTrackDayId(Long trackDayId);
 
-    void deleteById(String id);
+    void deleteById(Long id);
 }

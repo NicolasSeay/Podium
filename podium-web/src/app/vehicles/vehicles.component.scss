@@ -1,0 +1,96 @@
+.vehicles-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.7fr) minmax(0, 1.3fr);
+  gap: 11px;
+}
+
+.vehicle-form,
+.vehicle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vehicle-form h3,
+.vehicle-list h3 {
+  color: #e3f0f4;
+  font-size: 15px;
+  margin: -5px 0 7px;
+}
+
+.vehicle-form label {
+  color: #aac1ca;
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.vehicle-form input {
+  width: 100%;
+  border: 1px solid #2b5366;
+  border-radius: 4px;
+  background: #071a25;
+  color: #edf7fa;
+  padding: 10px;
+  font: inherit;
+  font-size: 11px;
+}
+
+.vehicle-form input:focus {
+  outline: 2px solid #299df5;
+  outline-offset: 1px;
+}
+
+.vehicle-form button {
+  margin-top: 5px;
+}
+
+.vehicle-form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.field-error,
+.form-error {
+  color: #ef8a7f;
+  font-size: 10px;
+}
+
+.vehicle-count {
+  color: #d6a84e;
+  font:
+    500 13px 'DM Mono',
+    monospace;
+}
+
+.vehicle-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0;
+}
+
+.vehicle-list li {
+  border-top: 1px solid #1a3441;
+  padding: 14px 0;
+}
+
+.vehicle-list li strong,
+.vehicle-list li span {
+  display: block;
+}
+
+.vehicle-list li strong {
+  color: #d2e2e7;
+  font-size: 12px;
+}
+
+.vehicle-list li span {
+  color: #66828e;
+  font-size: 10px;
+  margin-top: 5px;
+}
+
+@media (max-width: 650px) {
+  .vehicles-layout {
+    grid-template-columns: 1fr;
+  }
+}

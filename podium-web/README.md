@@ -56,6 +56,15 @@ npm run coverage
 
 The HTML report is generated in `coverage/`.
 
+## Running integration tests
+
+Integration tests live beside the feature they exercise and use the Angular unit-test builder with
+HTTP and NgRx test providers. To run the Tracks and Vehicles page flows only, use:
+
+```bash
+npm test -- --watch=false --include src/app/tracks/tracks.integration.spec.ts --include src/app/vehicles/vehicles.integration.spec.ts
+```
+
 ## Running end-to-end tests
 
 For end-to-end (e2e) testing, run:

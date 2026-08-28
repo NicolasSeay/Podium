@@ -15,11 +15,11 @@ class PersonalRecordServiceTest {
         def records = mock(PersonalRecordRepository)
         def sessions = mock(SessionRepository)
         def days = mock(TrackDayRepository)
-        when(sessions.findById('s1')).thenReturn(Optional.of(new Session('s1', 'd1', 'Open', null)))
-        when(days.findById('d1')).thenReturn(Optional.of(new TrackDay('d1', 'u1', 't1', 'v1', null, null, null)))
-        when(records.findByUserId('u1')).thenReturn([])
+        when(sessions.findById(1L)).thenReturn(Optional.of(new Session(1L, 1L, 'Open', null)))
+        when(days.findById(1L)).thenReturn(Optional.of(new TrackDay(1L, 1L, 1L, 1L, null, null, null)))
+        when(records.findByUserId(1L)).thenReturn([])
         def service = new PersonalRecordServiceImpl(records, sessions, days)
-        service.refresh('u1', 'l1', 's1', 95000L)
+        service.refresh(1L, 1L, 1L, 95000L)
         verify(records).save(any(PersonalRecord))
     }
 }

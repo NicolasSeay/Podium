@@ -17,9 +17,9 @@ class RecordControllerTest {
 
     @Test
     void exposesPersonalRecordEndpoint() {
-        when(auth.currentUser(any(), any())).thenReturn(new User('u1', 'driver@example.com', 'secret', 'Driver'))
-        when(records.list('u1')).thenReturn([new PersonalRecord('r1', 'u1', 'l1', 't1', 'v1', 94000L)])
-        mvc.perform(get('/api/records').header('X-User-Id', 'u1')).andExpect(status().isOk())
-        verify(records).list('u1')
+        when(auth.currentUser(any(), any())).thenReturn(new User(1L, 'driver@example.com', 'secret', 'Driver', 'Example'))
+        when(records.list(1L)).thenReturn([new PersonalRecord(1L, 1L, 1L, 1L, 1L, 94000L)])
+        mvc.perform(get('/api/records').header('X-User-Id', '1')).andExpect(status().isOk())
+        verify(records).list(1L)
     }
 }

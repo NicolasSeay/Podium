@@ -7,17 +7,17 @@ import java.util.List;
 import java.util.Map;
 
 public interface TrackService {
-    List<Track> list(String userId);
+    List<Track> list(Long userId);
 
-    Track get(String userId, String id);
+    Track get(Long userId, Long id);
 
-    Track create(String userId, Map<String, Object> body);
+    Track create(Long userId, Map<String, Object> body);
 
-    Track update(String userId, String id, Map<String, Object> body);
+    Track update(Long userId, Long id, Map<String, Object> body);
 
-    void delete(String userId, String id);
+    void delete(Long userId, Long id);
 
-    List<TrackConfiguration> configurations(String userId, String trackId);
+    List<TrackConfiguration> configurations(Long userId, Long trackId);
 
-    TrackConfiguration createConfiguration(String userId, String trackId, Map<String, Object> body);
+    TrackConfiguration createConfiguration(Long userId, Long trackId, Map<String, Object> body);
 }
