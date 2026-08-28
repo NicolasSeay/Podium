@@ -1,0 +1,3 @@
+{
+    "podium-web/src/**/*.{css,html,scss,ts}": "prettier --write"
+}

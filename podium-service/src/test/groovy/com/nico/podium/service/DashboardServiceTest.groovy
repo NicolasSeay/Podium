@@ -27,4 +27,42 @@ class DashboardServiceTest {
         assertEquals(1, result.totalLaps)
         assertEquals(95000L, result.totalLapTimeMillis)
     }
+
+    @Test
+    void returnsEmptyDashboardForUserWithoutTrackDays() {
+        def days = mock(TrackDayRepository)
+        def sessions = mock(SessionRepository)
+        def laps = mock(LapRepository)
+        def records = mock(PersonalRecordService)
+        when(days.findByUserId('u1')).thenReturn([])
+        when(records.list('u1')).thenReturn([])
+
+        def result = new DashboardServiceImpl(days, sessions, laps, records).get('u1')
+
+        assertEquals(0, result.totalTrackDays)
+        assertEquals(0, result.totalSessions)
+        assertEquals(0, result.totalLaps)
+        assertEquals(0L, result.totalLapTimeMillis)
+        assertTrue(result.recentTrackDays.isEmpty())
+        verifyNoInteractions(sessions, laps)
+    }
+
+    @Test
+    void returnsFiveMostRecentTrackDays() {
+        def days = mock(TrackDayRepository)
+        def sessions = mock(SessionRepository)
+        def laps = mock(LapRepository)
+        def records = mock(PersonalRecordService)
+        def trackDays = (1..6).collect { day ->
+            new TrackDay("d${day}", 'u1', "t${day}", null, LocalDate.of(2026, 8, day), null, null)
+        }
+        when(days.findByUserId('u1')).thenReturn(trackDays)
+        when(records.list('u1')).thenReturn([])
+
+        def result = new DashboardServiceImpl(days, sessions, laps, records).get('u1')
+
+        assertEquals(['d6', 'd5', 'd4', 'd3', 'd2'], result.recentTrackDays*.id())
+        verify(sessions).findByTrackDayId('d1')
+        verify(sessions).findByTrackDayId('d6')
+    }
 }

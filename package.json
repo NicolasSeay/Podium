@@ -1,0 +1,12 @@
+{
+    "name": "podium",
+    "private": true,
+    "scripts": {
+        "prepare": "husky"
+    },
+    "devDependencies": {
+        "husky": "^9.1.7",
+        "lint-staged": "^16.1.6",
+        "prettier": "^3.8.1"
+    }
+}
