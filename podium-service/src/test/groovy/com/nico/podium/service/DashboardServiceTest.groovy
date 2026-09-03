@@ -21,7 +21,7 @@ class DashboardServiceTest {
         when(sessions.findByTrackDayId(1L)).thenReturn([new Session(1L, 1L, 'Open', null)])
         when(laps.findBySessionId(1L)).thenReturn([new Lap(1L, 1L, 1, 95000L)])
         when(records.list(1L)).thenReturn([])
-        def result = new DashboardServiceImpl(days, sessions, laps, records).get(1L)
+        def result = new DashboardServiceImpl(days, sessions, laps, records).get(1L, null, null)
         assertEquals(1, result.totalTrackDays)
         assertEquals(1, result.totalSessions)
         assertEquals(1, result.totalLaps)
@@ -37,7 +37,7 @@ class DashboardServiceTest {
         when(days.findByUserId(1L)).thenReturn([])
         when(records.list(1L)).thenReturn([])
 
-        def result = new DashboardServiceImpl(days, sessions, laps, records).get(1L)
+        def result = new DashboardServiceImpl(days, sessions, laps, records).get(1L, null, null)
 
         assertEquals(0, result.totalTrackDays)
         assertEquals(0, result.totalSessions)
@@ -59,10 +59,37 @@ class DashboardServiceTest {
         when(days.findByUserId(1L)).thenReturn(trackDays)
         when(records.list(1L)).thenReturn([])
 
-        def result = new DashboardServiceImpl(days, sessions, laps, records).get(1L)
+        def result = new DashboardServiceImpl(days, sessions, laps, records).get(1L, null, null)
 
         assertEquals([6L, 5L, 4L, 3L, 2L], result.recentTrackDays*.id())
         verify(sessions).findByTrackDayId(1L)
         verify(sessions).findByTrackDayId(6L)
+    }
+
+    @Test
+    void filtersDashboardDataByTrackAndVehicle() {
+        def days = mock(TrackDayRepository)
+        def sessions = mock(SessionRepository)
+        def laps = mock(LapRepository)
+        def records = mock(PersonalRecordService)
+        when(days.findByUserId(1L)).thenReturn([
+            new TrackDay(1L, 1L, 10L, 20L, LocalDate.of(2026, 8, 24), null, null),
+            new TrackDay(2L, 1L, 11L, 21L, LocalDate.of(2026, 8, 25), null, null),
+        ])
+        when(sessions.findByTrackDayId(1L)).thenReturn([new Session(1L, 1L, 'Open', null)])
+        when(laps.findBySessionId(1L)).thenReturn([new Lap(1L, 1L, 1, 95000L)])
+        when(records.list(1L)).thenReturn([
+            new PersonalRecord(1L, 1L, 1L, 10L, 20L, 95000L),
+            new PersonalRecord(2L, 1L, 2L, 11L, 21L, 96000L),
+        ])
+
+        def result = new DashboardServiceImpl(days, sessions, laps, records).get(1L, 10L, 20L)
+
+        assertEquals(1, result.totalTrackDays)
+        assertEquals(1, result.totalSessions)
+        assertEquals(1, result.totalLaps)
+        assertEquals([1L], result.personalRecords*.id())
+        assertEquals([1L], result.recentTrackDays*.id())
+        verify(sessions, never()).findByTrackDayId(2L)
     }
 }

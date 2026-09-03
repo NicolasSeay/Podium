@@ -26,4 +26,12 @@ describe('DashboardApiService', () => {
     expect(request.request.method).toBe('GET');
     request.flush(data);
   });
+
+  it('sends track and vehicle filters', () => {
+    service.getDashboard(10, 20).subscribe();
+
+    const request = http.expectOne('/api/dashboard?trackId=10&vehicleId=20');
+    expect(request.request.method).toBe('GET');
+    request.flush({} as DashboardData);
+  });
 });

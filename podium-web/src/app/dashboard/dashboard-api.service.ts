@@ -7,7 +7,13 @@ import { DashboardData } from './dashboard.store';
 export class DashboardApiService {
   private readonly http = inject(HttpClient);
 
-  getDashboard(): Observable<DashboardData> {
-    return this.http.get<DashboardData>('/api/dashboard');
+  getDashboard(
+    trackId: number | null = null,
+    vehicleId: number | null = null,
+  ): Observable<DashboardData> {
+    const params: Record<string, string> = {};
+    if (trackId !== null) params['trackId'] = trackId.toString();
+    if (vehicleId !== null) params['vehicleId'] = vehicleId.toString();
+    return this.http.get<DashboardData>('/api/dashboard', { params });
   }
 }

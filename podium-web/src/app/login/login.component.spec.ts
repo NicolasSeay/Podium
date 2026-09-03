@@ -63,6 +63,7 @@ describe('LoginComponent', () => {
     });
 
     expect(localStorage.getItem('podium.auth.token')).toBe('session-token');
+    expect(document.cookie).toContain('podium.user.id=1');
     expect(TestBed.inject(Router).navigate).toHaveBeenCalledWith(['/dashboard']);
     expect(TestBed.inject(Store).selectSignal(authFeature.selectUser)()).toEqual({
       id: 1,

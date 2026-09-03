@@ -12,8 +12,8 @@ export class DashboardEffects {
   readonly loadDashboard$ = createEffect(() =>
     this.actions$.pipe(
       ofType(dashboardLoadRequested),
-      switchMap(() =>
-        this.dashboardApi.getDashboard().pipe(
+      switchMap(({ trackId, vehicleId }) =>
+        this.dashboardApi.getDashboard(trackId ?? null, vehicleId ?? null).pipe(
           map((dashboard) => dashboardLoaded(dashboard)),
           catchError((error: unknown) =>
             of(

@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { Router } from '@angular/router';
 import { RecentTrackDay } from '../dashboard.store';
 
 @Component({
@@ -8,5 +9,9 @@ import { RecentTrackDay } from '../dashboard.store';
   styleUrl: './recent-days.component.scss',
 })
 export class RecentDaysComponent {
+  private readonly router = inject(Router);
   readonly days = input<RecentTrackDay[]>([]);
+  protected viewAll(): void {
+    void this.router.navigate(['/track-days']).catch(() => undefined);
+  }
 }

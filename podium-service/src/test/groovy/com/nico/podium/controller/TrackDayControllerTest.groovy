@@ -23,6 +23,7 @@ class TrackDayControllerTest {
         when(auth.currentUser(any(), any())).thenReturn(new User(1L, 'driver@example.com', 'secret', 'Driver', 'Example'))
         def day = new TrackDay(1L, 1L, 1L, 1L, LocalDate.of(2026, 8, 24), 'notes', 'dry')
         when(days.list(anyLong(), any(), any(), any(), any())).thenReturn([])
+        when(days.stats(anyLong())).thenReturn([])
         when(days.get(anyLong(), eq(1L))).thenReturn(day)
         when(days.create(anyLong(), anyMap())).thenReturn(day)
         when(days.update(anyLong(), eq(1L), anyMap())).thenReturn(day)
@@ -30,6 +31,7 @@ class TrackDayControllerTest {
         when(sessions.create(anyLong(), eq(1L), anyMap())).thenReturn(new Session(1L, 1L, 'Open', null))
 
         mvc.perform(get('/api/track-days?trackId=1&vehicleId=1&from=2026-01-01&to=2026-12-31').header('X-User-Id', '1')).andExpect(status().isOk())
+        mvc.perform(get('/api/track-days/stats').header('X-User-Id', '1')).andExpect(status().isOk())
         mvc.perform(post('/api/track-days').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"trackId":1}')).andExpect(status().isOk())
         mvc.perform(get('/api/track-days/1').header('X-User-Id', '1')).andExpect(status().isOk())
         mvc.perform(patch('/api/track-days/1').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"notes":"updated"}')).andExpect(status().isOk())

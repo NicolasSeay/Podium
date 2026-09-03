@@ -16,7 +16,8 @@ export interface RecentTrackDay {
   userId: number;
   trackId: number;
   vehicleId: number;
-  date: string;
+  startDate: string;
+  endDate?: string;
   notes: string | null;
   conditions: string | null;
 }
@@ -45,7 +46,10 @@ export const setActiveNav = createAction(
   '[Dashboard] Set Active Navigation',
   (activeNav: string) => ({ activeNav }),
 );
-export const dashboardLoadRequested = createAction('[Dashboard] Load Requested');
+export const dashboardLoadRequested = createAction(
+  '[Dashboard] Load Requested',
+  (trackId: number | null = null, vehicleId: number | null = null) => ({ trackId, vehicleId }),
+);
 export const dashboardLoaded = createAction('[Dashboard] Loaded', (data: DashboardData) => ({
   data,
 }));

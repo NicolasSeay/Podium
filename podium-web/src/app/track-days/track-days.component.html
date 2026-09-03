@@ -1,0 +1,90 @@
+<section class="track-days-view" aria-labelledby="track-days-title">
+  <div class="section-bar">
+    <div>
+      <span class="eyebrow">Drive log</span>
+      <h2 id="track-days-title">Track Days</h2>
+    </div>
+    <span class="day-count">{{ trackDays().length }} events logged</span>
+  </div>
+  <div class="track-days-layout">
+    <div class="panel day-list">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">Your history</span>
+          <h3>Recorded events</h3>
+        </div>
+      </div>
+      @if (loading()) {
+        <p class="muted" role="status">Loading track days...</p>
+      } @else if (!trackDays().length) {
+        <p class="empty-state">Your first drive is waiting to be logged.</p>
+      } @else {
+        <ul>
+          @for (day of trackDays(); track day.id) {
+            <li>
+              <button
+                type="button"
+                class="day-row"
+                [class.selected]="selectedDayId() === day.id"
+                (click)="openDay(day)"
+              >
+                <span
+                  ><strong>{{ formatDateRange(day) }}</strong
+                  ><small>{{ trackName(day.trackId) }}</small></span
+                ><span
+                  ><strong>{{ vehicleName(day.vehicleId) }}</strong
+                  ><small>{{ day.conditions || 'Conditions not added' }}</small></span
+                ><span
+                  ><strong>{{ fastestLap(day.id) }}</strong
+                  ><small>Fastest lap</small></span
+                ><span
+                  ><strong>{{ averageLapTime(day.id) }}</strong
+                  ><small>Avg lap time</small></span
+                ><span class="open-arrow">→</span>
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </div>
+  @if (selectedDay(); as day) {
+    <section class="panel detail-panel" aria-labelledby="detail-title">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow"
+            >{{ day.startDate }} to {{ day.endDate || day.startDate }} ·
+            {{ trackName(day.trackId) }}</span
+          >
+          <h3 id="detail-title">Sessions and lap times</h3>
+        </div>
+        <span class="muted">{{ day.notes || 'No notes for this day' }}</span>
+      </div>
+      @if (!sessions().length) {
+        <p class="empty-state">Add a session to start recording laps.</p>
+      }
+      @for (session of sessions(); track session.id) {
+        <div class="session-block">
+          <div class="session-heading">
+            <strong>{{ session.name }}</strong
+            ><span>{{ session.notes || 'No session notes' }}</span>
+          </div>
+          <div class="lap-list">
+            @for (lap of laps()[session.id] ?? []; track lap.id) {
+              <div>
+                <span>Lap {{ lap.lapNumber }}</span
+                ><strong>{{ formatLapTime(lap.timeMillis) }}</strong>
+              </div>
+            }
+            @if (!laps()[session.id]?.length) {
+              <span class="muted">No laps recorded</span>
+            }
+          </div>
+        </div>
+      }
+    </section>
+  }
+  @if (error()) {
+    <p class="form-error" role="alert">{{ error() }}</p>
+  }
+</section>
