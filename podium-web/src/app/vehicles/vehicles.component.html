@@ -21,9 +21,11 @@
         <span class="field-error">Enter a vehicle name.</span>
       }
       <label for="vehicle-make">Make <span class="muted">Optional</span></label>
-      <input id="vehicle-make" type="text" formControlName="make" placeholder="e.g. Mazda" />
+      <input id="vehicle-make" type="text" formControlName="make" placeholder="e.g. Chevrolet" />
       <label for="vehicle-model">Model <span class="muted">Optional</span></label>
-      <input id="vehicle-model" type="text" formControlName="model" placeholder="e.g. MX-5 Miata" />
+      <input id="vehicle-model" type="text" formControlName="model" placeholder="e.g. Camaro" />
+      <label for="vehicle-trim">Trim <span class="muted">Optional</span></label>
+      <input id="vehicle-trim" type="text" formControlName="trim" placeholder="e.g. LT1" />
       <label for="vehicle-year">Year <span class="muted">Optional</span></label>
       <input id="vehicle-year" type="number" formControlName="year" placeholder="e.g. 2020" />
       @if (form.controls.year.touched && form.controls.year.invalid) {
@@ -57,6 +59,7 @@
               <span
                 >{{ vehicle.make || 'Make not added'
                 }}{{ vehicle.model ? ' · ' + vehicle.model : ''
+                }}{{ vehicle.trim ? ' · ' + vehicle.trim : ''
                 }}{{ vehicle.year ? ' · ' + vehicle.year : '' }}</span
               >
             </li>

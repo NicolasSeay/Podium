@@ -19,7 +19,7 @@ public final class PodiumModels {
     public record TrackConfiguration(Long id, Long trackId, String name, Integer lengthMeters) {
     }
 
-    public record Vehicle(Long id, Long userId, String name, String make, String model, Integer year) {
+    public record Vehicle(Long id, Long userId, String name, String make, String model, String trim, Integer year) {
     }
 
     public record TrackDay(Long id, Long userId, Long trackId, Long vehicleId,

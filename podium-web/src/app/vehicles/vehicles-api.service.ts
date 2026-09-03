@@ -15,6 +15,7 @@ export class VehiclesApiService {
     name: string;
     make: string | null;
     model: string | null;
+    trim: string | null;
     year: number | null;
   }): Observable<Vehicle> {
     return this.http.post<Vehicle>('/api/vehicles', vehicle);

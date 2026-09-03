@@ -41,14 +41,22 @@ describe('Vehicles page integration', () => {
     http
       .expectOne('/api/vehicles')
       .flush([
-        { id: 1, userId: 1, name: 'Sunday Driver', make: 'Mazda', model: 'MX-5 Miata', year: 2020 },
+        {
+          id: 1,
+          userId: 1,
+          name: 'Sunday Driver',
+          make: 'Mazda',
+          model: 'MX-5 Miata',
+          trim: 'Club',
+          year: 2020,
+        },
       ]);
     fixture.detectChanges();
 
     expect(page.text('#vehicles-title')).toBe('Vehicles');
     expect(page.text('.vehicle-count')).toBe('1');
     expect(page.text('.vehicle-list li strong')).toBe('Sunday Driver');
-    expect(page.text('.vehicle-list li span')).toBe('Mazda · MX-5 Miata · 2020');
+    expect(page.text('.vehicle-list li span')).toBe('Mazda · MX-5 Miata · Club · 2020');
   });
 
   it('validates and creates a vehicle through the API', () => {
@@ -70,6 +78,7 @@ describe('Vehicles page integration', () => {
     page.fill('#vehicle-name', ' Sunday Driver ');
     page.fill('#vehicle-make', 'Mazda');
     page.fill('#vehicle-model', 'MX-5 Miata');
+    page.fill('#vehicle-trim', 'LT1');
     page.fill('#vehicle-year', '2020');
     page.submit('.vehicle-form');
 
@@ -79,6 +88,7 @@ describe('Vehicles page integration', () => {
       name: 'Sunday Driver',
       make: 'Mazda',
       model: 'MX-5 Miata',
+      trim: 'LT1',
       year: 2020,
     });
     request.flush({
@@ -87,11 +97,12 @@ describe('Vehicles page integration', () => {
       name: 'Sunday Driver',
       make: 'Mazda',
       model: 'MX-5 Miata',
+      trim: 'LT1',
       year: 2020,
     });
     fixture.detectChanges();
 
     expect(page.text('.vehicle-list li strong')).toBe('Sunday Driver');
-    expect(page.text('.vehicle-list li span')).toBe('Mazda · MX-5 Miata · 2020');
+    expect(page.text('.vehicle-list li span')).toBe('Mazda · MX-5 Miata · LT1 · 2020');
   });
 });

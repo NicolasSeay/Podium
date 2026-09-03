@@ -6,6 +6,7 @@ export interface Vehicle {
   name: string;
   make: string | null;
   model: string | null;
+  trim: string | null;
   year: number | null;
 }
 
@@ -22,7 +23,13 @@ export const vehiclesLoaded = createAction('[Vehicles] Loaded', (vehicles: Vehic
 }));
 export const vehicleCreateRequested = createAction(
   '[Vehicles] Create Requested',
-  (vehicle: { name: string; make: string | null; model: string | null; year: number | null }) => ({
+  (vehicle: {
+    name: string;
+    make: string | null;
+    model: string | null;
+    trim: string | null;
+    year: number | null;
+  }) => ({
     vehicle,
   }),
 );

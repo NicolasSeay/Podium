@@ -18,6 +18,7 @@ public class VehicleEntity {
     private String name;
     private String make;
     private String model;
+    private String trim;
     @Column(name = "vehicle_year")
     private Integer year;
 
@@ -30,11 +31,12 @@ public class VehicleEntity {
         name = vehicle.name();
         make = vehicle.make();
         model = vehicle.model();
+        trim = vehicle.trim();
         year = vehicle.year();
     }
 
     public Vehicle toDomain() {
-        return new Vehicle(id, userId, name, make, model, year);
+        return new Vehicle(id, userId, name, make, model, trim, year);
     }
 
     public Long getId() {

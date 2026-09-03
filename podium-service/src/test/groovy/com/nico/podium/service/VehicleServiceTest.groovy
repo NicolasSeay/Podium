@@ -15,10 +15,11 @@ class VehicleServiceTest {
         def vehicles = mock(VehicleRepository)
         when(vehicles.save(any(Vehicle))).thenAnswer { it.arguments[0] }
         def service = new VehicleServiceImpl(vehicles)
-        def vehicle = service.create(1L, [name: 'MX-5', make: 'Mazda'])
+        def vehicle = service.create(1L, [name: 'MX-5', make: 'Mazda', trim: 'ND'])
         when(vehicles.findById(vehicle.id())).thenReturn(Optional.of(vehicle))
-        def updated = service.update(1L, vehicle.id(), [model: 'ND'])
+        def updated = service.update(1L, vehicle.id(), [model: 'ND', trim: 'Club'])
         assertEquals('ND', updated.model())
+        assertEquals('Club', updated.trim())
         verify(vehicles, times(2)).save(any(Vehicle))
     }
 }

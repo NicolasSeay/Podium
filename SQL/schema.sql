@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS vehicles (
     name         VARCHAR(255),
     make         VARCHAR(255),
     model        VARCHAR(255),
+    trim         VARCHAR(255),
     vehicle_year INT,
     PRIMARY KEY (id),
     KEY idx_vehicles_user_id (user_id),

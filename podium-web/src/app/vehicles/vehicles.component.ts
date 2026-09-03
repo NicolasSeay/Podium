@@ -21,6 +21,7 @@ export class VehiclesComponent {
     name: ['', [Validators.required, Validators.maxLength(100)]],
     make: [''],
     model: [''],
+    trim: [''],
     year: [null as number | null, [Validators.min(1886), Validators.max(2100)]],
   });
 
@@ -34,12 +35,13 @@ export class VehiclesComponent {
       return;
     }
 
-    const { name, make, model, year } = this.form.getRawValue();
+    const { name, make, model, trim, year } = this.form.getRawValue();
     this.store.dispatch(
       vehicleCreateRequested({
         name: name.trim(),
         make: make.trim() || null,
         model: model.trim() || null,
+        trim: trim.trim() || null,
         year,
       }),
     );
