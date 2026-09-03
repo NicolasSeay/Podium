@@ -103,7 +103,11 @@ public class TrackDayServiceImpl implements TrackDayService {
         List<Session> savedSessions = new ArrayList<>();
         Map<Long, List<Lap>> savedLaps = new LinkedHashMap<>();
         for (SessionRequest sessionRequest : request.sessions() == null ? List.<SessionRequest>of() : request.sessions()) {
-            Session session = sessions.save(new Session(null, day.id(), sessionRequest.name() == null ? "Session" : sessionRequest.name(), sessionRequest.notes()));
+            LocalDate sessionDate = sessionRequest.sessionDate() == null ? start : sessionRequest.sessionDate();
+            if (sessionDate.isBefore(start) || sessionDate.isAfter(end)) {
+                throw error(HttpStatus.BAD_REQUEST, "sessionDate must be within the track day range");
+            }
+            Session session = sessions.save(new Session(null, day.id(), sessionRequest.name() == null ? "Session" : sessionRequest.name(), sessionRequest.notes(), sessionDate));
             savedSessions.add(session);
             List<Lap> sessionLaps = new ArrayList<>();
             for (LapRequest lapRequest : sessionRequest.laps() == null ? List.<LapRequest>of() : sessionRequest.laps()) {

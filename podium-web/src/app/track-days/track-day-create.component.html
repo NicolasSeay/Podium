@@ -70,75 +70,97 @@
       <section class="panel wizard-panel">
         <span class="eyebrow">Step 2 of 3</span>
         <h2>Sessions and laps</h2>
-        <p class="muted">
-          Add every session and its lap times. You can leave a session without laps and fill it in
-          later.
-        </p>
-        <form class="add-session" [formGroup]="sessionForm" (ngSubmit)="addSession()">
-          <input
-            type="text"
-            formControlName="name"
-            placeholder="Session name, e.g. Open practice"
-            aria-label="Session name"
-          /><input
-            type="text"
-            formControlName="notes"
-            placeholder="Notes (optional)"
-            aria-label="Session notes"
-          /><button class="outline-button" type="submit">+ Add session</button>
-        </form>
-        @if (!sessions().length) {
-          <p class="empty-state">No sessions added yet.</p>
-        }
-        @for (session of sessions(); track $index; let sessionIndex = $index) {
-          <article class="draft-session">
-            <div class="session-title">
+        <p class="muted">Add as many sessions and lap times as you need for each day.</p>
+        @for (day of days(); track day.date; let dayIndex = $index) {
+          <section class="event-day" [attr.aria-labelledby]="'event-day-' + day.date">
+            <div class="day-heading">
               <div>
-                <h3>{{ session.name }}</h3>
-                <span>{{ session.notes || 'No session notes' }}</span>
+                <span class="eyebrow">Day {{ dayIndex + 1 }}</span>
+                <h3 [id]="'event-day-' + day.date">{{ dayLabel(day.date) }}</h3>
               </div>
-              <button
-                type="button"
-                class="delete-button"
-                (click)="removeSession(sessionIndex)"
-                aria-label="Remove {{ session.name }}"
-              >
-                ×
-              </button>
+              <span class="muted">{{ day.sessions.length }} session slots</span>
             </div>
-            <div class="draft-laps">
-              @for (lap of session.laps; track $index; let lapIndex = $index) {
-                <div>
-                  <span>Lap {{ lap.lapNumber }}</span
-                  ><strong>{{ lap.displayTime }}</strong
-                  ><button
+            <button
+              class="outline-button add-session-button"
+              type="button"
+              (click)="addSession(day.date)"
+            >
+              + Add session slot
+            </button>
+            @if (!day.sessions.length) {
+              <p class="empty-state">No session slots added for this day yet.</p>
+            }
+            @for (session of day.sessions; track $index; let sessionIndex = $index) {
+              <article class="draft-session">
+                <div class="session-title">
+                  <div>
+                    <input
+                      type="text"
+                      [value]="session.name"
+                      (input)="
+                        updateSession(dayIndex, sessionIndex, 'name', $any($event.target).value)
+                      "
+                      placeholder="Session name, e.g. Open practice"
+                      aria-label="Session name"
+                    />
+                    <input
+                      type="text"
+                      [value]="session.notes || ''"
+                      (input)="
+                        updateSession(dayIndex, sessionIndex, 'notes', $any($event.target).value)
+                      "
+                      placeholder="Notes (optional)"
+                      aria-label="Session notes"
+                    />
+                  </div>
+                  <button
                     type="button"
                     class="delete-button"
-                    (click)="removeLap(sessionIndex, lapIndex)"
-                    aria-label="Remove lap"
+                    (click)="removeSession(dayIndex, sessionIndex)"
+                    aria-label="Remove session slot"
                   >
                     ×
                   </button>
                 </div>
-              }
-              @if (!session.laps.length) {
-                <span class="muted">No laps added yet.</span>
-              }
-            </div>
-            <form class="add-lap" [formGroup]="lapForm" (ngSubmit)="addLap(sessionIndex)">
-              <input
-                type="number"
-                formControlName="lapNumber"
-                min="1"
-                aria-label="Lap number"
-              /><input
-                type="text"
-                formControlName="time"
-                placeholder="Lap time, e.g. 1:42.350"
-                aria-label="Lap time"
-              /><button class="outline-button" type="submit">+ Add lap</button>
-            </form>
-          </article>
+                <div class="draft-laps">
+                  @for (lap of session.laps; track $index; let lapIndex = $index) {
+                    <div>
+                      <span>Lap {{ lap.lapNumber }}</span
+                      ><strong>{{ lap.displayTime }}</strong
+                      ><button
+                        type="button"
+                        class="delete-button"
+                        (click)="removeLap(dayIndex, sessionIndex, lapIndex)"
+                        aria-label="Remove lap"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  }
+                  @if (!session.laps.length) {
+                    <span class="muted">No laps added yet.</span>
+                  }
+                </div>
+                <form
+                  class="add-lap"
+                  [formGroup]="lapForm"
+                  (ngSubmit)="addLap(dayIndex, sessionIndex)"
+                >
+                  <input
+                    type="number"
+                    formControlName="lapNumber"
+                    min="1"
+                    aria-label="Lap number"
+                  /><input
+                    type="text"
+                    formControlName="time"
+                    placeholder="Lap time, e.g. 1:42.350"
+                    aria-label="Lap time"
+                  /><button class="outline-button" type="submit">+ Add lap</button>
+                </form>
+              </article>
+            }
+          </section>
         }
         <div class="wizard-actions">
           <button class="ghost-button" type="button" (click)="previousStep()">← Back</button
@@ -167,7 +189,11 @@
           <div>
             <dt>Dates</dt>
             <dd>
-              {{ eventForm.controls.startDate.value }} to {{ eventForm.controls.endDate.value }}
+              @if (eventForm.controls.startDate.value === eventForm.controls.endDate.value) {
+                {{ eventForm.controls.startDate.value }}
+              } @else {
+                {{ eventForm.controls.startDate.value }} to {{ eventForm.controls.endDate.value }}
+              }
             </dd>
           </div>
           <div>
@@ -177,15 +203,32 @@
                 vehicles().find((vehicle) => vehicle.id === eventForm.controls.vehicleId.value)
                   ?.name ||
                   'No
-                    vehicle selected'
+          vehicle selected'
               }}
             </dd>
           </div>
           <div>
             <dt>Sessions</dt>
             <dd>
-              {{ sessions().length }} ·
-              {{ sessions().reduce((total, session) => total + session.laps.length, 0) }} laps
+              {{
+                days().reduce(
+                  (total, day) =>
+                    total + day.sessions.filter((session) => session.name.trim()).length,
+                  0
+                )
+              }}
+              ·
+              {{
+                days().reduce(
+                  (total, day) =>
+                    total +
+                    day.sessions
+                      .filter((session) => session.name.trim())
+                      .reduce((dayTotal, session) => dayTotal + session.laps.length, 0),
+                  0
+                )
+              }}
+              laps
             </dd>
           </div>
         </dl>

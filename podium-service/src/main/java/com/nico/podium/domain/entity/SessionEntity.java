@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "sessions")
 @Getter
@@ -17,16 +19,18 @@ public class SessionEntity {
     private Long trackDayId;
     private String name;
     private String notes;
+    private LocalDate sessionDate;
 
     public SessionEntity(Session session) {
         id = session.id();
         trackDayId = session.trackDayId();
         name = session.name();
         notes = session.notes();
+        sessionDate = session.sessionDate();
     }
 
     public Session toDomain() {
-        return new Session(id, trackDayId, name, notes);
+        return new Session(id, trackDayId, name, notes, sessionDate);
     }
 
 }
