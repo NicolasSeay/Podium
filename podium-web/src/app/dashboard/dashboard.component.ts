@@ -9,19 +9,25 @@ import {
 import { Store } from '@ngrx/store';
 import { authFeature } from '../auth.store';
 import { MetricCardComponent } from './metric-card/metric-card.component';
-import { RecentDaysComponent } from './recent-days/recent-days.component';
-import { dashboardFeature, dashboardLoadRequested, PersonalRecord } from './dashboard.store';
+import {
+  AnalyticsLap,
+  AnalyticsSession,
+  dashboardFeature,
+  dashboardLoadRequested,
+  PersonalRecord,
+} from './dashboard.store';
 import { trackDaysFeature, trackDaysLoadRequested } from '../track-days/track-days.store';
 
 @Component({
   selector: 'app-dashboard',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MetricCardComponent, RecentDaysComponent],
+  imports: [MetricCardComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
   private readonly store = inject(Store);
+  protected readonly math = Math;
 
   protected readonly dashboard = this.store.selectSignal(dashboardFeature.selectData);
   protected readonly loading = this.store.selectSignal(dashboardFeature.selectLoading);
@@ -50,6 +56,38 @@ export class DashboardComponent {
   protected readonly seatTime = computed(() =>
     this.formatDuration(this.dashboard()?.totalLapTimeMillis ?? 0),
   );
+  protected readonly analyticsSessions = computed(() => this.dashboard()?.analyticsSessions ?? []);
+  protected readonly selectedSessionId = signal<number | null>(null);
+  protected readonly sessionRows = computed(() =>
+    this.analyticsSessions().map((session) => this.sessionSummary(session)),
+  );
+  protected readonly selectedSession = computed(
+    () =>
+      this.sessionRows().find((session) => session.sessionId === this.selectedSessionId()) ??
+      this.sessionRows()[0] ??
+      null,
+  );
+  protected readonly progression = computed(() =>
+    this.sessionRows()
+      .slice()
+      .sort((left, right) => left.date.localeCompare(right.date)),
+  );
+  protected readonly lapTrace = computed(() => this.selectedSession()?.laps ?? []);
+  protected readonly histogram = computed(() => {
+    const laps = this.lapTrace();
+    if (!laps.length) return [];
+    const minimum = Math.min(...laps.map((lap) => lap.timeMillis));
+    const maximum = Math.max(...laps.map((lap) => lap.timeMillis));
+    const bucketSize = Math.max(1000, Math.ceil((maximum - minimum || 1000) / 5 / 1000) * 1000);
+    return Array.from({ length: 5 }, (_, index) => {
+      const start = minimum + index * bucketSize;
+      return {
+        label: this.formatLapTime(start),
+        count: laps.filter((lap) => lap.timeMillis >= start && lap.timeMillis < start + bucketSize)
+          .length,
+      };
+    });
+  });
 
   constructor() {
     this.store.dispatch(trackDaysLoadRequested());
@@ -88,7 +126,52 @@ export class DashboardComponent {
     this.store.dispatch(dashboardLoadRequested());
   }
 
-  private formatLapTime(timeMillis: number): string {
+  protected selectSession(sessionId: number): void {
+    this.selectedSessionId.set(sessionId);
+  }
+
+  protected sessionSummary(session: AnalyticsSession): SessionSummary {
+    const laps = session.laps.slice().sort((left, right) => left.lapNumber - right.lapNumber);
+    const times = laps.map((lap) => lap.timeMillis);
+    const average = times.reduce((sum, time) => sum + time, 0) / times.length;
+    const sorted = times.slice().sort((left, right) => left - right);
+    const midpoint = Math.floor(sorted.length / 2);
+    const median =
+      sorted.length % 2 ? sorted[midpoint] : (sorted[midpoint - 1] + sorted[midpoint]) / 2;
+    const deviation = Math.sqrt(
+      times.reduce((sum, time) => sum + (time - average) ** 2, 0) / times.length,
+    );
+    return {
+      sessionId: session.sessionId,
+      date: session.trackDayDate,
+      name: session.sessionName,
+      vehicleId: session.vehicleId,
+      laps,
+      best: Math.min(...times),
+      average,
+      median,
+      deviation,
+      spread: Math.max(...times) - Math.min(...times),
+    };
+  }
+
+  protected chartY(value: number, minimum: number, maximum: number, height = 180): number {
+    return 12 + ((value - minimum) / Math.max(maximum - minimum, 1)) * (height - 24);
+  }
+
+  protected chartX(index: number, count: number, width = 640): number {
+    return count <= 1 ? width / 2 : 24 + (index / (count - 1)) * (width - 48);
+  }
+
+  protected maxTime(values: number[]): number {
+    return Math.max(...values, 1);
+  }
+
+  protected minTime(values: number[]): number {
+    return Math.min(...values, 0);
+  }
+
+  protected formatLapTime(timeMillis: number): string {
     const minutes = Math.floor(timeMillis / 60000);
     const seconds = ((timeMillis % 60000) / 1000).toFixed(3).padStart(6, '0');
     return `${minutes}:${seconds}`;
@@ -98,4 +181,17 @@ export class DashboardComponent {
     const totalMinutes = Math.floor(timeMillis / 60000);
     return `${Math.floor(totalMinutes / 60)}h ${totalMinutes % 60}m`;
   }
+}
+
+export interface SessionSummary {
+  sessionId: number;
+  date: string;
+  name: string;
+  vehicleId: number | null;
+  laps: AnalyticsLap[];
+  best: number;
+  average: number;
+  median: number;
+  deviation: number;
+  spread: number;
 }
