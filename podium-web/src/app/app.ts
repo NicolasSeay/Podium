@@ -13,13 +13,12 @@ import {
 } from './dashboard/dashboard.store';
 import { MetricCardComponent } from './dashboard/metric-card/metric-card.component';
 import { RecentDaysComponent } from './dashboard/recent-days/recent-days.component';
-import { TracksComponent } from './tracks/tracks.component';
 import { VehiclesComponent } from './vehicles/vehicles.component';
 
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MetricCardComponent, RecentDaysComponent, TracksComponent, VehiclesComponent],
+  imports: [MetricCardComponent, RecentDaysComponent, VehiclesComponent],
   styleUrl: './app.scss',
   templateUrl: './app.html',
 })
@@ -57,7 +56,6 @@ export class App {
     'Track Days',
     'Sessions',
     'Analytics',
-    'Tracks',
     'Vehicles',
     'Records',
     'Goals',
@@ -68,13 +66,12 @@ export class App {
     'Track Days': 'track-days',
     Sessions: 'sessions',
     Analytics: 'analytics',
-    Tracks: 'tracks',
     Vehicles: 'vehicles',
     Records: 'records',
     Goals: 'goals',
     Settings: 'settings',
   };
-  protected readonly implementedNavigation = new Set(['Dashboard', 'Tracks', 'Vehicles']);
+  protected readonly implementedNavigation = new Set(['Dashboard', 'Vehicles']);
   constructor() {
     this.store.dispatch(setActiveNav(this.navigationLabelForUrl(this.router.url)));
     this.store.dispatch(dashboardLoadRequested());
