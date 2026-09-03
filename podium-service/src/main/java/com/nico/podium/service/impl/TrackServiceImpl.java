@@ -1,8 +1,6 @@
 package com.nico.podium.service.impl;
 
 import com.nico.podium.domain.PodiumModels.Track;
-import com.nico.podium.domain.PodiumModels.TrackConfiguration;
-import com.nico.podium.domain.PodiumModels.TrackConfigurationRequest;
 import com.nico.podium.domain.PodiumModels.TrackRequest;
 import com.nico.podium.repository.TrackRepository;
 import com.nico.podium.service.TrackService;
@@ -47,16 +45,4 @@ public class TrackServiceImpl implements TrackService {
         tracks.deleteById(id);
     }
 
-    public List<TrackConfiguration> configurations(Long userId, Long trackId) {
-        get(userId, trackId);
-        return tracks.findConfigurations(trackId);
-    }
-
-    public TrackConfiguration createConfiguration(Long userId, Long trackId, TrackConfigurationRequest request) {
-        get(userId, trackId);
-        if (request.name() == null || request.name().isBlank()) {
-            throw error(HttpStatus.BAD_REQUEST, "name is required");
-        }
-        return tracks.saveConfiguration(new TrackConfiguration(null, trackId, request.name(), request.lengthMeters()));
-    }
 }

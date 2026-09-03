@@ -20,22 +20,18 @@ class TrackControllerTest {
     private final mvc = MockMvcBuilders.standaloneSetup(new TrackController(tracks)).addFilters(new TokenAuthenticationFilter(auth)).build()
 
     @Test
-    void exposesTrackAndConfigurationEndpoints() {
+    void exposesTrackEndpoints() {
         when(auth.currentUser(any(), any())).thenReturn(new User(1L, 'driver@example.com', 'secret', 'Driver', 'Example'))
         def track = new Track(1L, 'Road Atlanta', 'Braselton', 'United States', 2.54G)
         when(tracks.list(anyLong())).thenReturn([])
         when(tracks.get(anyLong(), eq(1L))).thenReturn(track)
-        when(tracks.configurations(anyLong(), eq(1L))).thenReturn([])
         when(tracks.create(anyLong(), any())).thenReturn(track)
         when(tracks.update(anyLong(), eq(1L), any())).thenReturn(track)
-        when(tracks.createConfiguration(anyLong(), eq(1L), any())).thenReturn(new TrackConfiguration(1L, 1L, 'Full', 4088))
 
         mvc.perform(get('/api/tracks').header('X-User-Id', '1')).andExpect(status().isOk())
         mvc.perform(post('/api/tracks').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"name":"Road Atlanta"}')).andExpect(status().isOk())
         mvc.perform(get('/api/tracks/1').header('X-User-Id', '1')).andExpect(status().isOk())
         mvc.perform(patch('/api/tracks/1').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"city":"Braselton"}')).andExpect(status().isOk())
         mvc.perform(delete('/api/tracks/1').header('X-User-Id', '1')).andExpect(status().isNoContent())
-        mvc.perform(get('/api/tracks/1/configurations').header('X-User-Id', '1')).andExpect(status().isOk())
-        mvc.perform(post('/api/tracks/1/configurations').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"name":"Full"}')).andExpect(status().isOk())
     }
 }

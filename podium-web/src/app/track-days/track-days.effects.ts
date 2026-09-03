@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, forkJoin, map, of, switchMap } from 'rxjs';
+import { catchError, forkJoin, from, map, of, switchMap } from 'rxjs';
 import { TrackDaysApiService } from './track-days-api.service';
 import {
   lapCreateRequested,
@@ -89,6 +89,24 @@ export class TrackDaysEffects {
             of(trackDaysRequestFailed('Session saved, but laps could not be loaded')),
           ),
         ),
+      ),
+    ),
+  );
+
+  readonly loadLapsForSessions$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(sessionsLoaded),
+      switchMap(({ sessions }) =>
+        forkJoin(
+          sessions.map((session) =>
+            this.api.laps(session.id).pipe(
+              map((laps) => lapsLoaded(session.id, laps)),
+              catchError(() =>
+                of(trackDaysRequestFailed('Sessions loaded, but laps could not be loaded')),
+              ),
+            ),
+          ),
+        ).pipe(switchMap((actions) => from(actions))),
       ),
     ),
   );

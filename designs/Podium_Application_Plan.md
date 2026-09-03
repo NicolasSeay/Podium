@@ -8,7 +8,7 @@
 -   **Sessions** --- Session summaries, lap entry, notes, conditions
 -   **Lap Times / Analytics** --- Progression, averages, consistency,
     distributions, comparisons
--   **Tracks** --- Track/configuration profiles and personal history
+-   **Tracks** --- Track profiles and personal history
 -   **Vehicles** --- Cars, performance history, modifications
 -   **Records** --- Overall, track, and vehicle personal bests
 -   **Goals** --- Lap-time and participation goals with progress
@@ -21,7 +21,6 @@ User
 ├── Vehicle
 │   └── Modification
 ├── Track
-│   └── TrackConfiguration
 └── TrackDay
     ├── Conditions
     └── Session

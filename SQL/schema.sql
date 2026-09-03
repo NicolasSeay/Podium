@@ -23,17 +23,6 @@ CREATE TABLE IF NOT EXISTS tracks (
     PRIMARY KEY (id)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS track_configurations (
-    id            BIGINT NOT NULL AUTO_INCREMENT,
-    track_id      BIGINT NOT NULL,
-    name          VARCHAR(255),
-    length_meters INT,
-    PRIMARY KEY (id),
-    KEY idx_track_configurations_track_id (track_id),
-    CONSTRAINT fk_track_configurations_track
-        FOREIGN KEY (track_id) REFERENCES tracks (id)
-) ENGINE = InnoDB;
-
 CREATE TABLE IF NOT EXISTS vehicles (
     id           BIGINT NOT NULL AUTO_INCREMENT,
     user_id      BIGINT NOT NULL,

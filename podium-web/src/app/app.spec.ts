@@ -104,12 +104,10 @@ describe('App', () => {
       fixture.nativeElement.querySelectorAll('button.nav-item'),
     ) as HTMLButtonElement[];
     const incompleteButtons = buttons.filter((button) =>
-      ['Sessions', 'Analytics', 'Records', 'Goals', 'Settings'].some((item) =>
-        button.textContent?.includes(item),
-      ),
+      ['Analytics', 'Settings'].some((item) => button.textContent?.includes(item)),
     );
 
-    expect(incompleteButtons).toHaveLength(5);
+    expect(incompleteButtons).toHaveLength(2);
     expect(incompleteButtons.every((button) => button.disabled)).toBe(true);
   });
 });
@@ -145,7 +143,7 @@ describe('App vehicle flow', () => {
     fixture.detectChanges();
 
     (
-      fixture.nativeElement.querySelector('button.nav-item:nth-of-type(5)') as HTMLButtonElement
+      fixture.nativeElement.querySelector('button.nav-item:nth-of-type(4)') as HTMLButtonElement
     ).click();
     fixture.detectChanges();
     http.expectOne('/api/vehicles').flush([]);

@@ -10,13 +10,7 @@ import { Store } from '@ngrx/store';
 import { authFeature } from '../auth.store';
 import { MetricCardComponent } from './metric-card/metric-card.component';
 import { RecentDaysComponent } from './recent-days/recent-days.component';
-import {
-  DashboardRange,
-  dashboardFeature,
-  dashboardLoadRequested,
-  PersonalRecord,
-  setRange,
-} from './dashboard.store';
+import { dashboardFeature, dashboardLoadRequested, PersonalRecord } from './dashboard.store';
 import { trackDaysFeature, trackDaysLoadRequested } from '../track-days/track-days.store';
 
 @Component({
@@ -29,7 +23,6 @@ import { trackDaysFeature, trackDaysLoadRequested } from '../track-days/track-da
 export class DashboardComponent {
   private readonly store = inject(Store);
 
-  protected readonly range = this.store.selectSignal(dashboardFeature.selectRange);
   protected readonly dashboard = this.store.selectSignal(dashboardFeature.selectData);
   protected readonly loading = this.store.selectSignal(dashboardFeature.selectLoading);
   protected readonly error = this.store.selectSignal(dashboardFeature.selectError);
@@ -89,10 +82,6 @@ export class DashboardComponent {
     const vehicleId = Number((event.target as HTMLSelectElement).value);
     this.selectedVehicleId.set(vehicleId);
     this.store.dispatch(dashboardLoadRequested(this.selectedTrackId(), vehicleId));
-  }
-
-  protected changeRange(event: Event): void {
-    this.store.dispatch(setRange((event.target as HTMLSelectElement).value as DashboardRange));
   }
 
   protected retry(): void {

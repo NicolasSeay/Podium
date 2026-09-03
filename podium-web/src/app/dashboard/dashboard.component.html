@@ -33,16 +33,6 @@
         <option [value]="vehicle.id">{{ vehicle.name }}</option>
       }
     </select>
-    <select
-      class="range-select"
-      [value]="range()"
-      (change)="changeRange($event)"
-      aria-label="Dashboard time range"
-    >
-      <option>Last 12 Months</option>
-      <option>Last 6 Months</option>
-      <option>This Year</option>
-    </select>
   </div>
 </div>
 <div class="metrics-grid">

@@ -33,12 +33,6 @@ public final class PodiumModels {
     public record TrackRequest(String name, String city, String country, BigDecimal lengthMiles) {
     }
 
-    public record TrackConfiguration(Long id, Long trackId, String name, Integer lengthMeters) {
-    }
-
-    public record TrackConfigurationRequest(String name, Integer lengthMeters) {
-    }
-
     public record Vehicle(Long id, Long userId, String name, String make, String model, String trim, Integer year) {
     }
 
@@ -72,9 +66,6 @@ public final class PodiumModels {
     }
 
     public record SessionDetailsResponse(Session session, List<Lap> laps) {
-    }
-
-    public record TrackDetailsResponse(Track track, List<TrackConfiguration> configurations) {
     }
 
     public record TrackDayDetailsResponse(TrackDay trackDay, List<Session> sessions) {
