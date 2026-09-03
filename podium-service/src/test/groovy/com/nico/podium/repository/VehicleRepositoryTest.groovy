@@ -16,7 +16,7 @@ class VehicleRepositoryTest {
     @Test
     void managesVehiclesByOwner() {
         def repository = new VehicleRepositoryImpl(vehicles)
-        def vehicle = repository.save(new Vehicle(null, 1L, 'MX-5', 'Mazda', 'ND', 2020))
+        def vehicle = repository.save(new Vehicle(null, 1L, 'MX-5', 'Mazda', 'MX-5', 'ND', 2020))
         assertEquals(vehicle, repository.findById(1L).orElseThrow())
         assertEquals([vehicle], repository.findByUserId(1L))
         repository.deleteById(vehicle.id())

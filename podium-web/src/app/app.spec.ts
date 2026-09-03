@@ -172,6 +172,7 @@ describe('App vehicle flow', () => {
       name: 'Sunday Driver',
       make: 'Mazda',
       model: 'MX-5 Miata',
+      trim: null,
       year: 2020,
     });
     request.flush({
@@ -180,6 +181,7 @@ describe('App vehicle flow', () => {
       name: 'Sunday Driver',
       make: 'Mazda',
       model: 'MX-5 Miata',
+      trim: null,
       year: 2020,
     });
     fixture.detectChanges();

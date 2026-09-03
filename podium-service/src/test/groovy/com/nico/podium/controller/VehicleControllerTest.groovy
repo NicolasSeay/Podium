@@ -19,7 +19,7 @@ class VehicleControllerTest {
     @Test
     void exposesVehicleCrudEndpoints() {
         when(auth.currentUser(any(), any())).thenReturn(new User(1L, 'driver@example.com', 'secret', 'Driver', 'Example'))
-        def vehicle = new Vehicle(1L, 1L, 'MX-5', 'Mazda', 'MX-5', 2020)
+        def vehicle = new Vehicle(1L, 1L, 'MX-5', 'Mazda', 'MX-5', 'ND', 2020)
         when(vehicles.list(anyLong())).thenReturn([])
         when(vehicles.get(anyLong(), eq(1L))).thenReturn(vehicle)
         when(vehicles.create(anyLong(), anyMap())).thenReturn(vehicle)
