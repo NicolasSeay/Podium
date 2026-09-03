@@ -1,15 +1,15 @@
 package com.nico.podium.domain.entity;
 
 import com.nico.podium.domain.PodiumModels.Vehicle;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "vehicles")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class VehicleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +21,6 @@ public class VehicleEntity {
     private String trim;
     @Column(name = "vehicle_year")
     private Integer year;
-
-    protected VehicleEntity() {
-    }
 
     public VehicleEntity(Vehicle vehicle) {
         id = vehicle.id();
@@ -39,11 +36,4 @@ public class VehicleEntity {
         return new Vehicle(id, userId, name, make, model, trim, year);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
 }

@@ -1,12 +1,13 @@
 package com.nico.podium.service
 
 import com.nico.podium.domain.PodiumModels.*
-import com.nico.podium.repository.*
+import com.nico.podium.repository.PersonalRecordRepository
+import com.nico.podium.repository.SessionRepository
+import com.nico.podium.repository.TrackDayRepository
 import com.nico.podium.service.impl.PersonalRecordServiceImpl
 import org.junit.jupiter.api.Test
 
-import static org.junit.jupiter.api.Assertions.*
-import static org.mockito.ArgumentMatchers.*
+import static org.mockito.ArgumentMatchers.any
 import static org.mockito.Mockito.*
 
 class PersonalRecordServiceTest {

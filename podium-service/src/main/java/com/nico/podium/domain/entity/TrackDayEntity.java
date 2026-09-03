@@ -1,15 +1,17 @@
 package com.nico.podium.domain.entity;
 
 import com.nico.podium.domain.PodiumModels.TrackDay;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "track_days")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TrackDayEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +23,6 @@ public class TrackDayEntity {
     private LocalDate endDate;
     private String notes;
     private String conditions;
-
-    protected TrackDayEntity() {
-    }
 
     public TrackDayEntity(TrackDay day) {
         id = day.id();
@@ -40,11 +39,4 @@ public class TrackDayEntity {
         return new TrackDay(id, userId, trackId, vehicleId, startDate, endDate, notes, conditions);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
 }

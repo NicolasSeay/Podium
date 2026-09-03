@@ -5,8 +5,8 @@ import com.nico.podium.repository.TrackDayRepository
 import com.nico.podium.service.impl.TrackDayServiceImpl
 import org.junit.jupiter.api.Test
 
-import static org.junit.jupiter.api.Assertions.*
-import static org.mockito.ArgumentMatchers.*
+import static org.junit.jupiter.api.Assertions.assertEquals
+import static org.mockito.ArgumentMatchers.any
 import static org.mockito.Mockito.*
 
 class TrackDayServiceTest {
@@ -20,7 +20,7 @@ class TrackDayServiceTest {
         when(tracks.get(1L, 1L)).thenReturn(track)
         when(vehicles.get(1L, 1L)).thenReturn(vehicle)
         when(days.save(any(TrackDay))).thenAnswer { it.arguments[0] }
-        def day = new TrackDayServiceImpl(days, tracks, vehicles).create(1L, [trackId: 1L, vehicleId: 1L])
+        def day = new TrackDayServiceImpl(days, tracks, vehicles).create(1L, new TrackDayRequest(1L, 1L, null, null, null, null, null))
         assertEquals(1L, day.trackId())
         verify(tracks).get(1L, 1L)
         verify(vehicles).get(1L, 1L)

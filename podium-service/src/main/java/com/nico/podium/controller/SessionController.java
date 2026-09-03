@@ -1,10 +1,48 @@
 package com.nico.podium.controller;
-import com.nico.podium.domain.PodiumModels.*; import com.nico.podium.service.*; import org.springframework.http.HttpStatus; import org.springframework.web.bind.annotation.*; import java.util.List; import java.util.Map;
-@RestController @RequestMapping("/api/sessions") public class SessionController extends ControllerSupport {
- private final SessionService sessions; private final LapService laps; public SessionController(AuthService auth,SessionService sessions,LapService laps){super(auth);this.sessions=sessions;this.laps=laps;}
- @GetMapping("/{id}") public Map<String,Object> get(@PathVariable Long id,@RequestHeader(value="Authorization",required=false)String a,@RequestHeader(value="X-User-Id",required=false)String h){Long u=userId(a,h);return Map.of("session",sessions.get(u,id),"laps",laps.list(u,id));}
- @PatchMapping("/{id}") public Session update(@PathVariable Long id,@RequestHeader(value="Authorization",required=false)String a,@RequestHeader(value="X-User-Id",required=false)String h,@RequestBody Map<String,Object>b){return sessions.update(userId(a,h),id,b);}
- @DeleteMapping("/{id}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable Long id,@RequestHeader(value="Authorization",required=false)String a,@RequestHeader(value="X-User-Id",required=false)String h){sessions.delete(userId(a,h),id);}
- @GetMapping("/{id}/laps") public List<Lap> listLaps(@PathVariable Long id,@RequestHeader(value="Authorization",required=false)String a,@RequestHeader(value="X-User-Id",required=false)String h){return laps.list(userId(a,h),id);}
- @PostMapping("/{id}/laps") public Lap createLap(@PathVariable Long id,@RequestHeader(value="Authorization",required=false)String a,@RequestHeader(value="X-User-Id",required=false)String h,@RequestBody Map<String,Object>b){return laps.create(userId(a,h),id,b);}
+
+import com.nico.podium.domain.PodiumModels.*;
+import com.nico.podium.service.LapService;
+import com.nico.podium.service.SessionService;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/sessions")
+public class SessionController extends ControllerSupport {
+    private final SessionService sessions;
+    private final LapService laps;
+
+    public SessionController(SessionService sessions, LapService laps) {
+        this.sessions = sessions;
+        this.laps = laps;
+    }
+
+    @GetMapping("/{id}")
+    public SessionDetailsResponse get(@PathVariable Long id) {
+        Long userId = userId();
+        return new SessionDetailsResponse(sessions.get(userId, id), laps.list(userId, id));
+    }
+
+    @PatchMapping("/{id}")
+    public Session update(@PathVariable Long id, @RequestBody SessionRequest request) {
+        return sessions.update(userId(), id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        sessions.delete(userId(), id);
+    }
+
+    @GetMapping("/{id}/laps")
+    public List<Lap> listLaps(@PathVariable Long id) {
+        return laps.list(userId(), id);
+    }
+
+    @PostMapping("/{id}/laps")
+    public Lap createLap(@PathVariable Long id, @RequestBody LapRequest request) {
+        return laps.create(userId(), id, request);
+    }
 }

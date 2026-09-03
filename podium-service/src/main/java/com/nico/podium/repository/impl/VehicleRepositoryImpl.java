@@ -5,6 +5,7 @@ import com.nico.podium.domain.entity.VehicleEntity;
 import com.nico.podium.repository.VehicleRepository;
 import com.nico.podium.repository.jpa.VehicleJpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.Optional;
 

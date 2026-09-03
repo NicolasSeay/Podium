@@ -18,6 +18,9 @@ The Maven build compiles Groovy tests with GMavenPlus. Keep tests compatible wit
 - Name test methods for observable behavior, such as `aggregatesTrackDaySessionAndLapTotals`.
 - Prefer focused unit tests that instantiate the class under test directly.
 - Mock external collaborators with Mockito and stub only interactions needed by the behavior under test.
+- Construct the production records used for structured requests and responses directly in tests; do not reintroduce generic maps for typed payloads.
+- Use descriptive parameter and local-variable names, including in test fixtures and closures.
+- Always use braces and a multiline body for `if`, `for`, and `while` blocks in test code as well.
 - Verify returned values and meaningful collaborator interactions; avoid testing private implementation details.
 - Include empty, missing, boundary, and authorization-related cases when the production behavior supports them.
 - Use Spring test slices only when HTTP mapping, serialization, or Spring wiring is the behavior under test.

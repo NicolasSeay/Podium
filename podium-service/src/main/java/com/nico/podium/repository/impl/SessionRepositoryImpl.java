@@ -5,6 +5,7 @@ import com.nico.podium.domain.entity.SessionEntity;
 import com.nico.podium.repository.SessionRepository;
 import com.nico.podium.repository.jpa.SessionJpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.Optional;
 

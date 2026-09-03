@@ -1,14 +1,15 @@
 package com.nico.podium.domain.entity;
 
 import com.nico.podium.domain.PodiumModels.PersonalRecord;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "personal_records")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PersonalRecordEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,9 +19,6 @@ public class PersonalRecordEntity {
     private Long trackId;
     private Long vehicleId;
     private Long timeMillis;
-
-    protected PersonalRecordEntity() {
-    }
 
     public PersonalRecordEntity(PersonalRecord record) {
         id = record.id();
@@ -35,11 +33,4 @@ public class PersonalRecordEntity {
         return new PersonalRecord(id, userId, lapId, trackId, vehicleId, timeMillis);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
 }

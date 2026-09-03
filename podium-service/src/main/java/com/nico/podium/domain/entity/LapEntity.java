@@ -1,14 +1,15 @@
 package com.nico.podium.domain.entity;
 
 import com.nico.podium.domain.PodiumModels.Lap;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "laps")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LapEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,9 +17,6 @@ public class LapEntity {
     private Long sessionId;
     private Integer lapNumber;
     private Long timeMillis;
-
-    protected LapEntity() {
-    }
 
     public LapEntity(Lap lap) {
         id = lap.id();
@@ -31,11 +29,4 @@ public class LapEntity {
         return new Lap(id, sessionId, lapNumber, timeMillis);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Long getSessionId() {
-        return sessionId;
-    }
 }

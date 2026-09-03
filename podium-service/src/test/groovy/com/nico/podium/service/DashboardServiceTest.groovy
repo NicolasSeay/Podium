@@ -1,13 +1,16 @@
 package com.nico.podium.service
 
 import com.nico.podium.domain.PodiumModels.*
-import com.nico.podium.repository.*
+import com.nico.podium.repository.LapRepository
+import com.nico.podium.repository.SessionRepository
+import com.nico.podium.repository.TrackDayRepository
 import com.nico.podium.service.impl.DashboardServiceImpl
 import org.junit.jupiter.api.Test
+
 import java.time.LocalDate
 
-import static org.junit.jupiter.api.Assertions.*
-import static org.mockito.ArgumentMatchers.*
+import static org.junit.jupiter.api.Assertions.assertEquals
+import static org.junit.jupiter.api.Assertions.assertTrue
 import static org.mockito.Mockito.*
 
 class DashboardServiceTest {
@@ -73,14 +76,14 @@ class DashboardServiceTest {
         def laps = mock(LapRepository)
         def records = mock(PersonalRecordService)
         when(days.findByUserId(1L)).thenReturn([
-            new TrackDay(1L, 1L, 10L, 20L, LocalDate.of(2026, 8, 24), null, null),
-            new TrackDay(2L, 1L, 11L, 21L, LocalDate.of(2026, 8, 25), null, null),
+                new TrackDay(1L, 1L, 10L, 20L, LocalDate.of(2026, 8, 24), null, null),
+                new TrackDay(2L, 1L, 11L, 21L, LocalDate.of(2026, 8, 25), null, null),
         ])
         when(sessions.findByTrackDayId(1L)).thenReturn([new Session(1L, 1L, 'Open', null)])
         when(laps.findBySessionId(1L)).thenReturn([new Lap(1L, 1L, 1, 95000L)])
         when(records.list(1L)).thenReturn([
-            new PersonalRecord(1L, 1L, 1L, 10L, 20L, 95000L),
-            new PersonalRecord(2L, 1L, 2L, 11L, 21L, 96000L),
+                new PersonalRecord(1L, 1L, 1L, 10L, 20L, 95000L),
+                new PersonalRecord(2L, 1L, 2L, 11L, 21L, 96000L),
         ])
 
         def result = new DashboardServiceImpl(days, sessions, laps, records).get(1L, 10L, 20L)

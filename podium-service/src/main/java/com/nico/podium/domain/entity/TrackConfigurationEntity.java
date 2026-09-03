@@ -1,14 +1,15 @@
 package com.nico.podium.domain.entity;
 
 import com.nico.podium.domain.PodiumModels.TrackConfiguration;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "track_configurations")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TrackConfigurationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,9 +17,6 @@ public class TrackConfigurationEntity {
     private Long trackId;
     private String name;
     private Integer lengthMeters;
-
-    protected TrackConfigurationEntity() {
-    }
 
     public TrackConfigurationEntity(TrackConfiguration configuration) {
         id = configuration.id();
@@ -31,11 +29,4 @@ public class TrackConfigurationEntity {
         return new TrackConfiguration(id, trackId, name, lengthMeters);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Long getTrackId() {
-        return trackId;
-    }
 }

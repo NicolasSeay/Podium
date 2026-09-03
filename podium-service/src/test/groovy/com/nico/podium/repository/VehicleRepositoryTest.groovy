@@ -1,17 +1,19 @@
 package com.nico.podium.repository
 
 import com.nico.podium.domain.PodiumModels.Vehicle
-import com.nico.podium.repository.impl.*
+import com.nico.podium.repository.impl.VehicleRepositoryImpl
 import com.nico.podium.repository.jpa.VehicleJpaRepository
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.junit.jupiter.api.Test
 
-import static org.junit.jupiter.api.Assertions.*
+import static org.junit.jupiter.api.Assertions.assertEquals
+import static org.junit.jupiter.api.Assertions.assertTrue
 
 @SpringBootTest
 class VehicleRepositoryTest {
-    @Autowired VehicleJpaRepository vehicles
+    @Autowired
+    VehicleJpaRepository vehicles
 
     @Test
     void managesVehiclesByOwner() {

@@ -1,17 +1,18 @@
 package com.nico.podium.repository
 
 import com.nico.podium.domain.PodiumModels.User
-import com.nico.podium.repository.impl.*
+import com.nico.podium.repository.impl.UserRepositoryImpl
 import com.nico.podium.repository.jpa.UserJpaRepository
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.junit.jupiter.api.Test
 
-import static org.junit.jupiter.api.Assertions.*
+import static org.junit.jupiter.api.Assertions.assertEquals
 
 @SpringBootTest
 class UserRepositoryTest {
-    @Autowired UserJpaRepository users
+    @Autowired
+    UserJpaRepository users
 
     @Test
     void savesAndFindsUsersByIdAndEmail() {

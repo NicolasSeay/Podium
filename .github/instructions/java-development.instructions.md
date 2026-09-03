@@ -50,10 +50,15 @@ public class TrackController extends ControllerSupport {
 
 - Use four spaces for indentation, braces, and explicit types consistent with nearby Java files.
 - Put one statement or declaration per line. Format constructors, methods, and lambdas across multiple lines when their signatures or bodies would otherwise be difficult to scan.
+- Use named intermediate values when a constructor call or expression combines multiple fallback, validation, or transformation decisions.
+- Always use braces and a multiline body for `if`, `for`, and `while` blocks, even when the body contains one statement.
 - Prefer `final` fields and immutable return values where practical.
 - Use Java standard-library types already used by the module, such as `List`, `Map`, `LocalDate`, and `Optional` where appropriate.
+- Use immutable records or dedicated custom objects for structured request and response payloads; reserve `Map` for genuinely dynamic key/value data or lookup collections.
+- Never use single-letter parameter or local-variable names; choose names that describe the domain value.
+- Use imports for referenced classes; do not use fully qualified class names inline in method signatures or implementations.
 - Keep methods small and make business rules explicit.
-- Use Lombok only when it matches an existing module pattern; do not add annotations solely to reduce a small amount of code.
+- Use Lombok for repetitive entity boilerplate such as getters and framework-required constructors when it matches the existing module configuration. Do not use it to obscure business logic or replace domain records.
 - Do not silently change API response keys or domain record shapes.
 
 ## Adding a Feature

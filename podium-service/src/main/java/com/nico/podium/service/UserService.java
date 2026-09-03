@@ -1,9 +1,9 @@
 package com.nico.podium.service;
 
 import com.nico.podium.domain.PodiumModels.User;
+import com.nico.podium.domain.PodiumModels.UserUpdateRequest;
 
-import java.util.Map;
 
 public interface UserService {
-    User update(Long userId, Map<String, Object> body);
+    User update(Long userId, UserUpdateRequest request);
 }

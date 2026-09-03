@@ -1,15 +1,16 @@
 package com.nico.podium.service;
 
+import com.nico.podium.domain.PodiumModels.AuthResponse;
+import com.nico.podium.domain.PodiumModels.LoginRequest;
+import com.nico.podium.domain.PodiumModels.RegisterRequest;
 import com.nico.podium.domain.PodiumModels.User;
 
-import java.util.Map;
-
 public interface AuthService {
-    Map<String, Object> register(String email, String password, String firstName, String lastName);
+    AuthResponse register(RegisterRequest request);
 
-    Map<String, Object> login(String email, String password);
+    AuthResponse login(LoginRequest request);
 
-    Map<String, Object> refresh(String authorization);
+    AuthResponse refresh(String authorization);
 
     void logout(String authorization);
 
