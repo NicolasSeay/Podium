@@ -60,7 +60,10 @@ public final class PodiumModels {
     public record LapRequest(Integer lapNumber, Long timeMillis) {
     }
 
-    public record SessionRequest(String name, String notes, List<LapRequest> laps) {
+    public record SessionRequest(String name, String notes, List<LapRequest> laps, LocalDate sessionDate) {
+        public SessionRequest(String name, String notes, List<LapRequest> laps) {
+            this(name, notes, laps, null);
+        }
     }
 
     public record TrackDayRequest(Long trackId, Long vehicleId, LocalDate startDate,
@@ -82,7 +85,10 @@ public final class PodiumModels {
                                     List<TrackDay> recentTrackDays) {
     }
 
-    public record Session(Long id, Long trackDayId, String name, String notes) {
+    public record Session(Long id, Long trackDayId, String name, String notes, LocalDate sessionDate) {
+        public Session(Long id, Long trackDayId, String name, String notes) {
+            this(id, trackDayId, name, notes, null);
+        }
     }
 
     public record Lap(Long id, Long sessionId, Integer lapNumber, Long timeMillis) {

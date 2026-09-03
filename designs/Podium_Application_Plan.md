@@ -25,6 +25,7 @@ User
 └── TrackDay
     ├── Conditions
     └── Session
+        ├── Session date
         └── Lap
 
 Additional:

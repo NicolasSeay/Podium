@@ -32,6 +32,7 @@ export interface Session {
   trackDayId: number;
   name: string;
   notes: string | null;
+  sessionDate?: string;
 }
 
 export interface Lap {

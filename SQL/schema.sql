@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS sessions (
     track_day_id BIGINT NOT NULL,
     name        VARCHAR(255),
     notes       VARCHAR(255),
+    session_date DATE,
     PRIMARY KEY (id),
     KEY idx_sessions_track_day_id (track_day_id),
     CONSTRAINT fk_sessions_track_day

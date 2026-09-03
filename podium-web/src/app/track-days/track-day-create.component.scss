@@ -82,7 +82,7 @@
 .form-grid input,
 .form-grid select,
 .form-grid textarea,
-.add-session input,
+.session-title input,
 .add-lap input {
   width: 100%;
   border: 1px solid #2b5366;
@@ -113,6 +113,28 @@
   margin: 25px 0 18px;
 }
 
+.event-day {
+  border-top: 1px solid #2b5366;
+  margin-top: 26px;
+  padding-top: 18px;
+}
+
+.day-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.day-heading h3 {
+  color: #dcebf1;
+  font-size: 16px;
+  margin: 5px 0 0;
+}
+
+.add-session-button {
+  margin: 25px 0 0;
+}
+
 .draft-session {
   border-top: 1px solid #1a3441;
   padding: 17px 0;
@@ -122,6 +144,12 @@
   display: flex;
   justify-content: space-between;
   align-items: start;
+}
+
+.session-title > div {
+  display: grid;
+  gap: 8px;
+  flex: 1;
 }
 
 .session-title h3 {

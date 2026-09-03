@@ -46,6 +46,7 @@ export class TrackDaysApiService {
     sessions: {
       name: string;
       notes: string | null;
+      sessionDate: string;
       laps: { lapNumber: number; timeMillis: number }[];
     }[];
   }): Observable<CompletedTrackDay> {

@@ -52,10 +52,7 @@
     <section class="panel detail-panel" aria-labelledby="detail-title">
       <div class="panel-heading">
         <div>
-          <span class="eyebrow"
-            >{{ day.startDate }} to {{ day.endDate || day.startDate }} ·
-            {{ trackName(day.trackId) }}</span
-          >
+          <span class="eyebrow">{{ formatDateRange(day) }} · {{ trackName(day.trackId) }}</span>
           <h3 id="detail-title">Sessions and lap times</h3>
         </div>
         <span class="muted">{{ day.notes || 'No notes for this day' }}</span>

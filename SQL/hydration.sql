@@ -8,30 +8,10 @@ INSERT INTO tracks (name, city, country, length_miles) VALUES ('2K International
 INSERT INTO vehicles (user_id, name, make, model, trim, vehicle_year) VALUES (1, 'Daily Driver', 'Chevrolet', 'Camaro', 'LT1', 2020), (1, 'Track Beast', 'Chevrolet', 'Corvette', 'Stringray', 2026);
 
 -- Add Track Events
-INSERT INTO track_days (user_id, track_id, vehicle_id, start_date, end_date, notes, conditions) SELECT 1, t.id, v.id, '2026-06-14', '2026-06-14', 'First full day in the Track Beast', 'Dry and warm' FROM tracks t JOIN vehicles v ON v.user_id = 1 AND v.name = 'Track Beast' WHERE t.name = 'Podium Club';
-INSERT INTO track_days (user_id, track_id, vehicle_id, start_date, end_date, notes, conditions) SELECT 1, t.id, v.id, '2026-07-19', '2026-07-20', 'Two-day club event', 'Dry with light wind' FROM tracks t JOIN vehicles v ON v.user_id = 1 AND v.name = 'Track Beast' WHERE t.name = 'Podium Club';
-INSERT INTO track_days (user_id, track_id, vehicle_id, start_date, end_date, notes, conditions) SELECT 1, t.id, v.id, '2026-08-16', '2026-08-16', 'Shakedown with the Daily Driver', 'Overcast and dry' FROM tracks t JOIN vehicles v ON v.user_id = 1 AND v.name = 'Daily Driver' WHERE t.name = 'Arizona Motorsports Park - AMP';
+INSERT INTO track_days (user_id, track_id, vehicle_id, start_date, end_date, notes, conditions) VALUES (1, 720, 2, '2026-06-14', '2026-06-14', 'First full day in the Track Beast', 'Dry and warm'), (1, 720, 2, '2026-07-19', '2026-07-20', 'Two-day club event', 'Dry with light wind'), (1, 504, 1, '2026-08-16', '2026-08-16', 'Shakedown with the Daily Driver', 'Overcast and dry');
 
 -- Add Sessions
-INSERT INTO sessions (track_day_id, name, notes) SELECT id, 'Morning practice', 'Learning the line' FROM track_days WHERE user_id = 1 AND start_date = '2026-06-14' AND notes = 'First full day in the Track Beast';
-INSERT INTO sessions (track_day_id, name, notes) SELECT id, 'Afternoon pace', 'Building consistency' FROM track_days WHERE user_id = 1 AND start_date = '2026-06-14' AND notes = 'First full day in the Track Beast';
-INSERT INTO sessions (track_day_id, name, notes) SELECT id, 'Day one', 'Baseline setup' FROM track_days WHERE user_id = 1 AND start_date = '2026-07-19' AND notes = 'Two-day club event';
-INSERT INTO sessions (track_day_id, name, notes) SELECT id, 'Day two', 'Chasing a clean lap' FROM track_days WHERE user_id = 1 AND start_date = '2026-07-19' AND notes = 'Two-day club event';
-INSERT INTO sessions (track_day_id, name, notes) SELECT id, 'Shakedown', 'Street tires' FROM track_days WHERE user_id = 1 AND start_date = '2026-08-16' AND notes = 'Shakedown with the Daily Driver';
+INSERT INTO sessions (track_day_id, name, notes, session_date) VALUES (1, 'Morning practice', 'Learning the line', '2026-06-14'), (1, 'Afternoon pace', 'Building consistency', '2026-06-14'), (2, 'Day one', 'Baseline setup', '2026-07-19'), (2, 'Day two', 'Chasing a clean lap', '2026-07-20'), (3, 'Shakedown', 'Street tires', '2026-08-16');
 
 -- Add Laps
-INSERT INTO laps (session_id, lap_number, time_millis) SELECT id, 1, 96842 FROM sessions WHERE name = 'Morning practice' AND notes = 'Learning the line';
-INSERT INTO laps (session_id, lap_number, time_millis) SELECT id, 2, 95110 FROM sessions WHERE name = 'Morning practice' AND notes = 'Learning the line';
-INSERT INTO laps (session_id, lap_number, time_millis) SELECT id, 3, 94785 FROM sessions WHERE name = 'Morning practice' AND notes = 'Learning the line';
-INSERT INTO laps (session_id, lap_number, time_millis) SELECT id, 1, 93421 FROM sessions WHERE name = 'Afternoon pace' AND notes = 'Building consistency';
-INSERT INTO laps (session_id, lap_number, time_millis) SELECT id, 2, 92988 FROM sessions WHERE name = 'Afternoon pace' AND notes = 'Building consistency';
-INSERT INTO laps (session_id, lap_number, time_millis) SELECT id, 3, 93140 FROM sessions WHERE name = 'Afternoon pace' AND notes = 'Building consistency';
-INSERT INTO laps (session_id, lap_number, time_millis) SELECT id, 1, 100215 FROM sessions WHERE name = 'Day one' AND notes = 'Baseline setup';
-INSERT INTO laps (session_id, lap_number, time_millis) SELECT id, 2, 98764 FROM sessions WHERE name = 'Day one' AND notes = 'Baseline setup';
-INSERT INTO laps (session_id, lap_number, time_millis) SELECT id, 3, 98102 FROM sessions WHERE name = 'Day one' AND notes = 'Baseline setup';
-INSERT INTO laps (session_id, lap_number, time_millis) SELECT id, 1, 96554 FROM sessions WHERE name = 'Day two' AND notes = 'Chasing a clean lap';
-INSERT INTO laps (session_id, lap_number, time_millis) SELECT id, 2, 95880 FROM sessions WHERE name = 'Day two' AND notes = 'Chasing a clean lap';
-INSERT INTO laps (session_id, lap_number, time_millis) SELECT id, 3, 96112 FROM sessions WHERE name = 'Day two' AND notes = 'Chasing a clean lap';
-INSERT INTO laps (session_id, lap_number, time_millis) SELECT id, 1, 112430 FROM sessions WHERE name = 'Shakedown' AND notes = 'Street tires';
-INSERT INTO laps (session_id, lap_number, time_millis) SELECT id, 2, 110875 FROM sessions WHERE name = 'Shakedown' AND notes = 'Street tires';
-INSERT INTO laps (session_id, lap_number, time_millis) SELECT id, 3, 109992 FROM sessions WHERE name = 'Shakedown' AND notes = 'Street tires';
+INSERT INTO laps (session_id, lap_number, time_millis) VALUES (1, 1, 96842), (1, 2, 95110), (1, 3, 94785), (2, 1, 93421), (2, 2, 92988), (2, 3, 93140), (3, 1, 100215), (3, 2, 98764), (3, 3, 98102), (4, 1, 96554), (4, 2, 95880), (4, 3, 96112), (5, 1, 112430), (5, 2, 110875), (5, 3, 109992);
