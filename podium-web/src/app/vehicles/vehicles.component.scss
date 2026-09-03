@@ -77,6 +77,17 @@
   display: block;
 }
 
+.vehicle-item-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.vehicle-item-row > div {
+  flex: 1;
+}
+
 .vehicle-list li strong {
   color: #d2e2e7;
   font-size: 12px;
@@ -86,6 +97,24 @@
   color: #66828e;
   font-size: 10px;
   margin-top: 5px;
+}
+
+.delete-vehicle-button {
+  border: 1px solid #3d4d58;
+  background: #0d1f2b;
+  color: #f0b4ac;
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-vehicle-button:hover {
+  background: #152d39;
 }
 
 @media (max-width: 650px) {

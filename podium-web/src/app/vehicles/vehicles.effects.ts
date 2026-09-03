@@ -5,6 +5,8 @@ import { VehiclesApiService } from './vehicles-api.service';
 import {
   vehicleCreateRequested,
   vehicleCreated,
+  vehicleDeleteRequested,
+  vehicleDeleted,
   vehiclesLoaded,
   vehiclesLoadRequested,
   vehiclesRequestFailed,
@@ -34,6 +36,18 @@ export class VehiclesEffects {
         this.vehiclesApi.create(vehicle).pipe(
           map((createdVehicle) => vehicleCreated(createdVehicle)),
           catchError(() => of(vehiclesRequestFailed('Unable to create vehicle'))),
+        ),
+      ),
+    ),
+  );
+
+  readonly deleteVehicle$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(vehicleDeleteRequested),
+      switchMap(({ id }) =>
+        this.vehiclesApi.delete(id).pipe(
+          map(() => vehicleDeleted(id)),
+          catchError(() => of(vehiclesRequestFailed('Unable to delete vehicle'))),
         ),
       ),
     ),

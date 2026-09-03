@@ -20,4 +20,8 @@ export class VehiclesApiService {
   }): Observable<Vehicle> {
     return this.http.post<Vehicle>('/api/vehicles', vehicle);
   }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`/api/vehicles/${id}`);
+  }
 }
