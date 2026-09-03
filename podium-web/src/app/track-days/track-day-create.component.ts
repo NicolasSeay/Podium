@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { TrackDaysApiService } from './track-days-api.service';
 import { Track, Vehicle } from './track-days.store';
-import { AppHeaderComponent } from '../app-header.component';
+import { AppHeaderComponent } from '../app-header/app-header.component';
 
 type DraftLap = { lapNumber: number; timeMillis: number; displayTime: string };
 type DraftSession = { name: string; notes: string | null; laps: DraftLap[] };

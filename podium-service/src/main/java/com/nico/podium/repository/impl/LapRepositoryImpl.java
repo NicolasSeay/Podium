@@ -5,6 +5,7 @@ import com.nico.podium.domain.entity.LapEntity;
 import com.nico.podium.repository.LapRepository;
 import com.nico.podium.repository.jpa.LapJpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.Optional;
 

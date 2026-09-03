@@ -15,13 +15,34 @@ public final class PodiumModels {
     public record User(Long id, String email, @JsonIgnore String password, String firstName, String lastName) {
     }
 
+    public record RegisterRequest(String email, String password, String firstName, String lastName) {
+    }
+
+    public record LoginRequest(String email, String password) {
+    }
+
+    public record AuthResponse(User user, String token) {
+    }
+
+    public record UserUpdateRequest(String firstName, String lastName) {
+    }
+
     public record Track(Long id, String name, String city, String country, BigDecimal lengthMiles) {
+    }
+
+    public record TrackRequest(String name, String city, String country, BigDecimal lengthMiles) {
     }
 
     public record TrackConfiguration(Long id, Long trackId, String name, Integer lengthMeters) {
     }
 
+    public record TrackConfigurationRequest(String name, Integer lengthMeters) {
+    }
+
     public record Vehicle(Long id, Long userId, String name, String make, String model, String trim, Integer year) {
+    }
+
+    public record VehicleRequest(String name, String make, String model, String trim, Integer year) {
     }
 
     public record TrackDay(Long id, Long userId, Long trackId, Long vehicleId,
@@ -34,6 +55,31 @@ public final class PodiumModels {
 
     public record CompletedTrackDay(TrackDay trackDay, List<Session> sessions,
                                     Map<Long, List<Lap>> laps) {
+    }
+
+    public record LapRequest(Integer lapNumber, Long timeMillis) {
+    }
+
+    public record SessionRequest(String name, String notes, List<LapRequest> laps) {
+    }
+
+    public record TrackDayRequest(Long trackId, Long vehicleId, LocalDate startDate,
+                                  LocalDate endDate, String notes, String conditions,
+                                  List<SessionRequest> sessions) {
+    }
+
+    public record SessionDetailsResponse(Session session, List<Lap> laps) {
+    }
+
+    public record TrackDetailsResponse(Track track, List<TrackConfiguration> configurations) {
+    }
+
+    public record TrackDayDetailsResponse(TrackDay trackDay, List<Session> sessions) {
+    }
+
+    public record DashboardResponse(List<PersonalRecord> personalRecords, int totalTrackDays,
+                                    int totalSessions, int totalLaps, long totalLapTimeMillis,
+                                    List<TrackDay> recentTrackDays) {
     }
 
     public record Session(Long id, Long trackDayId, String name, String notes) {

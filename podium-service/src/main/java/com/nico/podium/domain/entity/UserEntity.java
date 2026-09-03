@@ -1,15 +1,15 @@
 package com.nico.podium.domain.entity;
 
 import com.nico.podium.domain.PodiumModels.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,9 +20,6 @@ public class UserEntity {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-
-    protected UserEntity() {
-    }
 
     public UserEntity(User user) {
         id = user.id();
@@ -36,11 +33,4 @@ public class UserEntity {
         return new User(id, email, password, firstName, lastName);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
 }

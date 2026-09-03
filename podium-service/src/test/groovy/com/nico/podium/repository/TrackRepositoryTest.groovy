@@ -1,18 +1,22 @@
 package com.nico.podium.repository
 
 import com.nico.podium.domain.PodiumModels.*
-import com.nico.podium.repository.impl.*
-import com.nico.podium.repository.jpa.*
+import com.nico.podium.repository.impl.TrackRepositoryImpl
+import com.nico.podium.repository.jpa.TrackConfigurationJpaRepository
+import com.nico.podium.repository.jpa.TrackJpaRepository
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.junit.jupiter.api.Test
 
-import static org.junit.jupiter.api.Assertions.*
+import static org.junit.jupiter.api.Assertions.assertEquals
+import static org.junit.jupiter.api.Assertions.assertTrue
 
 @SpringBootTest
 class TrackRepositoryTest {
-    @Autowired TrackJpaRepository tracks
-    @Autowired TrackConfigurationJpaRepository configurations
+    @Autowired
+    TrackJpaRepository tracks
+    @Autowired
+    TrackConfigurationJpaRepository configurations
 
     @Test
     void managesTracksAndConfigurations() {

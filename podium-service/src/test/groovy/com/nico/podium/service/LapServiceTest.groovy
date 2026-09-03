@@ -5,8 +5,8 @@ import com.nico.podium.repository.LapRepository
 import com.nico.podium.service.impl.LapServiceImpl
 import org.junit.jupiter.api.Test
 
-import static org.junit.jupiter.api.Assertions.*
-import static org.mockito.ArgumentMatchers.*
+import static org.junit.jupiter.api.Assertions.assertThrows
+import static org.mockito.ArgumentMatchers.any
 import static org.mockito.Mockito.*
 
 class LapServiceTest {
@@ -17,7 +17,7 @@ class LapServiceTest {
         def records = mock(PersonalRecordService)
         when(sessions.get(1L, 1L)).thenReturn(new Session(1L, 1L, 'Open', null))
         def service = new LapServiceImpl(laps, sessions, records)
-        assertThrows(Exception) { service.create(1L, 1L, [timeMillis: 0]) }
+        assertThrows(Exception) { service.create(1L, 1L, new LapRequest(null, 0L)) }
         verify(laps, never()).save(any(Lap))
     }
 }

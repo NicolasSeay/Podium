@@ -1,17 +1,19 @@
 package com.nico.podium.repository
 
 import com.nico.podium.domain.PodiumModels.PersonalRecord
-import com.nico.podium.repository.impl.*
+import com.nico.podium.repository.impl.PersonalRecordRepositoryImpl
 import com.nico.podium.repository.jpa.PersonalRecordJpaRepository
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.junit.jupiter.api.Test
 
-import static org.junit.jupiter.api.Assertions.*
+import static org.junit.jupiter.api.Assertions.assertEquals
+import static org.junit.jupiter.api.Assertions.assertTrue
 
 @SpringBootTest
 class PersonalRecordRepositoryTest {
-    @Autowired PersonalRecordJpaRepository records
+    @Autowired
+    PersonalRecordJpaRepository records
 
     @Test
     void findsRecordsByOwner() {

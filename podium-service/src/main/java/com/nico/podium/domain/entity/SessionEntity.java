@@ -1,14 +1,15 @@
 package com.nico.podium.domain.entity;
 
 import com.nico.podium.domain.PodiumModels.Session;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "sessions")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SessionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,9 +17,6 @@ public class SessionEntity {
     private Long trackDayId;
     private String name;
     private String notes;
-
-    protected SessionEntity() {
-    }
 
     public SessionEntity(Session session) {
         id = session.id();
@@ -31,11 +29,4 @@ public class SessionEntity {
         return new Session(id, trackDayId, name, notes);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Long getTrackDayId() {
-        return trackDayId;
-    }
 }

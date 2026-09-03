@@ -1,11 +1,13 @@
 package com.nico.podium.controller
 
 import com.nico.podium.domain.PodiumModels.*
-import com.nico.podium.service.*
+import com.nico.podium.security.TokenAuthenticationFilter
+import com.nico.podium.service.AuthService
+import com.nico.podium.service.PersonalRecordService
 import org.junit.jupiter.api.Test
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
-import static org.mockito.ArgumentMatchers.*
+import static org.mockito.ArgumentMatchers.any
 import static org.mockito.Mockito.*
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -13,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class RecordControllerTest {
     private final AuthService auth = mock(AuthService)
     private final PersonalRecordService records = mock(PersonalRecordService)
-    private final mvc = MockMvcBuilders.standaloneSetup(new RecordController(auth, records)).build()
+    private final mvc = MockMvcBuilders.standaloneSetup(new RecordController(records)).addFilters(new TokenAuthenticationFilter(auth)).build()
 
     @Test
     void exposesPersonalRecordEndpoint() {

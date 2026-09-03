@@ -1,12 +1,14 @@
 package com.nico.podium.repository.impl;
 
-import com.nico.podium.domain.PodiumModels.*;
+import com.nico.podium.domain.PodiumModels.Track;
+import com.nico.podium.domain.PodiumModels.TrackConfiguration;
 import com.nico.podium.domain.entity.TrackConfigurationEntity;
 import com.nico.podium.domain.entity.TrackEntity;
 import com.nico.podium.repository.TrackRepository;
 import com.nico.podium.repository.jpa.TrackConfigurationJpaRepository;
 import com.nico.podium.repository.jpa.TrackJpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.Optional;
 

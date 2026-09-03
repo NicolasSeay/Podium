@@ -1,59 +1,56 @@
 package com.nico.podium.controller;
 
-import com.nico.podium.domain.PodiumModels.Track;
-import com.nico.podium.domain.PodiumModels.TrackConfiguration;
-import com.nico.podium.service.AuthService;
+import com.nico.podium.domain.PodiumModels.*;
 import com.nico.podium.service.TrackService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tracks")
 public class TrackController extends ControllerSupport {
     private final TrackService tracks;
 
-    public TrackController(AuthService auth, TrackService tracks) {
-        super(auth);
+    public TrackController(TrackService tracks) {
         this.tracks = tracks;
     }
 
     @GetMapping
-    public List<Track> list(@RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h) {
-        return tracks.list(userId(a, h));
+    public List<Track> list() {
+        return tracks.list(userId());
     }
 
     @PostMapping
-    public Track create(@RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h, @RequestBody Map<String, Object> b) {
-        return tracks.create(userId(a, h), b);
+    public Track create(@RequestBody TrackRequest request) {
+        return tracks.create(userId(), request);
     }
 
     @GetMapping("/{id}")
-    public Map<String, Object> get(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h) {
-        Long u = userId(a, h);
-        return Map.of("track", tracks.get(u, id), "configurations", tracks.configurations(u, id));
+    public TrackDetailsResponse get(@PathVariable Long id) {
+        Long userId = userId();
+        return new TrackDetailsResponse(tracks.get(userId, id), tracks.configurations(userId, id));
     }
 
     @PatchMapping("/{id}")
-    public Track update(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h, @RequestBody Map<String, Object> b) {
-        return tracks.update(userId(a, h), id, b);
+    public Track update(@PathVariable Long id, @RequestBody TrackRequest request) {
+        return tracks.update(userId(), id, request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h) {
-        tracks.delete(userId(a, h), id);
+    public void delete(@PathVariable Long id) {
+        tracks.delete(userId(), id);
     }
 
     @GetMapping("/{id}/configurations")
-    public List<TrackConfiguration> configurations(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h) {
-        return tracks.configurations(userId(a, h), id);
+    public List<TrackConfiguration> configurations(@PathVariable Long id) {
+        return tracks.configurations(userId(), id);
     }
 
     @PostMapping("/{id}/configurations")
-    public TrackConfiguration createConfiguration(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h, @RequestBody Map<String, Object> b) {
-        return tracks.createConfiguration(userId(a, h), id, b);
+    public TrackConfiguration createConfiguration(@PathVariable Long id,
+                                                  @RequestBody TrackConfigurationRequest request) {
+        return tracks.createConfiguration(userId(), id, request);
     }
 }

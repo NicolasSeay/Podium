@@ -1,16 +1,17 @@
 package com.nico.podium.domain.entity;
 
 import com.nico.podium.domain.PodiumModels.Track;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "tracks")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TrackEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,9 +20,6 @@ public class TrackEntity {
     private String city;
     private String country;
     private BigDecimal lengthMiles;
-
-    protected TrackEntity() {
-    }
 
     public TrackEntity(Track track) {
         id = track.id();
@@ -33,10 +31,6 @@ public class TrackEntity {
 
     public Track toDomain() {
         return new Track(id, name, city, country, lengthMiles);
-    }
-
-    public Long getId() {
-        return id;
     }
 
 }

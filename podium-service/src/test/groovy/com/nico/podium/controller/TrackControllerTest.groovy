@@ -1,20 +1,23 @@
 package com.nico.podium.controller
 
 import com.nico.podium.domain.PodiumModels.*
-import com.nico.podium.service.*
+import com.nico.podium.security.TokenAuthenticationFilter
+import com.nico.podium.service.AuthService
+import com.nico.podium.service.TrackService
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
 import static org.mockito.ArgumentMatchers.*
-import static org.mockito.Mockito.*
+import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.when
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 class TrackControllerTest {
     private final AuthService auth = mock(AuthService)
     private final TrackService tracks = mock(TrackService)
-    private final mvc = MockMvcBuilders.standaloneSetup(new TrackController(auth, tracks)).build()
+    private final mvc = MockMvcBuilders.standaloneSetup(new TrackController(tracks)).addFilters(new TokenAuthenticationFilter(auth)).build()
 
     @Test
     void exposesTrackAndConfigurationEndpoints() {
@@ -23,9 +26,9 @@ class TrackControllerTest {
         when(tracks.list(anyLong())).thenReturn([])
         when(tracks.get(anyLong(), eq(1L))).thenReturn(track)
         when(tracks.configurations(anyLong(), eq(1L))).thenReturn([])
-        when(tracks.create(anyLong(), anyMap())).thenReturn(track)
-        when(tracks.update(anyLong(), eq(1L), anyMap())).thenReturn(track)
-        when(tracks.createConfiguration(anyLong(), eq(1L), anyMap())).thenReturn(new TrackConfiguration(1L, 1L, 'Full', 4088))
+        when(tracks.create(anyLong(), any())).thenReturn(track)
+        when(tracks.update(anyLong(), eq(1L), any())).thenReturn(track)
+        when(tracks.createConfiguration(anyLong(), eq(1L), any())).thenReturn(new TrackConfiguration(1L, 1L, 'Full', 4088))
 
         mvc.perform(get('/api/tracks').header('X-User-Id', '1')).andExpect(status().isOk())
         mvc.perform(post('/api/tracks').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"name":"Road Atlanta"}')).andExpect(status().isOk())

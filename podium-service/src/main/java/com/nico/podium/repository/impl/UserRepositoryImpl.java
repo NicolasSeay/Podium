@@ -5,6 +5,7 @@ import com.nico.podium.domain.entity.UserEntity;
 import com.nico.podium.repository.UserRepository;
 import com.nico.podium.repository.jpa.UserJpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.Optional;
 
 @Repository

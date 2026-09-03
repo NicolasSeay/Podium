@@ -1,3 +1,7 @@
 package com.nico.podium.service;
-import java.util.Map;
-public interface DashboardService { Map<String,Object> get(Long userId, Long trackId, Long vehicleId); }
+
+import com.nico.podium.domain.PodiumModels.DashboardResponse;
+
+public interface DashboardService {
+    DashboardResponse get(Long userId, Long trackId, Long vehicleId);
+}

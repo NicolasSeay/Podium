@@ -1,47 +1,45 @@
 package com.nico.podium.controller;
 
 import com.nico.podium.domain.PodiumModels.Vehicle;
-import com.nico.podium.service.AuthService;
+import com.nico.podium.domain.PodiumModels.VehicleRequest;
 import com.nico.podium.service.VehicleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/vehicles")
 public class VehicleController extends ControllerSupport {
     private final VehicleService vehicles;
 
-    public VehicleController(AuthService auth, VehicleService vehicles) {
-        super(auth);
+    public VehicleController(VehicleService vehicles) {
         this.vehicles = vehicles;
     }
 
     @GetMapping
-    public List<Vehicle> list(@RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h) {
-        return vehicles.list(userId(a, h));
+    public List<Vehicle> list() {
+        return vehicles.list(userId());
     }
 
     @PostMapping
-    public Vehicle create(@RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h, @RequestBody Map<String, Object> b) {
-        return vehicles.create(userId(a, h), b);
+    public Vehicle create(@RequestBody VehicleRequest request) {
+        return vehicles.create(userId(), request);
     }
 
     @GetMapping("/{id}")
-    public Vehicle get(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h) {
-        return vehicles.get(userId(a, h), id);
+    public Vehicle get(@PathVariable Long id) {
+        return vehicles.get(userId(), id);
     }
 
     @PatchMapping("/{id}")
-    public Vehicle update(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h, @RequestBody Map<String, Object> b) {
-        return vehicles.update(userId(a, h), id, b);
+    public Vehicle update(@PathVariable Long id, @RequestBody VehicleRequest request) {
+        return vehicles.update(userId(), id, request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String a, @RequestHeader(value = "X-User-Id", required = false) String h) {
-        vehicles.delete(userId(a, h), id);
+    public void delete(@PathVariable Long id) {
+        vehicles.delete(userId(), id);
     }
 }

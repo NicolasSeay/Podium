@@ -1,20 +1,23 @@
 package com.nico.podium.controller
 
 import com.nico.podium.domain.PodiumModels.*
-import com.nico.podium.service.*
+import com.nico.podium.security.TokenAuthenticationFilter
+import com.nico.podium.service.AuthService
+import com.nico.podium.service.VehicleService
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
 import static org.mockito.ArgumentMatchers.*
-import static org.mockito.Mockito.*
+import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.when
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 class VehicleControllerTest {
     private final AuthService auth = mock(AuthService)
     private final VehicleService vehicles = mock(VehicleService)
-    private final mvc = MockMvcBuilders.standaloneSetup(new VehicleController(auth, vehicles)).build()
+    private final mvc = MockMvcBuilders.standaloneSetup(new VehicleController(vehicles)).addFilters(new TokenAuthenticationFilter(auth)).build()
 
     @Test
     void exposesVehicleCrudEndpoints() {
@@ -22,8 +25,8 @@ class VehicleControllerTest {
         def vehicle = new Vehicle(1L, 1L, 'MX-5', 'Mazda', 'MX-5', 'ND', 2020)
         when(vehicles.list(anyLong())).thenReturn([])
         when(vehicles.get(anyLong(), eq(1L))).thenReturn(vehicle)
-        when(vehicles.create(anyLong(), anyMap())).thenReturn(vehicle)
-        when(vehicles.update(anyLong(), eq(1L), anyMap())).thenReturn(vehicle)
+        when(vehicles.create(anyLong(), any())).thenReturn(vehicle)
+        when(vehicles.update(anyLong(), eq(1L), any())).thenReturn(vehicle)
 
         mvc.perform(get('/api/vehicles').header('X-User-Id', '1')).andExpect(status().isOk())
         mvc.perform(post('/api/vehicles').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"name":"MX-5"}')).andExpect(status().isOk())

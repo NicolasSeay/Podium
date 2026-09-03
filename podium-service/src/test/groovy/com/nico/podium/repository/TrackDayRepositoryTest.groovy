@@ -1,18 +1,21 @@
 package com.nico.podium.repository
 
 import com.nico.podium.domain.PodiumModels.TrackDay
-import com.nico.podium.repository.impl.*
+import com.nico.podium.repository.impl.TrackDayRepositoryImpl
 import com.nico.podium.repository.jpa.TrackDayJpaRepository
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.junit.jupiter.api.Test
+
 import java.time.LocalDate
 
-import static org.junit.jupiter.api.Assertions.*
+import static org.junit.jupiter.api.Assertions.assertEquals
+import static org.junit.jupiter.api.Assertions.assertTrue
 
 @SpringBootTest
 class TrackDayRepositoryTest {
-    @Autowired TrackDayJpaRepository trackDays
+    @Autowired
+    TrackDayJpaRepository trackDays
 
     @Test
     void managesTrackDaysByOwner() {
