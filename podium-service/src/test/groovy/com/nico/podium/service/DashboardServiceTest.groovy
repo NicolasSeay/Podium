@@ -29,6 +29,7 @@ class DashboardServiceTest {
         assertEquals(1, result.totalSessions)
         assertEquals(1, result.totalLaps)
         assertEquals(95000L, result.totalLapTimeMillis)
+        assertEquals([1L], result.analyticsSessions*.sessionId())
     }
 
     @Test
@@ -47,6 +48,7 @@ class DashboardServiceTest {
         assertEquals(0, result.totalLaps)
         assertEquals(0L, result.totalLapTimeMillis)
         assertTrue(result.recentTrackDays.isEmpty())
+        assertTrue(result.analyticsSessions.isEmpty())
         verifyNoInteractions(sessions, laps)
     }
 

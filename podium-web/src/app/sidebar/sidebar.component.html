@@ -11,15 +11,7 @@
         (click)="changeNav(item)"
       >
         <span class="nav-icon">{{
-          item === 'Dashboard'
-            ? '▦'
-            : item === 'Track Days'
-              ? '◫'
-              : item === 'Analytics'
-                ? '⌁'
-                : item === 'Vehicles'
-                  ? '▱'
-                  : '⚙'
+          item === 'Dashboard' ? '▦' : item === 'Track Days' ? '◫' : item === 'Vehicles' ? '▱' : '⚙'
         }}</span
         >{{ item }}
       </button>

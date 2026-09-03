@@ -10,7 +10,7 @@ export const routes: Routes = [
   { path: 'dashboard', canActivate: [authGuard], component: App },
   { path: 'track-days', canActivate: [authGuard], component: App },
   { path: 'track-days/new', canActivate: [authGuard], component: TrackDayCreateComponent },
-  { path: 'analytics', canActivate: [authGuard], component: App },
+  { path: 'analytics', pathMatch: 'full', redirectTo: 'dashboard' },
   { path: 'vehicles', canActivate: [authGuard], component: App },
   { path: 'settings', canActivate: [authGuard], component: App },
   { path: '**', redirectTo: 'login' },

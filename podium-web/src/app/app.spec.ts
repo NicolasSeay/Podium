@@ -58,6 +58,7 @@ describe('App', () => {
         totalLaps: 42,
         totalLapTimeMillis: 3600000,
         recentTrackDays: [],
+        analyticsSessions: [],
       }),
     );
     fixture.detectChanges();
@@ -104,10 +105,10 @@ describe('App', () => {
       fixture.nativeElement.querySelectorAll('button.nav-item'),
     ) as HTMLButtonElement[];
     const incompleteButtons = buttons.filter((button) =>
-      ['Analytics', 'Settings'].some((item) => button.textContent?.includes(item)),
+      ['Settings'].some((item) => button.textContent?.includes(item)),
     );
 
-    expect(incompleteButtons).toHaveLength(2);
+    expect(incompleteButtons).toHaveLength(1);
     expect(incompleteButtons.every((button) => button.disabled)).toBe(true);
   });
 });
@@ -143,7 +144,7 @@ describe('App vehicle flow', () => {
     fixture.detectChanges();
 
     (
-      fixture.nativeElement.querySelector('button.nav-item:nth-of-type(4)') as HTMLButtonElement
+      fixture.nativeElement.querySelector('button.nav-item:nth-of-type(3)') as HTMLButtonElement
     ).click();
     fixture.detectChanges();
     http.expectOne('/api/vehicles').flush([]);

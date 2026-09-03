@@ -16,6 +16,7 @@ describe('dashboardFeature', () => {
     totalLaps: 12,
     totalLapTimeMillis: 90000,
     recentTrackDays: [],
+    analyticsSessions: [],
   };
 
   it('updates navigation', () => {

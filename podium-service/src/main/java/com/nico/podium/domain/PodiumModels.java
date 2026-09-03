@@ -73,7 +73,12 @@ public final class PodiumModels {
 
     public record DashboardResponse(List<PersonalRecord> personalRecords, int totalTrackDays,
                                     int totalSessions, int totalLaps, long totalLapTimeMillis,
-                                    List<TrackDay> recentTrackDays) {
+                                    List<TrackDay> recentTrackDays,
+                                    List<DashboardSession> analyticsSessions) {
+    }
+
+    public record DashboardSession(Long sessionId, Long trackDayId, LocalDate trackDayDate,
+                                   Long vehicleId, String sessionName, List<Lap> laps) {
     }
 
     public record Session(Long id, Long trackDayId, String name, String notes, LocalDate sessionDate) {

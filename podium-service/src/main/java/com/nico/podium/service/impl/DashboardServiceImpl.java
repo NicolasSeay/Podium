@@ -27,9 +27,14 @@ public class DashboardServiceImpl implements DashboardService {
 
     public DashboardResponse get(Long userId, Long trackId, Long vehicleId) {
         List<TrackDay> d = days.findByUserId(userId).stream().filter(day -> trackId == null || trackId.equals(day.trackId())).filter(day -> vehicleId == null || vehicleId.equals(day.vehicleId())).toList();
-        List<Session> s = d.stream().flatMap(day -> sessions.findByTrackDayId(day.id()).stream()).toList();
-        List<Lap> l = s.stream().flatMap(session -> laps.findBySessionId(session.id()).stream()).toList();
+        List<DashboardSession> analyticsSessions = d.stream().flatMap(day -> sessions.findByTrackDayId(day.id()).stream()
+            .map(session -> new DashboardSession(session.id(), day.id(), day.startDate(), day.vehicleId(),
+                session.name(), laps.findBySessionId(session.id())))).toList();
+        List<Session> s = analyticsSessions.stream().map(session -> new Session(session.sessionId(), session.trackDayId(),
+            session.sessionName(), null)).toList();
+        List<Lap> l = analyticsSessions.stream().flatMap(session -> session.laps().stream()).toList();
         List<PersonalRecord> filteredRecords = records.list(userId).stream().filter(record -> trackId == null || trackId.equals(record.trackId())).filter(record -> vehicleId == null || vehicleId.equals(record.vehicleId())).toList();
-        return new DashboardResponse(filteredRecords, d.size(), s.size(), l.size(), l.stream().mapToLong(Lap::timeMillis).sum(), d.stream().sorted(Comparator.comparing(TrackDay::startDate).reversed()).limit(5).toList());
+        return new DashboardResponse(filteredRecords, d.size(), s.size(), l.size(), l.stream().mapToLong(Lap::timeMillis).sum(),
+            d.stream().sorted(Comparator.comparing(TrackDay::startDate).reversed()).limit(5).toList(), analyticsSessions);
     }
 }

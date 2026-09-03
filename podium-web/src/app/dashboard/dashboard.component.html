@@ -55,4 +55,236 @@
     icon="⌁"
   /><app-metric-card label="Seat time" [value]="seatTime()" detail="Driving time" icon="◒" />
 </div>
-<app-recent-days [days]="dashboard()?.recentTrackDays ?? []" />
+
+<section class="analytics-heading">
+  <div>
+    <span class="eyebrow">Performance intelligence</span>
+    <h2>Find the pace you can repeat</h2>
+  </div>
+  <span class="muted">{{ sessionRows().length }} sessions in view</span>
+</section>
+
+@if (sessionRows().length) {
+  <div class="analytics-grid">
+    <section class="panel chart-panel progression-panel">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">Progression</span>
+          <h2>Fastest lap by date</h2>
+        </div>
+        <span class="chart-unit">mm:ss.sss</span>
+      </div>
+      <svg
+        class="chart"
+        viewBox="0 0 640 220"
+        role="img"
+        aria-label="Fastest lap progression chart"
+      >
+        @let values = progression().map((session) => session.best);
+        @let minimum = minTime(values);
+        @let maximum = maxTime(values);
+        <line class="chart-axis" x1="24" y1="196" x2="616" y2="196" />
+        <polyline
+          class="progression-line"
+          [attr.points]="
+            progression()
+              .map(
+                (session, index) =>
+                  chartX(index, progression().length) +
+                  ',' +
+                  (chartY(session.best, minimum, maximum, 180) + 12)
+              )
+              .join(' ')
+          "
+        />
+        @for (session of progression(); track session.sessionId; let index = $index) {
+          <circle
+            class="chart-dot"
+            [attr.cx]="chartX(index, progression().length)"
+            [attr.cy]="chartY(session.best, minimum, maximum, 180) + 12"
+            r="5"
+          >
+            <title>{{ session.date }}: {{ formatLapTime(session.best) }}</title>
+          </circle>
+        }
+      </svg>
+      <div class="chart-labels">
+        <span>{{ progression()[0].date }}</span
+        ><span>{{ progression()[progression().length - 1].date }}</span>
+      </div>
+    </section>
+
+    <section class="panel chart-panel consistency-panel">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">Consistency</span>
+          <h2>Session pace range</h2>
+        </div>
+        <span class="chart-unit">median • average</span>
+      </div>
+      <div class="range-chart" role="img" aria-label="Session consistency range chart">
+        @for (session of sessionRows(); track session.sessionId) {
+          <button
+            class="range-column"
+            type="button"
+            [class.selected]="selectedSession()?.sessionId === session.sessionId"
+            (click)="selectSession(session.sessionId)"
+            [attr.aria-label]="session.name + ' on ' + session.date"
+          >
+            <span class="range-track"
+              ><span
+                class="range-line"
+                [style.height.%]="
+                  math.min(100, (session.spread / math.max(session.best, 1)) * 1000)
+                "
+                [attr.title]="'Spread ' + formatLapTime(session.spread)"
+              ></span
+              ><span class="range-median"></span
+            ></span>
+            <strong>{{ session.name }}</strong
+            ><small>{{ session.laps.length }} laps</small>
+          </button>
+        }
+      </div>
+    </section>
+
+    <section class="panel chart-panel trace-panel">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">Selected session</span>
+          <h2>{{ selectedSession()?.name }} lap trace</h2>
+        </div>
+        <span class="chart-unit">{{ selectedSession()?.date }}</span>
+      </div>
+      @if (selectedSession(); as session) {
+        <svg
+          class="chart"
+          viewBox="0 0 640 220"
+          role="img"
+          aria-label="Lap time by lap number chart"
+        >
+          @let times = session.laps.map((lap) => lap.timeMillis);
+          @let minimum = minTime(times);
+          @let maximum = maxTime(times);
+          <line
+            class="reference-line"
+            x1="24"
+            [attr.y1]="chartY(session.median, minimum, maximum, 180) + 12"
+            x2="616"
+            [attr.y2]="chartY(session.median, minimum, maximum, 180) + 12"
+          />
+          <polyline
+            class="trace-line"
+            [attr.points]="
+              session.laps
+                .map(
+                  (lap, index) =>
+                    chartX(index, session.laps.length) +
+                    ',' +
+                    (chartY(lap.timeMillis, minimum, maximum, 180) + 12)
+                )
+                .join(' ')
+            "
+          />
+          @for (lap of session.laps; track lap.id; let index = $index) {
+            <circle
+              class="chart-dot trace-dot"
+              [attr.cx]="chartX(index, session.laps.length)"
+              [attr.cy]="chartY(lap.timeMillis, minimum, maximum, 180) + 12"
+              r="4"
+            >
+              <title>Lap {{ lap.lapNumber }}: {{ formatLapTime(lap.timeMillis) }}</title>
+            </circle>
+          }
+        </svg>
+        <div class="chart-summary">
+          <span
+            >Best <strong>{{ formatLapTime(session.best) }}</strong></span
+          ><span
+            >Median <strong>{{ formatLapTime(session.median) }}</strong></span
+          ><span
+            >Average <strong>{{ formatLapTime(session.average) }}</strong></span
+          >
+        </div>
+      }
+    </section>
+
+    <section class="panel chart-panel distribution-panel">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">Distribution</span>
+          <h2>Lap-time spread</h2>
+        </div>
+        <span class="chart-unit">5 buckets</span>
+      </div>
+      <div class="histogram" role="img" aria-label="Lap time distribution histogram">
+        @for (bucket of histogram(); track bucket.label) {
+          <div class="histogram-column">
+            <span class="histogram-count">{{ bucket.count }}</span
+            ><span
+              class="histogram-bar"
+              [style.height.%]="
+                (bucket.count / math.max(...histogram().map((item) => item.count), 1)) * 100
+              "
+            ></span
+            ><small>{{ bucket.label }}</small>
+          </div>
+        }
+      </div>
+    </section>
+  </div>
+
+  <section class="panel session-table-panel">
+    <div class="panel-heading">
+      <div>
+        <span class="eyebrow">Drill down</span>
+        <h2>Session detail</h2>
+      </div>
+      <span class="muted">Select a row to inspect its trace</span>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Session</th>
+            <th>Laps</th>
+            <th>Best</th>
+            <th>Median</th>
+            <th>Average</th>
+            <th>Std dev</th>
+            <th>Spread</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (session of sessionRows(); track session.sessionId) {
+            <tr
+              [class.selected-row]="selectedSession()?.sessionId === session.sessionId"
+              (click)="selectSession(session.sessionId)"
+            >
+              <td>{{ session.date }}</td>
+              <td>
+                <strong>{{ session.name }}</strong>
+              </td>
+              <td>{{ session.laps.length }}</td>
+              <td>{{ formatLapTime(session.best) }}</td>
+              <td>{{ formatLapTime(session.median) }}</td>
+              <td>{{ formatLapTime(session.average) }}</td>
+              <td>{{ formatLapTime(session.deviation) }}</td>
+              <td>{{ formatLapTime(session.spread) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+} @else if (!loading() && !error()) {
+  <section class="panel empty-analytics">
+    <span class="eyebrow">No lap data yet</span>
+    <h2>Record a session to unlock your analytics</h2>
+    <p class="muted">
+      Your pace progression and consistency charts will appear here after your first completed track
+      day.
+    </p>
+  </section>
+}
