@@ -26,24 +26,12 @@ export class SidebarComponent {
     const user = this.user();
     return user ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase() : 'D';
   });
-  protected readonly navigation = [
-    'Dashboard',
-    'Track Days',
-    'Sessions',
-    'Analytics',
-    'Vehicles',
-    'Records',
-    'Goals',
-    'Settings',
-  ];
+  protected readonly navigation = ['Dashboard', 'Track Days', 'Analytics', 'Vehicles', 'Settings'];
   protected readonly navigationRoutes: Record<string, string> = {
     Dashboard: 'dashboard',
     'Track Days': 'track-days',
-    Sessions: 'sessions',
     Analytics: 'analytics',
     Vehicles: 'vehicles',
-    Records: 'records',
-    Goals: 'goals',
     Settings: 'settings',
   };
   protected readonly implementedNavigation = new Set(['Dashboard', 'Track Days', 'Vehicles']);

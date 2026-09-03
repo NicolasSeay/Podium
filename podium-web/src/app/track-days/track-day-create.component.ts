@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { TrackDaysApiService } from './track-days-api.service';
-import { Track, Vehicle } from './track-days.store';
+import { Track, TrackDay, Vehicle } from './track-days.store';
 import { AppHeaderComponent } from '../app-header/app-header.component';
 
-type DraftLap = { lapNumber: number; timeMillis: number; displayTime: string };
+type DraftLap = { timeMillis: number; displayTime: string };
 type DraftSession = { name: string; notes: string | null; laps: DraftLap[] };
 type DraftDay = { date: string; sessions: DraftSession[] };
 
@@ -23,29 +23,38 @@ export class TrackDayCreateComponent {
   private readonly router = inject(Router);
 
   protected readonly tracks = signal<Track[]>([]);
+  protected readonly trackDays = signal<TrackDay[]>([]);
   protected readonly vehicles = signal<Vehicle[]>([]);
   protected readonly days = signal<DraftDay[]>([]);
   protected readonly step = signal(1);
   protected readonly saving = signal(false);
   protected readonly loading = signal(true);
   protected readonly error = signal<string | null>(null);
+  protected readonly recentTracks = computed(() => {
+    const racedTrackIds = new Set(this.trackDays().map((trackDay) => trackDay.trackId));
+    return this.tracks().filter((track) => racedTrackIds.has(track.id));
+  });
+  protected readonly otherTracks = computed(() => {
+    const recentTrackIds = new Set(this.recentTracks().map((track) => track.id));
+    return this.tracks().filter((track) => !recentTrackIds.has(track.id));
+  });
   protected readonly eventForm = this.formBuilder.nonNullable.group({
     trackId: [0, [Validators.required, Validators.min(1)]],
-    vehicleId: [0],
+    vehicleId: [0, [Validators.required, Validators.min(1)]],
     startDate: [new Date().toISOString().slice(0, 10), Validators.required],
     endDate: [new Date().toISOString().slice(0, 10), Validators.required],
     conditions: [''],
     notes: [''],
   });
-  protected readonly lapForm = this.formBuilder.nonNullable.group({
-    lapNumber: [1, [Validators.required, Validators.min(1)]],
-    time: ['', Validators.required],
-  });
-
   constructor() {
-    forkJoin({ tracks: this.api.tracks(), vehicles: this.api.vehicles() }).subscribe({
+    forkJoin({
+      tracks: this.api.tracks(),
+      vehicles: this.api.vehicles(),
+      trackDays: this.api.list(),
+    }).subscribe({
       next: (data) => {
         this.tracks.set(data.tracks);
+        this.trackDays.set(data.trackDays);
         this.vehicles.set(data.vehicles);
         this.loading.set(false);
       },
@@ -77,13 +86,20 @@ export class TrackDayCreateComponent {
     this.step.update((value) => Math.max(value - 1, 1));
   }
 
+  protected handleVehicleChange(): void {
+    if (this.eventForm.controls.vehicleId.value === -1) {
+      this.eventForm.controls.vehicleId.setValue(0);
+      void this.router.navigate(['/vehicles']);
+    }
+  }
+
   protected addSession(date: string): void {
     this.days.update((days) =>
       days.map((day) =>
         day.date === date
           ? {
               ...day,
-              sessions: [...day.sessions, { name: '', notes: null, laps: [] }],
+              sessions: [...day.sessions, { name: '', notes: null, laps: [this.emptyLap()] }],
             }
           : day,
       ),
@@ -125,19 +141,13 @@ export class TrackDayCreateComponent {
     );
   }
 
-  protected addLap(dayIndex: number, sessionIndex: number): void {
-    if (this.lapForm.invalid) {
-      this.lapForm.markAllAsTouched();
-      return;
-    }
-    const value = this.lapForm.getRawValue();
-    const parts = value.time.split(':');
-    const timeMillis =
-      parts.length === 2 ? Math.round((Number(parts[0]) * 60 + Number(parts[1])) * 1000) : 0;
-    if (!Number.isFinite(timeMillis) || timeMillis <= 0) {
-      this.lapForm.controls.time.setErrors({ invalidTime: true });
-      return;
-    }
+  protected updateLap(
+    dayIndex: number,
+    sessionIndex: number,
+    lapIndex: number,
+    value: string,
+  ): void {
+    const timeMillis = this.parseLapTime(value);
     this.days.update((days) =>
       days.map((day, currentDayIndex) =>
         currentDayIndex === dayIndex
@@ -147,10 +157,19 @@ export class TrackDayCreateComponent {
                 currentSessionIndex === sessionIndex
                   ? {
                       ...session,
-                      laps: [
-                        ...session.laps,
-                        { lapNumber: Number(value.lapNumber), timeMillis, displayTime: value.time },
-                      ],
+                      laps: session.laps.reduce<DraftLap[]>((laps, lap, currentLapIndex) => {
+                        laps.push(
+                          currentLapIndex === lapIndex ? { timeMillis, displayTime: value } : lap,
+                        );
+                        if (
+                          currentLapIndex === lapIndex &&
+                          value.trim() &&
+                          lapIndex === session.laps.length - 1
+                        ) {
+                          laps.push(this.emptyLap());
+                        }
+                        return laps;
+                      }, []),
                     }
                   : session,
               ),
@@ -158,10 +177,6 @@ export class TrackDayCreateComponent {
           : day,
       ),
     );
-    this.lapForm.reset({
-      lapNumber: this.days()[dayIndex].sessions[sessionIndex].laps.length + 1,
-      time: '',
-    });
   }
 
   protected removeLap(dayIndex: number, sessionIndex: number, lapIndex: number): void {
@@ -176,7 +191,9 @@ export class TrackDayCreateComponent {
                       ...session,
                       laps: session.laps.filter(
                         (_, currentLapIndex) => currentLapIndex !== lapIndex,
-                      ),
+                      ).length
+                        ? session.laps.filter((_, currentLapIndex) => currentLapIndex !== lapIndex)
+                        : [this.emptyLap()],
                     }
                   : session,
               ),
@@ -194,7 +211,9 @@ export class TrackDayCreateComponent {
           name: name.trim(),
           notes: notes?.trim() || null,
           sessionDate: day.date,
-          laps: laps.map(({ lapNumber, timeMillis }) => ({ lapNumber, timeMillis })),
+          laps: laps
+            .filter((lap) => lap.timeMillis > 0)
+            .map(({ timeMillis }, lapIndex) => ({ lapNumber: lapIndex + 1, timeMillis })),
         })),
     );
     if (!sessions.length) {
@@ -229,6 +248,21 @@ export class TrackDayCreateComponent {
       day: 'numeric',
       year: 'numeric',
     });
+  }
+
+  private emptyLap(): DraftLap {
+    return { timeMillis: 0, displayTime: '' };
+  }
+
+  private parseLapTime(value: string): number {
+    const parts = value.trim().split(':');
+    const timeMillis =
+      parts.length === 1
+        ? Number(parts[0]) * 1000
+        : parts.length === 2
+          ? (Number(parts[0]) * 60 + Number(parts[1])) * 1000
+          : 0;
+    return Number.isFinite(timeMillis) && timeMillis > 0 ? timeMillis : 0;
   }
 
   private buildDays(existingDays: DraftDay[]): DraftDay[] {

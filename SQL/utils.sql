@@ -9,7 +9,6 @@ DROP TABLE IF EXISTS
     sessions,
     track_days,
     vehicles,
-    track_configurations,
     tracks,
     users;
 SET FOREIGN_KEY_CHECKS = 1;
@@ -21,7 +20,6 @@ TRUNCATE TABLE laps;
 TRUNCATE TABLE sessions;
 TRUNCATE TABLE track_days;
 TRUNCATE TABLE vehicles;
-TRUNCATE TABLE track_configurations;
 TRUNCATE TABLE tracks;
 TRUNCATE TABLE users;
 SET FOREIGN_KEY_CHECKS = 1;

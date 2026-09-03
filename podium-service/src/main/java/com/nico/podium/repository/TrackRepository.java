@@ -1,7 +1,6 @@
 package com.nico.podium.repository;
 
 import com.nico.podium.domain.PodiumModels.Track;
-import com.nico.podium.domain.PodiumModels.TrackConfiguration;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +13,4 @@ public interface TrackRepository {
     List<Track> findAll();
 
     void deleteById(Long id);
-
-    TrackConfiguration saveConfiguration(TrackConfiguration configuration);
-
-    List<TrackConfiguration> findConfigurations(Long trackId);
 }

@@ -5,7 +5,6 @@ import {
   dashboardLoadRequested,
   DashboardData,
   setActiveNav,
-  setRange,
 } from './dashboard.store';
 
 describe('dashboardFeature', () => {
@@ -19,12 +18,10 @@ describe('dashboardFeature', () => {
     recentTrackDays: [],
   };
 
-  it('updates navigation and range', () => {
+  it('updates navigation', () => {
     const state = dashboardFeature.reducer(initialState, setActiveNav('Tracks'));
-    const nextState = dashboardFeature.reducer(state, setRange('This Year'));
 
-    expect(nextState.activeNav).toBe('Tracks');
-    expect(nextState.range).toBe('This Year');
+    expect(state.activeNav).toBe('Tracks');
   });
 
   it('tracks a pending dashboard request', () => {

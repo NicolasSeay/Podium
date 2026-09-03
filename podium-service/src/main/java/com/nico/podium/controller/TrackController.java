@@ -27,9 +27,8 @@ public class TrackController extends ControllerSupport {
     }
 
     @GetMapping("/{id}")
-    public TrackDetailsResponse get(@PathVariable Long id) {
-        Long userId = userId();
-        return new TrackDetailsResponse(tracks.get(userId, id), tracks.configurations(userId, id));
+    public Track get(@PathVariable Long id) {
+        return tracks.get(userId(), id);
     }
 
     @PatchMapping("/{id}")
@@ -43,14 +42,4 @@ public class TrackController extends ControllerSupport {
         tracks.delete(userId(), id);
     }
 
-    @GetMapping("/{id}/configurations")
-    public List<TrackConfiguration> configurations(@PathVariable Long id) {
-        return tracks.configurations(userId(), id);
-    }
-
-    @PostMapping("/{id}/configurations")
-    public TrackConfiguration createConfiguration(@PathVariable Long id,
-                                                  @RequestBody TrackConfigurationRequest request) {
-        return tracks.createConfiguration(userId(), id, request);
-    }
 }

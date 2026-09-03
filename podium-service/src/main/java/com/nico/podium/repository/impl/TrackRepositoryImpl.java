@@ -1,11 +1,8 @@
 package com.nico.podium.repository.impl;
 
 import com.nico.podium.domain.PodiumModels.Track;
-import com.nico.podium.domain.PodiumModels.TrackConfiguration;
-import com.nico.podium.domain.entity.TrackConfigurationEntity;
 import com.nico.podium.domain.entity.TrackEntity;
 import com.nico.podium.repository.TrackRepository;
-import com.nico.podium.repository.jpa.TrackConfigurationJpaRepository;
 import com.nico.podium.repository.jpa.TrackJpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,11 +12,9 @@ import java.util.Optional;
 @Repository
 public class TrackRepositoryImpl implements TrackRepository {
     private final TrackJpaRepository tracks;
-    private final TrackConfigurationJpaRepository configurations;
 
-    public TrackRepositoryImpl(TrackJpaRepository tracks, TrackConfigurationJpaRepository configurations) {
+    public TrackRepositoryImpl(TrackJpaRepository tracks) {
         this.tracks = tracks;
-        this.configurations = configurations;
     }
 
     public Track save(Track value) {
@@ -40,13 +35,4 @@ public class TrackRepositoryImpl implements TrackRepository {
         tracks.deleteById(id);
     }
 
-    public TrackConfiguration saveConfiguration(TrackConfiguration value) {
-        return configurations.save(new TrackConfigurationEntity(value)).toDomain();
-    }
-
-    public List<TrackConfiguration> findConfigurations(Long trackId) {
-        return configurations.findByTrackId(trackId).stream()
-                .map(TrackConfigurationEntity::toDomain)
-                .toList();
-    }
 }

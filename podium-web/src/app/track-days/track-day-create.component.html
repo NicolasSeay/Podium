@@ -26,17 +26,30 @@
           <label for="create-track"
             >Track<select id="create-track" formControlName="trackId">
               <option [ngValue]="0">Choose a track</option>
-              @for (track of tracks(); track track.id) {
-                <option [ngValue]="track.id">{{ track.name }} · {{ track.city }}</option>
+              @if (recentTracks().length) {
+                <optgroup label="Recents">
+                  @for (track of recentTracks(); track track.id) {
+                    <option [ngValue]="track.id">{{ track.name }} · {{ track.city }}</option>
+                  }
+                </optgroup>
               }
+              <optgroup label="All tracks">
+                @for (track of otherTracks(); track track.id) {
+                  <option [ngValue]="track.id">{{ track.name }} · {{ track.city }}</option>
+                }
+              </optgroup>
             </select></label
           ><label for="create-vehicle"
-            >Vehicle <small>Optional</small
-            ><select id="create-vehicle" formControlName="vehicleId">
-              <option [ngValue]="0">No vehicle selected</option>
+            >Vehicle ><select
+              id="create-vehicle"
+              formControlName="vehicleId"
+              (change)="handleVehicleChange()"
+            >
+              <option [ngValue]="0">Choose a vehicle</option>
               @for (vehicle of vehicles(); track vehicle.id) {
                 <option [ngValue]="vehicle.id">{{ vehicle.name }}</option>
               }
+              <option [ngValue]="-1">Add a new vehicle...</option>
             </select></label
           ><label for="create-start-date"
             >Start date<input
@@ -78,17 +91,13 @@
                 <span class="eyebrow">Day {{ dayIndex + 1 }}</span>
                 <h3 [id]="'event-day-' + day.date">{{ dayLabel(day.date) }}</h3>
               </div>
-              <span class="muted">{{ day.sessions.length }} session slots</span>
+              <span class="muted"
+                >{{ day.sessions.length }}
+                {{ day.sessions.length === 1 ? 'session' : 'sessions' }}</span
+              >
             </div>
-            <button
-              class="outline-button add-session-button"
-              type="button"
-              (click)="addSession(day.date)"
-            >
-              + Add session slot
-            </button>
             @if (!day.sessions.length) {
-              <p class="empty-state">No session slots added for this day yet.</p>
+              <p class="empty-state">No sessions added for this day yet.</p>
             }
             @for (session of day.sessions; track $index; let sessionIndex = $index) {
               <article class="draft-session">
@@ -117,49 +126,49 @@
                     type="button"
                     class="delete-button"
                     (click)="removeSession(dayIndex, sessionIndex)"
-                    aria-label="Remove session slot"
+                    aria-label="Remove session"
                   >
                     ×
                   </button>
                 </div>
                 <div class="draft-laps">
                   @for (lap of session.laps; track $index; let lapIndex = $index) {
-                    <div>
-                      <span>Lap {{ lap.lapNumber }}</span
-                      ><strong>{{ lap.displayTime }}</strong
-                      ><button
-                        type="button"
-                        class="delete-button"
-                        (click)="removeLap(dayIndex, sessionIndex, lapIndex)"
-                        aria-label="Remove lap"
-                      >
-                        ×
-                      </button>
+                    <div class="lap-row">
+                      <span>Lap {{ lapIndex + 1 }}</span
+                      ><input
+                        class="lap-time-input"
+                        type="text"
+                        [value]="lap.displayTime"
+                        (input)="
+                          updateLap(dayIndex, sessionIndex, lapIndex, $any($event.target).value)
+                        "
+                        placeholder="Lap time, e.g. 1:42.350"
+                        [attr.aria-label]="'Lap ' + (lapIndex + 1) + ' time'"
+                      />
+                      @if (lapIndex < session.laps.length - 1) {
+                        <button
+                          type="button"
+                          class="delete-button"
+                          (click)="removeLap(dayIndex, sessionIndex, lapIndex)"
+                          [attr.aria-label]="'Remove lap ' + (lapIndex + 1)"
+                        >
+                          ×
+                        </button>
+                      } @else {
+                        <span class="lap-action-placeholder" aria-hidden="true"></span>
+                      }
                     </div>
                   }
-                  @if (!session.laps.length) {
-                    <span class="muted">No laps added yet.</span>
-                  }
                 </div>
-                <form
-                  class="add-lap"
-                  [formGroup]="lapForm"
-                  (ngSubmit)="addLap(dayIndex, sessionIndex)"
-                >
-                  <input
-                    type="number"
-                    formControlName="lapNumber"
-                    min="1"
-                    aria-label="Lap number"
-                  /><input
-                    type="text"
-                    formControlName="time"
-                    placeholder="Lap time, e.g. 1:42.350"
-                    aria-label="Lap time"
-                  /><button class="outline-button" type="submit">+ Add lap</button>
-                </form>
               </article>
             }
+            <button
+              class="outline-button add-session-button"
+              type="button"
+              (click)="addSession(day.date)"
+            >
+              + Add session
+            </button>
           </section>
         }
         <div class="wizard-actions">
@@ -224,7 +233,11 @@
                     total +
                     day.sessions
                       .filter((session) => session.name.trim())
-                      .reduce((dayTotal, session) => dayTotal + session.laps.length, 0),
+                      .reduce(
+                        (dayTotal, session) =>
+                          dayTotal + session.laps.filter((lap) => lap.timeMillis > 0).length,
+                        0
+                      ),
                   0
                 )
               }}
