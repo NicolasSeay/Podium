@@ -2,6 +2,7 @@ package com.nico.podium.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public final class PodiumModels {
@@ -12,7 +13,7 @@ public final class PodiumModels {
     public record User(Long id, String email, @JsonIgnore String password, String firstName, String lastName) {
     }
 
-    public record Track(Long id, Long userId, String name, String location) {
+    public record Track(Long id, String name, String city, String country, BigDecimal lengthMiles) {
     }
 
     public record TrackConfiguration(Long id, Long trackId, String name, Integer lengthMeters) {

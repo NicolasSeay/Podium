@@ -11,13 +11,13 @@ import static org.mockito.Mockito.*
 
 class TrackServiceTest {
     @Test
-    void createsAndRejectsOtherOwners() {
+    void createsAndReturnsCatalogTracks() {
         def tracks = mock(TrackRepository)
         when(tracks.save(any(Track))).thenAnswer { it.arguments[0] }
         def service = new TrackServiceImpl(tracks)
-        def track = service.create(1L, [name: 'Road Atlanta'])
+        def track = service.create(1L, [name: 'Road Atlanta', city: 'Braselton', country: 'United States', lengthMiles: '2.54'])
         when(tracks.findById(track.id())).thenReturn(Optional.of(track))
-        assertEquals(1L, service.get(1L, track.id()).userId())
-        assertThrows(Exception) { service.get(2L, track.id()) }
+        assertEquals('Braselton', service.get(2L, track.id()).city())
+        verify(tracks).save(track)
     }
 }

@@ -160,28 +160,40 @@ describe('App track creation flow', () => {
     fixture.detectChanges();
 
     const name = fixture.nativeElement.querySelector('#track-name') as HTMLInputElement;
-    const location = fixture.nativeElement.querySelector('#track-location') as HTMLInputElement;
+    const city = fixture.nativeElement.querySelector('#track-city') as HTMLInputElement;
+    const country = fixture.nativeElement.querySelector('#track-country') as HTMLInputElement;
+    const length = fixture.nativeElement.querySelector('#track-length') as HTMLInputElement;
     name.value = 'Road Atlanta';
     name.dispatchEvent(new Event('input'));
-    location.value = 'Braselton, GA';
-    location.dispatchEvent(new Event('input'));
+    city.value = 'Braselton';
+    city.dispatchEvent(new Event('input'));
+    country.value = 'United States';
+    country.dispatchEvent(new Event('input'));
+    length.value = '2.54';
+    length.dispatchEvent(new Event('input'));
     (fixture.nativeElement.querySelector('.track-form') as HTMLFormElement).dispatchEvent(
       new Event('submit'),
     );
 
     const request = http.expectOne('/api/tracks');
     expect(request.request.method).toBe('POST');
-    expect(request.request.body).toEqual({ name: 'Road Atlanta', location: 'Braselton, GA' });
+    expect(request.request.body).toEqual({
+      name: 'Road Atlanta',
+      city: 'Braselton',
+      country: 'United States',
+      lengthMiles: 2.54,
+    });
     request.flush({
       id: 1,
-      userId: 1,
       name: 'Road Atlanta',
-      location: 'Braselton, GA',
+      city: 'Braselton',
+      country: 'United States',
+      lengthMiles: 2.54,
     });
     fixture.detectChanges();
 
     expect(fixture.nativeElement.textContent).toContain('Road Atlanta');
-    expect(fixture.nativeElement.textContent).toContain('Braselton, GA');
+    expect(fixture.nativeElement.textContent).toContain('Braselton, United States');
   });
 
   it('posts a new vehicle and renders the persisted response', () => {

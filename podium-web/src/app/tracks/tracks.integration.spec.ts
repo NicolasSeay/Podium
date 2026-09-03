@@ -40,13 +40,21 @@ describe('Tracks page integration', () => {
     page.clickNavigation('Tracks');
     http
       .expectOne('/api/tracks')
-      .flush([{ id: 1, userId: 1, name: 'Road Atlanta', location: 'Braselton, GA' }]);
+      .flush([
+        {
+          id: 1,
+          name: 'Road Atlanta',
+          city: 'Braselton',
+          country: 'United States',
+          lengthMiles: 2.54,
+        },
+      ]);
     fixture.detectChanges();
 
     expect(page.text('#tracks-title')).toBe('Tracks');
     expect(page.text('.track-count')).toBe('1');
     expect(page.text('.track-list li strong')).toBe('Road Atlanta');
-    expect(page.text('.track-list li span')).toBe('Braselton, GA');
+    expect(page.text('.track-list li span')).toBe('Braselton, United States');
   });
 
   it('validates and creates a track through the API', () => {
@@ -65,16 +73,29 @@ describe('Tracks page integration', () => {
     http.verify();
 
     page.fill('#track-name', '  Road Atlanta  ');
-    page.fill('#track-location', ' Braselton, GA ');
+    page.fill('#track-city', ' Braselton ');
+    page.fill('#track-country', ' United States ');
+    page.fill('#track-length', '2.54');
     page.submit('.track-form');
 
     const request = http.expectOne('/api/tracks');
     expect(request.request.method).toBe('POST');
-    expect(request.request.body).toEqual({ name: 'Road Atlanta', location: 'Braselton, GA' });
-    request.flush({ id: 1, userId: 1, name: 'Road Atlanta', location: 'Braselton, GA' });
+    expect(request.request.body).toEqual({
+      name: 'Road Atlanta',
+      city: 'Braselton',
+      country: 'United States',
+      lengthMiles: 2.54,
+    });
+    request.flush({
+      id: 1,
+      name: 'Road Atlanta',
+      city: 'Braselton',
+      country: 'United States',
+      lengthMiles: 2.54,
+    });
     fixture.detectChanges();
 
     expect(page.text('.track-list li strong')).toBe('Road Atlanta');
-    expect(page.text('.track-list li span')).toBe('Braselton, GA');
+    expect(page.text('.track-list li span')).toBe('Braselton, United States');
   });
 });

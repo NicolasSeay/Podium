@@ -2,9 +2,10 @@ import { createAction, createFeature, createReducer, on } from '@ngrx/store';
 
 export interface Track {
   id: number;
-  userId: number;
   name: string;
-  location: string | null;
+  city: string | null;
+  country: string | null;
+  lengthMiles: number | null;
 }
 
 export interface TracksState {
@@ -18,7 +19,12 @@ export const tracksLoadRequested = createAction('[Tracks] Load Requested');
 export const tracksLoaded = createAction('[Tracks] Loaded', (tracks: Track[]) => ({ tracks }));
 export const trackCreateRequested = createAction(
   '[Tracks] Create Requested',
-  (track: { name: string; location: string | null }) => ({ track }),
+  (track: {
+    name: string;
+    city: string | null;
+    country: string | null;
+    lengthMiles: number | null;
+  }) => ({ track }),
 );
 export const trackCreated = createAction('[Tracks] Created', (track: Track) => ({ track }));
 export const tracksRequestFailed = createAction('[Tracks] Request Failed', (error: string) => ({

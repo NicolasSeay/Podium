@@ -19,7 +19,9 @@ export class TracksComponent {
   protected readonly error = this.store.selectSignal(tracksFeature.selectError);
   protected readonly form = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.maxLength(100)]],
-    location: [''],
+    city: [''],
+    country: [''],
+    lengthMiles: [null as number | null],
   });
 
   constructor() {
@@ -32,9 +34,14 @@ export class TracksComponent {
       return;
     }
 
-    const { name, location } = this.form.getRawValue();
+    const { name, city, country, lengthMiles } = this.form.getRawValue();
     this.store.dispatch(
-      trackCreateRequested({ name: name.trim(), location: location.trim() || null }),
+      trackCreateRequested({
+        name: name.trim(),
+        city: city.trim() || null,
+        country: country.trim() || null,
+        lengthMiles,
+      }),
     );
     this.form.reset();
   }

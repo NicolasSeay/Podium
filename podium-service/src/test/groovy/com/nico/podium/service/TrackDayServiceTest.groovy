@@ -15,7 +15,7 @@ class TrackDayServiceTest {
         def days = mock(TrackDayRepository)
         def tracks = mock(TrackService)
         def vehicles = mock(VehicleService)
-        def track = new Track(1L, 1L, 'Road Atlanta', null)
+        def track = new Track(1L, 'Road Atlanta', 'Braselton', 'United States', 2.54G)
         def vehicle = new Vehicle(1L, 1L, 'MX-5', null, null, null)
         when(tracks.get(1L, 1L)).thenReturn(track)
         when(vehicles.get(1L, 1L)).thenReturn(vehicle)

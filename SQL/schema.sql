@@ -15,14 +15,12 @@ CREATE TABLE IF NOT EXISTS users (
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS tracks (
-    id       BIGINT NOT NULL AUTO_INCREMENT,
-    user_id  BIGINT NOT NULL,
-    name     VARCHAR(255),
-    location VARCHAR(255),
-    PRIMARY KEY (id),
-    KEY idx_tracks_user_id (user_id),
-    CONSTRAINT fk_tracks_user
-        FOREIGN KEY (user_id) REFERENCES users (id)
+    id           BIGINT NOT NULL AUTO_INCREMENT,
+    name         VARCHAR(255) NOT NULL,
+    city         VARCHAR(255),
+    country      VARCHAR(255),
+    length_miles DECIMAL(7,3),
+    PRIMARY KEY (id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS track_configurations (

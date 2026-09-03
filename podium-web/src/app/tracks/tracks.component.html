@@ -15,13 +15,17 @@
       @if (form.controls.name.touched && form.controls.name.invalid) {
         <span class="field-error">Enter a track name.</span>
       }
-      <label for="track-location">Location <span class="muted">Optional</span></label>
+      <label for="track-city">City <span class="muted">Optional</span></label>
+      <input id="track-city" type="text" formControlName="city" placeholder="e.g. Braselton" />
+      <label for="track-country">Country <span class="muted">Optional</span></label>
       <input
-        id="track-location"
+        id="track-country"
         type="text"
-        formControlName="location"
-        placeholder="e.g. Braselton, GA"
+        formControlName="country"
+        placeholder="e.g. United States"
       />
+      <label for="track-length">Length (mi.) <span class="muted">Optional</span></label>
+      <input id="track-length" type="number" min="0" step="0.001" formControlName="lengthMiles" />
       <button class="primary-button" type="submit" [disabled]="saving()">
         {{ saving() ? 'Saving...' : 'Create track' }}
       </button>
@@ -47,7 +51,13 @@
           @for (track of tracks(); track track.id) {
             <li>
               <strong>{{ track.name }}</strong>
-              <span>{{ track.location || 'Location not added' }}</span>
+              <span
+                >{{ track.city || track.country || 'Location not added'
+                }}{{ track.city && track.country ? ', ' + track.country : '' }}</span
+              >
+              @if (track.lengthMiles !== null) {
+                <small>{{ track.lengthMiles }} mi.</small>
+              }
             </li>
           }
         </ul>

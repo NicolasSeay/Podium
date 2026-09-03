@@ -11,7 +11,12 @@ export class TracksApiService {
     return this.http.get<Track[]>('/api/tracks');
   }
 
-  create(track: { name: string; location: string | null }): Observable<Track> {
+  create(track: {
+    name: string;
+    city: string | null;
+    country: string | null;
+    lengthMiles: number | null;
+  }): Observable<Track> {
     return this.http.post<Track>('/api/tracks', track);
   }
 }
