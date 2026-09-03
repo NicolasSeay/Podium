@@ -6,11 +6,18 @@ import { dashboardFeature, setActiveNav } from './dashboard/dashboard.store';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { VehiclesComponent } from './vehicles/vehicles.component';
 import { TrackDaysComponent } from './track-days/track-days.component';
+import { AppHeaderComponent } from './app-header.component';
 
 @Component({
   selector: 'app-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DashboardComponent, VehiclesComponent, TrackDaysComponent, SidebarComponent],
+  imports: [
+    DashboardComponent,
+    VehiclesComponent,
+    TrackDaysComponent,
+    SidebarComponent,
+    AppHeaderComponent,
+  ],
   templateUrl: './app-shell.component.html',
   styleUrl: './app-shell.component.scss',
 })
@@ -21,10 +28,6 @@ export class AppShellComponent {
 
   constructor() {
     this.store.dispatch(setActiveNav(this.navigationLabelForUrl(this.router.url)));
-  }
-
-  protected newTrackDay(): void {
-    void this.router.navigate(['/track-days']).catch(() => undefined);
   }
 
   private navigationLabelForUrl(url: string): string {

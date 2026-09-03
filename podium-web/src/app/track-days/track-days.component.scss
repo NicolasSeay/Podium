@@ -5,7 +5,7 @@
 
 .track-days-layout {
   display: grid;
-  grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1.3fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
 }
 
@@ -88,7 +88,7 @@
   color: inherit;
   padding: 14px 4px;
   display: grid;
-  grid-template-columns: 1fr 1fr auto;
+  grid-template-columns: 1.3fr 1fr 0.8fr 0.8fr auto;
   gap: 10px;
   text-align: left;
   align-items: center;
@@ -224,6 +224,11 @@
   }
 
   .day-row span:nth-child(2) {
+    grid-column: 1;
+  }
+
+  .day-row span:nth-child(3),
+  .day-row span:nth-child(4) {
     grid-column: 1;
   }
 

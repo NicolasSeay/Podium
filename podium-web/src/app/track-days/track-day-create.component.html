@@ -1,0 +1,207 @@
+<main class="create-page">
+  <app-header
+    title="Log a track day"
+    eyebrow="Drive log"
+    description="Capture the complete day before it becomes part of your history."
+    backLabel="Track Days"
+    [showNewTrackDay]="false"
+  />
+  <nav class="stepper" aria-label="Track day setup steps">
+    @for (label of ['Event details', 'Sessions', 'Review']; track label; let index = $index) {
+      <span [class.active]="step() === index + 1" [class.complete]="step() > index + 1"
+        ><b>{{ index + 1 }}</b
+        >{{ label }}</span
+      >
+    }
+  </nav>
+  @if (loading()) {
+    <p class="muted" role="status">Loading tracks and vehicles...</p>
+  } @else {
+    @if (step() === 1) {
+      <form class="panel wizard-panel" [formGroup]="eventForm" (ngSubmit)="nextStep()">
+        <span class="eyebrow">Step 1 of 3</span>
+        <h2>Event details</h2>
+        <p class="muted">Where and when did you drive?</p>
+        <div class="form-grid">
+          <label for="create-track"
+            >Track<select id="create-track" formControlName="trackId">
+              <option [ngValue]="0">Choose a track</option>
+              @for (track of tracks(); track track.id) {
+                <option [ngValue]="track.id">{{ track.name }} · {{ track.city }}</option>
+              }
+            </select></label
+          ><label for="create-vehicle"
+            >Vehicle <small>Optional</small
+            ><select id="create-vehicle" formControlName="vehicleId">
+              <option [ngValue]="0">No vehicle selected</option>
+              @for (vehicle of vehicles(); track vehicle.id) {
+                <option [ngValue]="vehicle.id">{{ vehicle.name }}</option>
+              }
+            </select></label
+          ><label for="create-start-date"
+            >Start date<input
+              id="create-start-date"
+              type="date"
+              formControlName="startDate" /></label
+          ><label for="create-end-date"
+            >End date<input id="create-end-date" type="date" formControlName="endDate" /></label
+          ><label class="wide" for="create-conditions"
+            >Conditions <small>Optional</small
+            ><input
+              id="create-conditions"
+              type="text"
+              formControlName="conditions"
+              placeholder="Dry, 72°F, light wind" /></label
+          ><label class="wide" for="create-notes"
+            >Notes <small>Optional</small
+            ><textarea
+              id="create-notes"
+              rows="4"
+              formControlName="notes"
+              placeholder="What did you learn today?"
+            ></textarea>
+          </label>
+        </div>
+        <div class="wizard-actions">
+          <button class="primary-button" type="submit">Continue to sessions →</button>
+        </div>
+      </form>
+    } @else if (step() === 2) {
+      <section class="panel wizard-panel">
+        <span class="eyebrow">Step 2 of 3</span>
+        <h2>Sessions and laps</h2>
+        <p class="muted">
+          Add every session and its lap times. You can leave a session without laps and fill it in
+          later.
+        </p>
+        <form class="add-session" [formGroup]="sessionForm" (ngSubmit)="addSession()">
+          <input
+            type="text"
+            formControlName="name"
+            placeholder="Session name, e.g. Open practice"
+            aria-label="Session name"
+          /><input
+            type="text"
+            formControlName="notes"
+            placeholder="Notes (optional)"
+            aria-label="Session notes"
+          /><button class="outline-button" type="submit">+ Add session</button>
+        </form>
+        @if (!sessions().length) {
+          <p class="empty-state">No sessions added yet.</p>
+        }
+        @for (session of sessions(); track $index; let sessionIndex = $index) {
+          <article class="draft-session">
+            <div class="session-title">
+              <div>
+                <h3>{{ session.name }}</h3>
+                <span>{{ session.notes || 'No session notes' }}</span>
+              </div>
+              <button
+                type="button"
+                class="delete-button"
+                (click)="removeSession(sessionIndex)"
+                aria-label="Remove {{ session.name }}"
+              >
+                ×
+              </button>
+            </div>
+            <div class="draft-laps">
+              @for (lap of session.laps; track $index; let lapIndex = $index) {
+                <div>
+                  <span>Lap {{ lap.lapNumber }}</span
+                  ><strong>{{ lap.displayTime }}</strong
+                  ><button
+                    type="button"
+                    class="delete-button"
+                    (click)="removeLap(sessionIndex, lapIndex)"
+                    aria-label="Remove lap"
+                  >
+                    ×
+                  </button>
+                </div>
+              }
+              @if (!session.laps.length) {
+                <span class="muted">No laps added yet.</span>
+              }
+            </div>
+            <form class="add-lap" [formGroup]="lapForm" (ngSubmit)="addLap(sessionIndex)">
+              <input
+                type="number"
+                formControlName="lapNumber"
+                min="1"
+                aria-label="Lap number"
+              /><input
+                type="text"
+                formControlName="time"
+                placeholder="Lap time, e.g. 1:42.350"
+                aria-label="Lap time"
+              /><button class="outline-button" type="submit">+ Add lap</button>
+            </form>
+          </article>
+        }
+        <div class="wizard-actions">
+          <button class="ghost-button" type="button" (click)="previousStep()">← Back</button
+          ><button class="primary-button" type="button" (click)="nextStep()">
+            Review track day →
+          </button>
+        </div>
+      </section>
+    } @else {
+      <section class="panel wizard-panel">
+        <span class="eyebrow">Step 3 of 3</span>
+        <h2>Review and save</h2>
+        <p class="muted">
+          Everything looks good? Saving will persist the event, sessions, and laps together.
+        </p>
+        <dl class="review-list">
+          <div>
+            <dt>Track</dt>
+            <dd>
+              {{
+                tracks().find((track) => track.id === eventForm.controls.trackId.value)?.name ||
+                  'Not selected'
+              }}
+            </dd>
+          </div>
+          <div>
+            <dt>Dates</dt>
+            <dd>
+              {{ eventForm.controls.startDate.value }} to {{ eventForm.controls.endDate.value }}
+            </dd>
+          </div>
+          <div>
+            <dt>Vehicle</dt>
+            <dd>
+              {{
+                vehicles().find((vehicle) => vehicle.id === eventForm.controls.vehicleId.value)
+                  ?.name ||
+                  'No
+                    vehicle selected'
+              }}
+            </dd>
+          </div>
+          <div>
+            <dt>Sessions</dt>
+            <dd>
+              {{ sessions().length }} ·
+              {{ sessions().reduce((total, session) => total + session.laps.length, 0) }} laps
+            </dd>
+          </div>
+        </dl>
+        @if (error()) {
+          <p class="form-error" role="alert">{{ error() }}</p>
+        }
+        <div class="wizard-actions">
+          <button class="ghost-button" type="button" (click)="previousStep()">← Back</button
+          ><button class="primary-button" type="button" [disabled]="saving()" (click)="complete()">
+            {{ saving() ? 'Saving...' : 'Complete and save track day' }}
+          </button>
+        </div>
+      </section>
+    }
+  }
+  @if (error() && step() !== 3) {
+    <p class="form-error" role="alert">{{ error() }}</p>
+  }
+</main>

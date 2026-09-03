@@ -1,7 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Lap, Session, Track, TrackDay, Vehicle } from './track-days.store';
+import {
+  CompletedTrackDay,
+  Lap,
+  Session,
+  Track,
+  TrackDay,
+  TrackDayStats,
+  Vehicle,
+} from './track-days.store';
 
 @Injectable({ providedIn: 'root' })
 export class TrackDaysApiService {
@@ -9,6 +17,9 @@ export class TrackDaysApiService {
 
   list(): Observable<TrackDay[]> {
     return this.http.get<TrackDay[]>('/api/track-days');
+  }
+  stats(): Observable<TrackDayStats[]> {
+    return this.http.get<TrackDayStats[]>('/api/track-days/stats');
   }
   tracks(): Observable<Track[]> {
     return this.http.get<Track[]>('/api/tracks');
@@ -19,11 +30,26 @@ export class TrackDaysApiService {
   create(trackDay: {
     trackId: number;
     vehicleId: number | null;
-    date: string;
+    startDate: string;
     notes: string | null;
     conditions: string | null;
   }): Observable<TrackDay> {
     return this.http.post<TrackDay>('/api/track-days', trackDay);
+  }
+  complete(payload: {
+    trackId: number;
+    vehicleId: number | null;
+    startDate: string;
+    endDate: string;
+    notes: string | null;
+    conditions: string | null;
+    sessions: {
+      name: string;
+      notes: string | null;
+      laps: { lapNumber: number; timeMillis: number }[];
+    }[];
+  }): Observable<CompletedTrackDay> {
+    return this.http.post<CompletedTrackDay>('/api/track-days/complete', payload);
   }
   sessions(trackDayId: number): Observable<Session[]> {
     return this.http.get<Session[]>(`/api/track-days/${trackDayId}/sessions`);

@@ -4,59 +4,14 @@
       <span class="eyebrow">Drive log</span>
       <h2 id="track-days-title">Track Days</h2>
     </div>
-    <span class="day-count">{{ trackDays().length }} days logged</span>
+    <span class="day-count">{{ trackDays().length }} events logged</span>
   </div>
   <div class="track-days-layout">
-    <form class="panel day-form" [formGroup]="dayForm" (ngSubmit)="createTrackDay()">
-      <span class="eyebrow">New entry</span>
-      <h3>Log a track day</h3>
-      <label for="track-day-track">Track</label>
-      <select id="track-day-track" formControlName="trackId">
-        <option [ngValue]="0">Choose a track</option>
-        @for (track of tracks(); track track.id) {
-          <option [ngValue]="track.id">{{ track.name }} · {{ track.city }}</option>
-        }
-      </select>
-      @if (dayForm.controls.trackId.touched && dayForm.controls.trackId.invalid) {
-        <span class="field-error">Choose a track.</span>
-      }
-      <label for="track-day-vehicle">Vehicle <span class="muted">Optional</span></label>
-      <select id="track-day-vehicle" formControlName="vehicleId">
-        <option [ngValue]="0">No vehicle selected</option>
-        @for (vehicle of vehicles(); track vehicle.id) {
-          <option [ngValue]="vehicle.id">{{ vehicle.name }}</option>
-        }
-      </select>
-      <label for="track-day-date">Date</label
-      ><input id="track-day-date" type="date" formControlName="date" />
-      <label for="track-day-conditions">Conditions <span class="muted">Optional</span></label
-      ><input
-        id="track-day-conditions"
-        type="text"
-        formControlName="conditions"
-        placeholder="Dry, 72°F, light wind"
-      />
-      <label for="track-day-notes">Notes <span class="muted">Optional</span></label
-      ><textarea
-        id="track-day-notes"
-        formControlName="notes"
-        rows="3"
-        placeholder="What did you learn today?"
-      ></textarea>
-      <button class="primary-button" type="submit" [disabled]="saving()">
-        {{
-          saving()
-            ? 'Saving...'
-            : 'Save track
-                day'
-        }}
-      </button>
-    </form>
     <div class="panel day-list">
       <div class="panel-heading">
         <div>
           <span class="eyebrow">Your history</span>
-          <h3>Recorded days</h3>
+          <h3>Recorded events</h3>
         </div>
       </div>
       @if (loading()) {
@@ -74,11 +29,17 @@
                 (click)="openDay(day)"
               >
                 <span
-                  ><strong>{{ day.date }}</strong
+                  ><strong>{{ formatDateRange(day) }}</strong
                   ><small>{{ trackName(day.trackId) }}</small></span
                 ><span
                   ><strong>{{ vehicleName(day.vehicleId) }}</strong
                   ><small>{{ day.conditions || 'Conditions not added' }}</small></span
+                ><span
+                  ><strong>{{ fastestLap(day.id) }}</strong
+                  ><small>Fastest lap</small></span
+                ><span
+                  ><strong>{{ averageLapTime(day.id) }}</strong
+                  ><small>Avg lap time</small></span
                 ><span class="open-arrow">→</span>
               </button>
             </li>
@@ -91,24 +52,14 @@
     <section class="panel detail-panel" aria-labelledby="detail-title">
       <div class="panel-heading">
         <div>
-          <span class="eyebrow">{{ day.date }} · {{ trackName(day.trackId) }}</span>
+          <span class="eyebrow"
+            >{{ day.startDate }} to {{ day.endDate || day.startDate }} ·
+            {{ trackName(day.trackId) }}</span
+          >
           <h3 id="detail-title">Sessions and lap times</h3>
         </div>
         <span class="muted">{{ day.notes || 'No notes for this day' }}</span>
       </div>
-      <form class="session-form" [formGroup]="sessionForm" (ngSubmit)="createSession()">
-        <input
-          aria-label="Session name"
-          type="text"
-          formControlName="name"
-          placeholder="Session name"
-        /><input
-          aria-label="Session notes"
-          type="text"
-          formControlName="notes"
-          placeholder="Session notes (optional)"
-        /><button class="outline-button" type="submit" [disabled]="saving()">+ Add session</button>
-      </form>
       @if (!sessions().length) {
         <p class="empty-state">Add a session to start recording laps.</p>
       }
@@ -129,23 +80,6 @@
               <span class="muted">No laps recorded</span>
             }
           </div>
-          <form
-            class="lap-form"
-            [formGroup]="lapForm(session.id)"
-            (ngSubmit)="createLap(session.id)"
-          >
-            <input
-              type="number"
-              formControlName="lapNumber"
-              aria-label="Lap number"
-              min="1"
-            /><input
-              type="text"
-              formControlName="time"
-              aria-label="Lap time"
-              placeholder="1:42.350"
-            /><button class="outline-button" type="submit" [disabled]="saving()">+ Add lap</button>
-          </form>
         </div>
       }
     </section>

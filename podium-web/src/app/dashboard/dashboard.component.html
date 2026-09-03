@@ -12,16 +12,38 @@
     <span class="eyebrow">Performance snapshot</span>
     <h2>Welcome back, {{ firstName() }}</h2>
   </div>
-  <select
-    class="range-select"
-    [value]="range()"
-    (change)="changeRange($event)"
-    aria-label="Dashboard time range"
-  >
-    <option>Last 12 Months</option>
-    <option>Last 6 Months</option>
-    <option>This Year</option>
-  </select>
+  <div class="dashboard-filters">
+    <select
+      class="filter-select"
+      [value]="selectedTrackId()"
+      (change)="changeTrack($event)"
+      aria-label="Filter by track"
+    >
+      @for (track of attendedTracks(); track track.id) {
+        <option [value]="track.id">{{ track.name }}</option>
+      }
+    </select>
+    <select
+      class="filter-select"
+      [value]="selectedVehicleId()"
+      (change)="changeVehicle($event)"
+      aria-label="Filter by vehicle"
+    >
+      @for (vehicle of vehicles(); track vehicle.id) {
+        <option [value]="vehicle.id">{{ vehicle.name }}</option>
+      }
+    </select>
+    <select
+      class="range-select"
+      [value]="range()"
+      (change)="changeRange($event)"
+      aria-label="Dashboard time range"
+    >
+      <option>Last 12 Months</option>
+      <option>Last 6 Months</option>
+      <option>This Year</option>
+    </select>
+  </div>
 </div>
 <div class="metrics-grid">
   <app-metric-card
@@ -43,14 +65,4 @@
     icon="⌁"
   /><app-metric-card label="Seat time" [value]="seatTime()" detail="Driving time" icon="◒" />
 </div>
-@if (dashboard()?.recentTrackDays?.length) {
-  <div class="panel record-panel">
-    <div class="eyebrow">Latest track day</div>
-    <h2>{{ dashboard()?.recentTrackDays?.[0]?.date }}</h2>
-    <span class="muted"
-      >Track {{ dashboard()?.recentTrackDays?.[0]?.trackId }} · Vehicle
-      {{ dashboard()?.recentTrackDays?.[0]?.vehicleId }}</span
-    >
-  </div>
-}
 <app-recent-days [days]="dashboard()?.recentTrackDays ?? []" />

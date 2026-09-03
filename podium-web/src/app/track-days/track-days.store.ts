@@ -21,7 +21,8 @@ export interface TrackDay {
   userId: number;
   trackId: number;
   vehicleId: number | null;
-  date: string;
+  startDate: string;
+  endDate?: string;
   notes: string | null;
   conditions: string | null;
 }
@@ -40,12 +41,25 @@ export interface Lap {
   timeMillis: number;
 }
 
+export interface TrackDayStats {
+  trackDayId: number;
+  fastestLapTimeMillis: number;
+  averageLapTimeMillis: number;
+}
+
+export interface CompletedTrackDay {
+  trackDay: TrackDay;
+  sessions: Session[];
+  laps: Record<number, Lap[]>;
+}
+
 export interface TrackDaysState {
   tracks: Track[];
   vehicles: Vehicle[];
   trackDays: TrackDay[];
   sessions: Session[];
   laps: Record<number, Lap[]>;
+  stats: Record<number, TrackDayStats>;
   selectedDayId: number | null;
   loading: boolean;
   saving: boolean;
@@ -55,14 +69,19 @@ export interface TrackDaysState {
 export const trackDaysLoadRequested = createAction('[Track Days] Load Requested');
 export const trackDaysLoaded = createAction(
   '[Track Days] Loaded',
-  (data: { tracks: Track[]; vehicles: Vehicle[]; trackDays: TrackDay[] }) => data,
+  (data: {
+    tracks: Track[];
+    vehicles: Vehicle[];
+    trackDays: TrackDay[];
+    stats?: TrackDayStats[];
+  }) => data,
 );
 export const trackDayCreateRequested = createAction(
   '[Track Days] Create Requested',
   (trackDay: {
     trackId: number;
     vehicleId: number | null;
-    date: string;
+    startDate: string;
     notes: string | null;
     conditions: string | null;
   }) => ({ trackDay }),
@@ -111,6 +130,7 @@ const initialState: TrackDaysState = {
   trackDays: [],
   sessions: [],
   laps: {},
+  stats: {},
   selectedDayId: null,
   loading: false,
   saving: false,
@@ -122,7 +142,13 @@ export const trackDaysFeature = createFeature({
   reducer: createReducer(
     initialState,
     on(trackDaysLoadRequested, (state) => ({ ...state, loading: true, error: null })),
-    on(trackDaysLoaded, (state, data) => ({ ...state, ...data, loading: false, error: null })),
+    on(trackDaysLoaded, (state, data) => ({
+      ...state,
+      ...data,
+      stats: Object.fromEntries((data.stats ?? []).map((summary) => [summary.trackDayId, summary])),
+      loading: false,
+      error: null,
+    })),
     on(trackDayCreateRequested, sessionCreateRequested, lapCreateRequested, (state) => ({
       ...state,
       saving: true,

@@ -30,6 +30,7 @@ export class TrackDaysEffects {
           tracks: this.api.tracks(),
           vehicles: this.api.vehicles(),
           trackDays: this.api.list(),
+          stats: this.api.stats(),
         }).pipe(
           map((data) => trackDaysLoaded(data)),
           catchError(() => of(trackDaysRequestFailed('Unable to load track-day data'))),

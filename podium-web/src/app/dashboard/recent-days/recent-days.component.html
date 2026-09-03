@@ -10,17 +10,10 @@
     @for (day of days(); track day.id) {
       <div class="recent-row">
         <div class="date-block">
-          <strong>{{ day.date }}</strong
+          <strong>{{ day.startDate }}</strong
           ><span>Track day</span>
         </div>
-        <div class="day-main">
-          <strong>Track {{ day.trackId }}</strong
-          ><span>Vehicle {{ day.vehicleId }}</span>
-        </div>
-        <div class="lap-block">
-          <strong>{{ day.id }}</strong
-          ><span>Day ID</span>
-        </div>
+        <div class="day-main"><strong>Recorded event</strong><span>Performance log</span></div>
         <div class="improvement">{{ day.conditions || 'No conditions' }}</div>
         <span class="weather">{{ day.notes || '' }}</span>
       </div>

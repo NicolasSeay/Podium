@@ -19,7 +19,7 @@ describe('RecentDaysComponent', () => {
     );
   });
 
-  it('renders supplied track day identifiers and metadata', () => {
+  it('renders supplied track day metadata without database identifiers', () => {
     const fixture = TestBed.createComponent(RecentDaysComponent);
     fixture.componentRef.setInput('days', [
       {
@@ -27,7 +27,7 @@ describe('RecentDaysComponent', () => {
         userId: 1,
         trackId: 1,
         vehicleId: 1,
-        date: '2026-08-24',
+        startDate: '2026-08-24',
         notes: 'Dry',
         conditions: 'Sunny',
       },
@@ -35,7 +35,10 @@ describe('RecentDaysComponent', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.textContent).toContain('2026-08-24');
-    expect(fixture.nativeElement.textContent).toContain('Track 1');
+    expect(fixture.nativeElement.textContent).toContain('Recorded event');
+    expect(fixture.nativeElement.textContent).not.toContain('Track 1');
+    expect(fixture.nativeElement.textContent).not.toContain('Vehicle 1');
+    expect(fixture.nativeElement.textContent).not.toContain('Day ID');
     expect(fixture.nativeElement.textContent).toContain('Sunny');
   });
 });

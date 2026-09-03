@@ -1,0 +1,28 @@
+.dashboard-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.filter-select {
+  min-width: 150px;
+  border: 1px solid #2b5366;
+  border-radius: 4px;
+  background: #0c222f;
+  color: #aac1ca;
+  padding: 8px 12px;
+  font-size: 11px;
+}
+
+@media (max-width: 760px) {
+  .dashboard-filters {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .filter-select,
+  .range-select {
+    flex: 1 1 150px;
+  }
+}

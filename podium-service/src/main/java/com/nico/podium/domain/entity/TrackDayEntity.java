@@ -17,7 +17,8 @@ public class TrackDayEntity {
     private Long userId;
     private Long trackId;
     private Long vehicleId;
-    private LocalDate date;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String notes;
     private String conditions;
 
@@ -29,13 +30,14 @@ public class TrackDayEntity {
         userId = day.userId();
         trackId = day.trackId();
         vehicleId = day.vehicleId();
-        date = day.date();
+        startDate = day.startDate();
+        endDate = day.endDate();
         notes = day.notes();
         conditions = day.conditions();
     }
 
     public TrackDay toDomain() {
-        return new TrackDay(id, userId, trackId, vehicleId, date, notes, conditions);
+        return new TrackDay(id, userId, trackId, vehicleId, startDate, endDate, notes, conditions);
     }
 
     public Long getId() {

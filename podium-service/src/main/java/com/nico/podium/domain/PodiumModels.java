@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 public final class PodiumModels {
 
@@ -23,7 +25,15 @@ public final class PodiumModels {
     }
 
     public record TrackDay(Long id, Long userId, Long trackId, Long vehicleId,
-                           LocalDate date, String notes, String conditions) {
+                           LocalDate startDate, LocalDate endDate, String notes, String conditions) {
+        public TrackDay(Long id, Long userId, Long trackId, Long vehicleId,
+                        LocalDate startDate, String notes, String conditions) {
+            this(id, userId, trackId, vehicleId, startDate, startDate, notes, conditions);
+        }
+    }
+
+    public record CompletedTrackDay(TrackDay trackDay, List<Session> sessions,
+                                    Map<Long, List<Lap>> laps) {
     }
 
     public record Session(Long id, Long trackDayId, String name, String notes) {
@@ -34,5 +44,8 @@ public final class PodiumModels {
 
     public record PersonalRecord(Long id, Long userId, Long lapId, Long trackId,
                                  Long vehicleId, Long timeMillis) {
+    }
+
+    public record TrackDayStats(Long trackDayId, Long fastestLapTimeMillis, Long averageLapTimeMillis) {
     }
 }
