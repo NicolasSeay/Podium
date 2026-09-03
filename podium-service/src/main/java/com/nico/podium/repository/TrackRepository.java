@@ -11,7 +11,7 @@ public interface TrackRepository {
 
     Optional<Track> findById(Long id);
 
-    List<Track> findByUserId(Long userId);
+    List<Track> findAll();
 
     void deleteById(Long id);
 

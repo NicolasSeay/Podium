@@ -10,7 +10,6 @@ export const routes: Routes = [
   { path: 'track-days', canActivate: [authGuard], component: App },
   { path: 'sessions', canActivate: [authGuard], component: App },
   { path: 'analytics', canActivate: [authGuard], component: App },
-  { path: 'tracks', canActivate: [authGuard], component: App },
   { path: 'vehicles', canActivate: [authGuard], component: App },
   { path: 'records', canActivate: [authGuard], component: App },
   { path: 'goals', canActivate: [authGuard], component: App },

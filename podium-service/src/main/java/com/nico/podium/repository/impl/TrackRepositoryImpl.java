@@ -28,8 +28,8 @@ public class TrackRepositoryImpl implements TrackRepository {
         return tracks.findById(id).map(TrackEntity::toDomain);
     }
 
-    public List<Track> findByUserId(Long userId) {
-        return tracks.findByUserId(userId).stream()
+    public List<Track> findAll() {
+        return tracks.findAll().stream()
                 .map(TrackEntity::toDomain)
                 .toList();
     }
