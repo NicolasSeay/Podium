@@ -36,6 +36,12 @@ export const vehicleCreateRequested = createAction(
 export const vehicleCreated = createAction('[Vehicles] Created', (vehicle: Vehicle) => ({
   vehicle,
 }));
+export const vehicleDeleteRequested = createAction('[Vehicles] Delete Requested', (id: number) => ({
+  id,
+}));
+export const vehicleDeleted = createAction('[Vehicles] Deleted', (id: number) => ({
+  id,
+}));
 export const vehiclesRequestFailed = createAction('[Vehicles] Request Failed', (error: string) => ({
   error,
 }));
@@ -62,6 +68,17 @@ export const vehiclesFeature = createFeature({
     on(vehicleCreated, (state, { vehicle }) => ({
       ...state,
       vehicles: [...state.vehicles, vehicle],
+      saving: false,
+      error: null,
+    })),
+    on(vehicleDeleteRequested, (state) => ({
+      ...state,
+      saving: true,
+      error: null,
+    })),
+    on(vehicleDeleted, (state, { id }) => ({
+      ...state,
+      vehicles: state.vehicles.filter((vehicle) => vehicle.id !== id),
       saving: false,
       error: null,
     })),

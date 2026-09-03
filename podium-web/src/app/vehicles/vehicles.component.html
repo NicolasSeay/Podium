@@ -55,13 +55,27 @@
         <ul>
           @for (vehicle of vehicles(); track vehicle.id) {
             <li>
-              <strong>{{ vehicle.name }}</strong>
-              <span
-                >{{ vehicle.make || 'Make not added'
-                }}{{ vehicle.model ? ' · ' + vehicle.model : ''
-                }}{{ vehicle.trim ? ' · ' + vehicle.trim : ''
-                }}{{ vehicle.year ? ' · ' + vehicle.year : '' }}</span
-              >
+              <div class="vehicle-item-row">
+                <div>
+                  <strong>{{ vehicle.name }}</strong>
+                  <span
+                    >{{ vehicle.make || 'Make not added'
+                    }}{{ vehicle.model ? ' · ' + vehicle.model : ''
+                    }}{{ vehicle.trim ? ' · ' + vehicle.trim : ''
+                    }}{{ vehicle.year ? ' · ' + vehicle.year : '' }}</span
+                  >
+                </div>
+                <button
+                  type="button"
+                  class="delete-vehicle-button"
+                  [attr.data-testid]="'delete-vehicle-' + vehicle.id"
+                  (click)="deleteVehicle(vehicle.id)"
+                  aria-label="Delete {{ vehicle.name }}"
+                  title="Delete vehicle"
+                >
+                  🗑️
+                </button>
+              </div>
             </li>
           }
         </ul>

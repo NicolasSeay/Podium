@@ -3,6 +3,7 @@
     "private": true,
     "scripts": {
         "start": "npm --prefix podium-web start",
+        "test": "npm --prefix podium-web test -- --watch=false",
         "prepare": "husky"
     },
     "devDependencies": {

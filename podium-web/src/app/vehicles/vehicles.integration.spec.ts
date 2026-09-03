@@ -38,19 +38,17 @@ describe('Vehicles page integration', () => {
     fixture.detectChanges();
 
     page.clickNavigation('Vehicles');
-    http
-      .expectOne('/api/vehicles')
-      .flush([
-        {
-          id: 1,
-          userId: 1,
-          name: 'Sunday Driver',
-          make: 'Mazda',
-          model: 'MX-5 Miata',
-          trim: 'Club',
-          year: 2020,
-        },
-      ]);
+    http.expectOne('/api/vehicles').flush([
+      {
+        id: 1,
+        userId: 1,
+        name: 'Sunday Driver',
+        make: 'Mazda',
+        model: 'MX-5 Miata',
+        trim: 'Club',
+        year: 2020,
+      },
+    ]);
     fixture.detectChanges();
 
     expect(page.text('#vehicles-title')).toBe('Vehicles');
@@ -104,5 +102,47 @@ describe('Vehicles page integration', () => {
 
     expect(page.text('.vehicle-list li strong')).toBe('Sunday Driver');
     expect(page.text('.vehicle-list li span')).toBe('Mazda · MX-5 Miata · LT1 · 2020');
+  });
+
+  it('prompts before deleting a saved vehicle and removes it from the list', () => {
+    const fixture = TestBed.createComponent(App);
+    const page = new AppPage(fixture);
+    const http = TestBed.inject(HttpTestingController);
+    const originalConfirm = window.confirm;
+    const confirmMessages: string[] = [];
+    (window as any).confirm = (message: string) => {
+      confirmMessages.push(message);
+      return true;
+    };
+
+    fixture.detectChanges();
+    flushDashboardRequest(http);
+    fixture.detectChanges();
+    page.clickNavigation('Vehicles');
+    http.expectOne('/api/vehicles').flush([
+      {
+        id: 1,
+        userId: 1,
+        name: 'Sunday Driver',
+        make: 'Mazda',
+        model: 'MX-5 Miata',
+        trim: 'Club',
+        year: 2020,
+      },
+    ]);
+    fixture.detectChanges();
+
+    page.find<HTMLButtonElement>('button[data-testid="delete-vehicle-1"]').click();
+    fixture.detectChanges();
+
+    expect(confirmMessages).toEqual(['Are you sure you want to delete this vehicle?']);
+    const deleteRequest = http.expectOne('/api/vehicles/1');
+    expect(deleteRequest.request.method).toBe('DELETE');
+    deleteRequest.flush(null, { status: 204, statusText: 'No Content' });
+    fixture.detectChanges();
+
+    expect(page.text('.vehicle-count')).toBe('0');
+    expect(page.text('.empty-state')).toBe('Your garage is ready for its first car.');
+    (window as any).confirm = originalConfirm;
   });
 });

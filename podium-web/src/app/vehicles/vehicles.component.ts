@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { vehicleCreateRequested, vehiclesFeature, vehiclesLoadRequested } from './vehicles.store';
+import {
+  vehicleCreateRequested,
+  vehicleDeleteRequested,
+  vehiclesFeature,
+  vehiclesLoadRequested,
+} from './vehicles.store';
 
 @Component({
   selector: 'app-vehicles',
@@ -46,5 +51,14 @@ export class VehiclesComponent {
       }),
     );
     this.form.reset();
+  }
+
+  protected deleteVehicle(vehicleId: number): void {
+    const confirmed = window.confirm('Are you sure you want to delete this vehicle?');
+    if (!confirmed) {
+      return;
+    }
+
+    this.store.dispatch(vehicleDeleteRequested(vehicleId));
   }
 }
