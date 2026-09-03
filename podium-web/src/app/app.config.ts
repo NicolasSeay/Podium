@@ -10,6 +10,9 @@ import { authInterceptor } from './auth.interceptor';
 import { authFeature } from './auth.store';
 import { VehiclesEffects } from './vehicles/vehicles.effects';
 import { vehiclesFeature } from './vehicles/vehicles.store';
+import { TrackDaysEffects } from './track-days/track-days.effects';
+import { trackDaysFeature } from './track-days/track-days.store';
+import { AuthEffects } from './auth.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,7 +23,8 @@ export const appConfig: ApplicationConfig = {
       [dashboardFeature.name]: dashboardFeature.reducer,
       [vehiclesFeature.name]: vehiclesFeature.reducer,
       [authFeature.name]: authFeature.reducer,
+      [trackDaysFeature.name]: trackDaysFeature.reducer,
     }),
-    provideEffects(DashboardEffects, VehiclesEffects),
+    provideEffects(AuthEffects, DashboardEffects, VehiclesEffects, TrackDaysEffects),
   ],
 };

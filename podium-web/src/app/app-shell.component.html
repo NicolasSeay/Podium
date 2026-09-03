@@ -1,0 +1,26 @@
+<div class="app-shell">
+  <app-sidebar />
+  <main class="content-area">
+    <header class="topbar">
+      <div>
+        <span class="eyebrow">Overview of your performance</span>
+        <h1>{{ activeNav() }}</h1>
+      </div>
+      <div class="top-actions">
+        <button class="outline-button" type="button" disabled>⌕ <span>Search</span></button>
+        <button class="primary-button" type="button" (click)="newTrackDay()">
+          + New Track Day
+        </button>
+      </div>
+    </header>
+    <div class="content-body">
+      @if (activeNav() === 'Track Days') {
+        <app-track-days />
+      } @else if (activeNav() === 'Vehicles') {
+        <app-vehicles />
+      } @else {
+        <app-dashboard />
+      }
+    </div>
+  </main>
+</div>

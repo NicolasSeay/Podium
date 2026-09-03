@@ -1,0 +1,44 @@
+<aside class="sidebar">
+  <div class="brand"><span class="brand-mark">P</span><span>Podium</span></div>
+  <div class="workspace-label">MY WORKSPACE</div>
+  <nav aria-label="Primary navigation">
+    @for (item of navigation; track item) {
+      <button
+        type="button"
+        class="nav-item"
+        [class.active]="activeNav() === item"
+        [disabled]="!implementedNavigation.has(item)"
+        (click)="changeNav(item)"
+      >
+        <span class="nav-icon">{{
+          item === 'Dashboard'
+            ? '▦'
+            : item === 'Track Days'
+              ? '◫'
+              : item === 'Sessions'
+                ? '◌'
+                : item === 'Analytics'
+                  ? '⌁'
+                  : item === 'Vehicles'
+                    ? '▱'
+                    : item === 'Records'
+                      ? '◇'
+                      : item === 'Goals'
+                        ? '◎'
+                        : '⚙'
+        }}</span
+        >{{ item }}
+      </button>
+    }
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="profile-avatar" aria-hidden="true">{{ initials() }}</div>
+    <div>
+      <strong>{{ sidebarName() }}</strong
+      ><span>Track driver</span>
+    </div>
+    <button class="logout-button" type="button" aria-label="Log out" (click)="logout()">
+      ↪ <span>Log out</span>
+    </button>
+  </div>
+</aside>

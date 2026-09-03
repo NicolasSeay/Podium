@@ -54,6 +54,7 @@ describe('authInterceptor', () => {
     http.expectOne('/api/dashboard').flush({}, { status: 401, statusText: 'Unauthorized' });
 
     expect(storage.get('podium.auth.token')).toBeUndefined();
+    expect(document.cookie).not.toContain('podium.user.id=');
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
 });

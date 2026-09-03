@@ -1,9 +1,13 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { RecentDaysComponent } from './recent-days.component';
 
 describe('RecentDaysComponent', () => {
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [RecentDaysComponent] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [RecentDaysComponent],
+      providers: [provideRouter([])],
+    }).compileComponents();
   });
 
   it('renders API track days without fabricated rows when empty', () => {
@@ -11,7 +15,7 @@ describe('RecentDaysComponent', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll('.recent-row')).toHaveLength(0);
     expect((fixture.nativeElement.querySelector('button') as HTMLButtonElement).disabled).toBe(
-      true,
+      false,
     );
   });
 

@@ -104,12 +104,12 @@ describe('App', () => {
       fixture.nativeElement.querySelectorAll('button.nav-item'),
     ) as HTMLButtonElement[];
     const incompleteButtons = buttons.filter((button) =>
-      ['Track Days', 'Sessions', 'Analytics', 'Records', 'Goals', 'Settings'].some((item) =>
+      ['Sessions', 'Analytics', 'Records', 'Goals', 'Settings'].some((item) =>
         button.textContent?.includes(item),
       ),
     );
 
-    expect(incompleteButtons).toHaveLength(6);
+    expect(incompleteButtons).toHaveLength(5);
     expect(incompleteButtons.every((button) => button.disabled)).toBe(true);
   });
 });
@@ -133,6 +133,7 @@ describe('App vehicle flow', () => {
   it('posts a new vehicle and renders the persisted response', () => {
     const fixture = TestBed.createComponent(App);
     const http = TestBed.inject(HttpTestingController);
+    fixture.detectChanges();
     http.expectOne('/api/dashboard').flush({
       personalRecords: [],
       totalTrackDays: 0,
