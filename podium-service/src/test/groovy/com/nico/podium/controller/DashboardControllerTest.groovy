@@ -21,7 +21,7 @@ class DashboardControllerTest {
     void exposesDashboardEndpoint() {
         when(auth.currentUser(any(), any())).thenReturn(new User(1L, 'driver@example.com', 'secret', 'Driver', 'Example'))
         when(dashboard.get(1L, 10L, 20L)).thenReturn(new com.nico.podium.domain.PodiumModels.DashboardResponse([], 0, 0, 0, 0L, [], []))
-        mvc.perform(get('/api/dashboard').header('X-User-Id', '1').param('trackId', '10').param('vehicleId', '20')).andExpect(status().isOk())
+        mvc.perform(get('/api/dashboard').header('Authorization', 'Bearer test-token').param('trackId', '10').param('vehicleId', '20')).andExpect(status().isOk())
         verify(dashboard).get(1L, 10L, 20L)
     }
 }

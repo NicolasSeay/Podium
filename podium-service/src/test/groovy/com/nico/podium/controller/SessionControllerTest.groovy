@@ -30,10 +30,10 @@ class SessionControllerTest {
         when(laps.list(anyLong(), eq(1L))).thenReturn([])
         when(laps.create(anyLong(), eq(1L), any())).thenReturn(new Lap(1L, 1L, 1, 95000L))
 
-        mvc.perform(get('/api/sessions/1').header('X-User-Id', '1')).andExpect(status().isOk())
-        mvc.perform(patch('/api/sessions/1').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"name":"Race"}')).andExpect(status().isOk())
-        mvc.perform(delete('/api/sessions/1').header('X-User-Id', '1')).andExpect(status().isNoContent())
-        mvc.perform(get('/api/sessions/1/laps').header('X-User-Id', '1')).andExpect(status().isOk())
-        mvc.perform(post('/api/sessions/1/laps').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"timeMillis":95000}')).andExpect(status().isOk())
+        mvc.perform(get('/api/sessions/1').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
+        mvc.perform(patch('/api/sessions/1').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"name":"Race"}')).andExpect(status().isOk())
+        mvc.perform(delete('/api/sessions/1').header('Authorization', 'Bearer test-token')).andExpect(status().isNoContent())
+        mvc.perform(get('/api/sessions/1/laps').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
+        mvc.perform(post('/api/sessions/1/laps').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"timeMillis":95000}')).andExpect(status().isOk())
     }
 }

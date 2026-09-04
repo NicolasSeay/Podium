@@ -27,7 +27,7 @@ class UserControllerTest {
         when(auth.currentUser(any(), any())).thenReturn(user)
         when(users.update(anyLong(), any())).thenReturn(user)
 
-        mvc.perform(get('/api/users/me').header('X-User-Id', '1')).andExpect(status().isOk())
-        mvc.perform(patch('/api/users/me').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"name":"Updated"}')).andExpect(status().isOk())
+        mvc.perform(get('/api/users/me').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
+        mvc.perform(patch('/api/users/me').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"name":"Updated"}')).andExpect(status().isOk())
     }
 }

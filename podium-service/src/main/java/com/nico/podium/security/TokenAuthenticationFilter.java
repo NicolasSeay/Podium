@@ -29,11 +29,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
         String authorization = request.getHeader("Authorization");
-        String userHeader = request.getHeader("X-User-Id");
 
-        if (authorization != null || userHeader != null) {
+        if (authorization != null) {
             try {
-                User user = auth.currentUser(authorization, userHeader);
+            User user = auth.currentUser(authorization, null);
                 var authentication = new UsernamePasswordAuthenticationToken(
                         user,
                         null,

@@ -4,13 +4,21 @@ import com.nico.podium.domain.PodiumModels.AuthResponse;
 import com.nico.podium.domain.PodiumModels.LoginRequest;
 import com.nico.podium.domain.PodiumModels.RegisterRequest;
 import com.nico.podium.domain.PodiumModels.User;
+import com.nico.podium.domain.entity.AuthTokenEntity;
 import com.nico.podium.repository.UserRepository;
+import com.nico.podium.repository.jpa.AuthTokenJpaRepository;
 import com.nico.podium.service.AuthService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Base64;
+import java.util.HexFormat;
 
 import static com.nico.podium.service.impl.ServiceSupportImpl.error;
 import static com.nico.podium.service.impl.ServiceSupportImpl.id;
@@ -18,58 +26,90 @@ import static com.nico.podium.service.impl.ServiceSupportImpl.id;
 @Service
 public class AuthServiceImpl implements AuthService {
     private final UserRepository users;
-    private final Map<String, String> tokens = new ConcurrentHashMap<>();
+    private final AuthTokenJpaRepository tokens;
+    private final PasswordEncoder passwordEncoder;
+    private final SecureRandom secureRandom = new SecureRandom();
+    private final Duration tokenLifetime = Duration.ofHours(1);
 
-    public AuthServiceImpl(UserRepository users) {
+    public AuthServiceImpl(UserRepository users, AuthTokenJpaRepository tokens, PasswordEncoder passwordEncoder) {
         this.users = users;
+        this.tokens = tokens;
+        this.passwordEncoder = passwordEncoder;
     }
 
     private static String bearer(String value) {
-        return value.startsWith("Bearer ") ? value.substring(7) : value;
+        if (value == null || !value.regionMatches(true, 0, "Bearer ", 0, 7)) {
+            throw error(HttpStatus.UNAUTHORIZED, "a bearer token is required");
+        }
+        String token = value.substring(7).trim();
+        if (token.isEmpty()) {
+            throw error(HttpStatus.UNAUTHORIZED, "a bearer token is required");
+        }
+        return token;
     }
 
     public AuthResponse register(RegisterRequest request) {
         String email = request.email();
         String password = request.password();
-        if (email == null || password == null) {
+        if (email == null || password == null || email.isBlank() || password.length() < 12) {
             throw error(HttpStatus.BAD_REQUEST, "email and password are required");
         }
+        email = email.trim();
         if (users.findByEmail(email).isPresent()) {
             throw error(HttpStatus.CONFLICT, "email is already registered");
         }
-        return response(users.save(new User(null, email, password, request.firstName(), request.lastName())));
+        return response(users.save(new User(null, email, passwordEncoder.encode(password), request.firstName(), request.lastName())));
     }
 
     public AuthResponse login(LoginRequest request) {
         String email = request.email();
         String password = request.password();
-        User user = users.findByEmail(email).filter(candidate -> candidate.password().equals(password)).orElseThrow(() -> error(HttpStatus.UNAUTHORIZED, "invalid credentials"));
+        User user = users.findByEmail(email)
+            .filter(candidate -> password != null && passwordEncoder.matches(password, candidate.password()))
+            .orElseThrow(() -> error(HttpStatus.UNAUTHORIZED, "invalid credentials"));
         return response(user);
     }
 
     public AuthResponse refresh(String authorization) {
         User user = currentUser(authorization, null);
-        tokens.remove(bearer(authorization));
+        revoke(authorization);
         return response(user);
     }
 
     public void logout(String authorization) {
         if (authorization != null) {
-            tokens.remove(bearer(authorization));
+            revoke(authorization);
         }
     }
 
     public User currentUser(String authorization, String userHeader) {
-        String userId = authorization == null ? userHeader : tokens.get(bearer(authorization));
-        if (userId == null) {
-            throw error(HttpStatus.UNAUTHORIZED, "authentication is required");
-        }
-        return users.findById(Long.valueOf(userId)).orElseThrow(() -> error(HttpStatus.UNAUTHORIZED, "unknown user"));
+        AuthTokenEntity token = tokens.findByTokenHashAndRevokedAtIsNull(hash(bearer(authorization)))
+            .filter(candidate -> candidate.getExpiresAt().isAfter(Instant.now()))
+            .orElseThrow(() -> error(HttpStatus.UNAUTHORIZED, "invalid or expired token"));
+        return users.findById(token.getUserId()).orElseThrow(() -> error(HttpStatus.UNAUTHORIZED, "unknown user"));
     }
 
     private AuthResponse response(User user) {
-        String token = id();
-        tokens.put(token, String.valueOf(user.id()));
+        byte[] tokenBytes = new byte[32];
+        secureRandom.nextBytes(tokenBytes);
+        String token = Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);
+        tokens.save(new AuthTokenEntity(hash(token), user.id(), Instant.now().plus(tokenLifetime)));
         return new AuthResponse(user, token);
+    }
+
+    private void revoke(String authorization) {
+        AuthTokenEntity token = tokens.findByTokenHashAndRevokedAtIsNull(hash(bearer(authorization)))
+                .orElseThrow(() -> error(HttpStatus.UNAUTHORIZED, "invalid token"));
+        token.revoke();
+        tokens.save(token);
+    }
+
+    private static String hash(String token) {
+        try {
+            return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
+                    .digest(token.getBytes(StandardCharsets.UTF_8)));
+        } catch (Exception exception) {
+            throw new IllegalStateException("SHA-256 is unavailable", exception);
+        }
     }
 }

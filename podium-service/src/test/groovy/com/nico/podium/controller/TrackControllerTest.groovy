@@ -28,10 +28,10 @@ class TrackControllerTest {
         when(tracks.create(anyLong(), any())).thenReturn(track)
         when(tracks.update(anyLong(), eq(1L), any())).thenReturn(track)
 
-        mvc.perform(get('/api/tracks').header('X-User-Id', '1')).andExpect(status().isOk())
-        mvc.perform(post('/api/tracks').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"name":"Road Atlanta"}')).andExpect(status().isOk())
-        mvc.perform(get('/api/tracks/1').header('X-User-Id', '1')).andExpect(status().isOk())
-        mvc.perform(patch('/api/tracks/1').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"city":"Braselton"}')).andExpect(status().isOk())
-        mvc.perform(delete('/api/tracks/1').header('X-User-Id', '1')).andExpect(status().isNoContent())
+        mvc.perform(get('/api/tracks').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
+        mvc.perform(post('/api/tracks').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"name":"Road Atlanta"}')).andExpect(status().isOk())
+        mvc.perform(get('/api/tracks/1').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
+        mvc.perform(patch('/api/tracks/1').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"city":"Braselton"}')).andExpect(status().isOk())
+        mvc.perform(delete('/api/tracks/1').header('Authorization', 'Bearer test-token')).andExpect(status().isNoContent())
     }
 }
