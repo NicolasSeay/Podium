@@ -33,6 +33,10 @@ The local Angular development build keeps API requests relative and uses the
 development proxy to reach `http://localhost:8080`. Build the frontend with
 `npm --prefix podium-web run build` for production; Angular replaces the local
 API configuration with `https://podium-u3rl.onrender.com` in that build.
+The `podium-web/vercel.json` configuration installs and builds the Angular
+app, publishes its `dist/podium-web/browser` output, and rewrites client-side
+routes to `index.html`. Keep the Vercel project Root Directory set to
+`podium-web` so this configuration is applied.
 
 ## Deploy the backend with Docker
 
