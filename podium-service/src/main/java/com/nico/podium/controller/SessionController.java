@@ -3,6 +3,7 @@ package com.nico.podium.controller;
 import com.nico.podium.domain.PodiumModels.*;
 import com.nico.podium.service.LapService;
 import com.nico.podium.service.SessionService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class SessionController extends ControllerSupport {
     }
 
     @PatchMapping("/{id}")
-    public Session update(@PathVariable Long id, @RequestBody SessionRequest request) {
+    public Session update(@PathVariable Long id, @Valid @RequestBody SessionRequest request) {
         return sessions.update(userId(), id, request);
     }
 
@@ -42,7 +43,7 @@ public class SessionController extends ControllerSupport {
     }
 
     @PostMapping("/{id}/laps")
-    public Lap createLap(@PathVariable Long id, @RequestBody LapRequest request) {
+    public Lap createLap(@PathVariable Long id, @Valid @RequestBody LapRequest request) {
         return laps.create(userId(), id, request);
     }
 }

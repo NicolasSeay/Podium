@@ -15,9 +15,11 @@ GRANT ALL PRIVILEGES ON podium.* TO 'podium_service'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-Run the backend from `podium-service` with `mvn spring-boot:run`. Hibernate
-creates or updates the JPA tables on startup. Tests use an in-memory H2 database
-instead of the local MySQL instance.
+Run the backend from `podium-service` with `mvn spring-boot:run`. Apply
+`SQL/schema.sql` before starting the service; production defaults to
+`JPA_DDL_AUTO=validate` so an incomplete schema fails startup. Set
+`JPA_DDL_AUTO=update` only for an explicitly controlled local development
+database. Tests use an in-memory H2 database instead of the local MySQL instance.
 
 Useful MySQL maintenance scripts are collected in `SQL/utils.sql`: one section
 removes the application tables, one clears their data, and one reports table
@@ -43,6 +45,7 @@ environment variables:
 - `DB_PASSWORD`
 - `CORS_ALLOWED_ORIGINS`, a comma-separated list of origin patterns such as
   `https://podium-*-bronze7.vercel.app`
+- `JPA_DDL_AUTO`, which should remain `validate` in production
 
 Spring Boot uses Render's `PORT` value automatically and defaults to port 8080
 when running locally. Spring Boot Actuator exposes `/actuator/health` for the
@@ -52,9 +55,9 @@ CORS origin values as secrets to be configured in Render. The backend defaults
 to Podium's Vercel deployment pattern and `http://localhost:4200` when the
 CORS variable is not set.
 
-The service still uses MySQL and Hibernate's `ddl-auto=update`; it does not
-create or provision the external database. Create the database and grant the
-configured user access before deploying, and treat `SQL/hydration.sql` as an
+The service still uses MySQL and does not create or provision the external
+database. Create the database, apply `SQL/schema.sql`, and grant the configured
+user access before deploying, and treat `SQL/hydration.sql` as an
 optional, reviewed data-load script rather than an automatic production step.
 
 ## Test coverage

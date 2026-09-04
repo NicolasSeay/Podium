@@ -20,7 +20,6 @@ describe('AuthEffects', () => {
       },
     });
     storage.set('podium.auth.token', 'session-token');
-    document.cookie = 'podium.user.id=1; Path=/; SameSite=Lax';
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),
@@ -35,10 +34,9 @@ describe('AuthEffects', () => {
   afterEach(() => {
     http.verify();
     storage.clear();
-    document.cookie = 'podium.user.id=; Max-Age=0; Path=/; SameSite=Lax';
   });
 
-  it('loads the current user when a token and user ID cookie exist', () => {
+  it('loads the current user when a token exists', () => {
     TestBed.inject(Store).dispatch(authRehydrateRequested());
 
     const request = http.expectOne('/api/users/me');

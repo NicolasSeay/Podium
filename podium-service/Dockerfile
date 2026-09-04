@@ -10,6 +10,9 @@ FROM eclipse-temurin:26-jre
 WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
+RUN useradd --system --uid 10001 appuser \
+	&& chown -R appuser:appuser /app
+USER appuser
 
 EXPOSE 8080
 

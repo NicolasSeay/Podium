@@ -3,6 +3,7 @@ package com.nico.podium.controller;
 import com.nico.podium.domain.PodiumModels.Lap;
 import com.nico.podium.domain.PodiumModels.LapRequest;
 import com.nico.podium.service.LapService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class LapController extends ControllerSupport {
     }
 
     @PatchMapping("/{id}")
-    public Lap update(@PathVariable Long id, @RequestBody LapRequest request) {
+    public Lap update(@PathVariable Long id, @Valid @RequestBody LapRequest request) {
         return laps.update(userId(), id, request);
     }
 

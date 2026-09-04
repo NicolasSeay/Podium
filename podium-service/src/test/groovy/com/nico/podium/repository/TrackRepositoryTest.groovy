@@ -15,11 +15,9 @@ class TrackRepositoryTest {
     @Autowired
     TrackJpaRepository tracks
     @Test
-    void managesTracks() {
+    void readsTracksWithoutMutationOperations() {
         def repository = new TrackRepositoryImpl(tracks)
-        def track = repository.save(new Track(null, 'Road Atlanta', 'Braselton', 'United States', 2.54G))
-        assertTrue(repository.findAll().contains(track))
-        repository.deleteById(track.id())
-        assertTrue(repository.findById(track.id()).isEmpty())
+        assertTrue(repository.findAll().isEmpty())
+        assertTrue(repository.findById(1L).isEmpty())
     }
 }

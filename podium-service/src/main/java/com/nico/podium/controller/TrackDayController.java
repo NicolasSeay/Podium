@@ -3,6 +3,7 @@ package com.nico.podium.controller;
 import com.nico.podium.domain.PodiumModels.*;
 import com.nico.podium.service.SessionService;
 import com.nico.podium.service.TrackDayService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,12 +32,12 @@ public class TrackDayController extends ControllerSupport {
     }
 
     @PostMapping
-    public TrackDay create(@RequestBody TrackDayRequest request) {
+    public TrackDay create(@Valid @RequestBody TrackDayRequest request) {
         return days.create(userId(), request);
     }
 
     @PostMapping("/complete")
-    public CompletedTrackDay complete(@RequestBody TrackDayRequest request) {
+    public CompletedTrackDay complete(@Valid @RequestBody TrackDayRequest request) {
         return days.complete(userId(), request);
     }
 
@@ -47,7 +48,7 @@ public class TrackDayController extends ControllerSupport {
     }
 
     @PatchMapping("/{id:\\d+}")
-    public TrackDay update(@PathVariable Long id, @RequestBody TrackDayRequest request) {
+    public TrackDay update(@PathVariable Long id, @Valid @RequestBody TrackDayRequest request) {
         return days.update(userId(), id, request);
     }
 
@@ -63,7 +64,7 @@ public class TrackDayController extends ControllerSupport {
     }
 
     @PostMapping("/{id:\\d+}/sessions")
-    public Session createSession(@PathVariable Long id, @RequestBody SessionRequest request) {
+    public Session createSession(@PathVariable Long id, @Valid @RequestBody SessionRequest request) {
         return sessions.create(userId(), id, request);
     }
 }

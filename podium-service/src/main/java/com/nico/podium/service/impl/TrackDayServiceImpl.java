@@ -71,7 +71,7 @@ public class TrackDayServiceImpl implements TrackDayService {
         if (trackId == null) {
             throw error(HttpStatus.BAD_REQUEST, "trackId is required");
         }
-        tracks.get(userId, trackId);
+        tracks.get(trackId);
         Long vehicleId = request.vehicleId();
         if (vehicleId != null) {
             vehicles.get(userId, vehicleId);
@@ -89,7 +89,7 @@ public class TrackDayServiceImpl implements TrackDayService {
         if (trackId == null) {
             throw error(HttpStatus.BAD_REQUEST, "trackId is required");
         }
-        tracks.get(userId, trackId);
+        tracks.get(trackId);
         Long vehicleId = request.vehicleId();
         if (vehicleId != null) {
             vehicles.get(userId, vehicleId);
@@ -127,7 +127,7 @@ public class TrackDayServiceImpl implements TrackDayService {
     public TrackDay update(Long userId, Long id, TrackDayRequest request) {
         TrackDay c = get(userId, id);
         Long trackId = request.trackId() == null ? c.trackId() : request.trackId();
-        tracks.get(userId, trackId);
+        tracks.get(trackId);
         Long vehicleId = request.vehicleId() == null ? c.vehicleId() : request.vehicleId();
         if (vehicleId != null) {
             vehicles.get(userId, vehicleId);

@@ -12,7 +12,7 @@ export class AuthEffects {
   readonly rehydrate$ = createEffect(() =>
     this.actions$.pipe(
       ofType(authRehydrateRequested),
-      filter(() => this.auth.isAuthenticated() && this.auth.userId() !== null),
+      filter(() => this.auth.isAuthenticated()),
       switchMap(() =>
         this.auth.currentUser().pipe(
           map((user) => authUserLoaded(user)),

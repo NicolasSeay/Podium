@@ -17,10 +17,6 @@ public class TrackRepositoryImpl implements TrackRepository {
         this.tracks = tracks;
     }
 
-    public Track save(Track value) {
-        return tracks.save(new TrackEntity(value)).toDomain();
-    }
-
     public Optional<Track> findById(Long id) {
         return tracks.findById(id).map(TrackEntity::toDomain);
     }
@@ -29,10 +25,6 @@ public class TrackRepositoryImpl implements TrackRepository {
         return tracks.findAll().stream()
                 .map(TrackEntity::toDomain)
                 .toList();
-    }
-
-    public void deleteById(Long id) {
-        tracks.deleteById(id);
     }
 
 }

@@ -21,7 +21,7 @@ class RecordControllerTest {
     void exposesPersonalRecordEndpoint() {
         when(auth.currentUser(any(), any())).thenReturn(new User(1L, 'driver@example.com', 'secret', 'Driver', 'Example'))
         when(records.list(1L)).thenReturn([new PersonalRecord(1L, 1L, 1L, 1L, 1L, 94000L)])
-        mvc.perform(get('/api/records').header('X-User-Id', '1')).andExpect(status().isOk())
+        mvc.perform(get('/api/records').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
         verify(records).list(1L)
     }
 }

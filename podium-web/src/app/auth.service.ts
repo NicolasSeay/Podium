@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { finalize, Observable, tap } from 'rxjs';
+import { catchError, finalize, map, Observable, of, tap } from 'rxjs';
 import { AuthUser } from './auth.store';
 
 interface LoginResponse {
@@ -12,7 +12,6 @@ interface LoginResponse {
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly tokenKey = 'podium.auth.token';
-  private readonly userIdCookieKey = 'podium.user.id';
 
   isAuthenticated(): boolean {
     return Boolean(this.token());
@@ -22,17 +21,21 @@ export class AuthService {
     return localStorage.getItem(this.tokenKey);
   }
 
-  userId(): number | null {
-    const cookie = document.cookie
-      .split('; ')
-      .find((entry) => entry.startsWith(`${this.userIdCookieKey}=`));
-    const value = cookie ? Number(decodeURIComponent(cookie.split('=').slice(1).join('='))) : NaN;
-    return Number.isInteger(value) && value > 0 ? value : null;
-  }
-
   clearSession(): void {
     localStorage.removeItem(this.tokenKey);
-    document.cookie = `${this.userIdCookieKey}=; Max-Age=0; Path=/; SameSite=Lax`;
+  }
+
+  ensureAuthenticated(): Observable<boolean> {
+    if (!this.isAuthenticated()) {
+      return of(false);
+    }
+    return this.currentUser().pipe(
+      map(() => true),
+      catchError(() => {
+        this.clearSession();
+        return of(false);
+      }),
+    );
   }
 
   logout(): Observable<void> {
@@ -41,9 +44,8 @@ export class AuthService {
 
   login(email: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>('/api/auth/login', { email, password }).pipe(
-      tap(({ token, user }) => {
+      tap(({ token }) => {
         localStorage.setItem(this.tokenKey, token);
-        document.cookie = `${this.userIdCookieKey}=${encodeURIComponent(user.id)}; Max-Age=2592000; Path=/; SameSite=Lax`;
       }),
     );
   }
@@ -57,9 +59,8 @@ export class AuthService {
     return this.http
       .post<LoginResponse>('/api/auth/register', { email, password, firstName, lastName })
       .pipe(
-        tap(({ token, user }) => {
+        tap(({ token }) => {
           localStorage.setItem(this.tokenKey, token);
-          document.cookie = `${this.userIdCookieKey}=${encodeURIComponent(user.id)}; Max-Age=2592000; Path=/; SameSite=Lax`;
         }),
       );
   }

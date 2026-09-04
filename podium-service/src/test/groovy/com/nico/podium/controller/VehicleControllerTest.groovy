@@ -28,10 +28,10 @@ class VehicleControllerTest {
         when(vehicles.create(anyLong(), any())).thenReturn(vehicle)
         when(vehicles.update(anyLong(), eq(1L), any())).thenReturn(vehicle)
 
-        mvc.perform(get('/api/vehicles').header('X-User-Id', '1')).andExpect(status().isOk())
-        mvc.perform(post('/api/vehicles').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"name":"MX-5"}')).andExpect(status().isOk())
-        mvc.perform(get('/api/vehicles/1').header('X-User-Id', '1')).andExpect(status().isOk())
-        mvc.perform(patch('/api/vehicles/1').header('X-User-Id', '1').contentType(MediaType.APPLICATION_JSON).content('{"year":2020}')).andExpect(status().isOk())
-        mvc.perform(delete('/api/vehicles/1').header('X-User-Id', '1')).andExpect(status().isNoContent())
+        mvc.perform(get('/api/vehicles').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
+        mvc.perform(post('/api/vehicles').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"name":"MX-5"}')).andExpect(status().isOk())
+        mvc.perform(get('/api/vehicles/1').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
+        mvc.perform(patch('/api/vehicles/1').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"year":2020}')).andExpect(status().isOk())
+        mvc.perform(delete('/api/vehicles/1').header('Authorization', 'Bearer test-token')).andExpect(status().isNoContent())
     }
 }
