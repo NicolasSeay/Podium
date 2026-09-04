@@ -166,26 +166,24 @@ The HttpOnly-cookie migration is intentionally not planned at this time because 
 
 Continue using Angular's default template escaping and avoid unsafe HTML APIs. Revisit this decision only if the deployment architecture changes, sessions become longer-lived, or the application handles more sensitive data.
 
-### 11. No Content Security Policy or related browser headers are configured
-
+### 11. Content Security Policy and related browser headers are configured
 Affected area: Vercel deployment configuration for `podium-web`.
 
 What this means:
 
 A Content Security Policy (CSP) is a browser-enforced allowlist for scripts, connections, frames, and other resources. It can limit the damage from an XSS bug by preventing injected code from running or sending data to an untrusted destination. HSTS tells browsers to use HTTPS, `X-Content-Type-Options` prevents MIME-type guessing, and `Referrer-Policy` limits URL information sent to other sites.
 
-These are defense-in-depth controls, not a substitute for Angular's normal template escaping or secure token handling. The Angular application is deployed on Vercel, which supports custom response headers through a repository `vercel.json` file or Vercel project configuration. These headers should be configured on Vercel rather than in Angular source code or `index.html`.
+These are defense-in-depth controls, not a substitute for Angular's normal template escaping or secure token handling. The Angular application is deployed on Vercel, and the repository `vercel.json` configures these response headers. The production Angular bundle loads font files from `https://fonts.gstatic.com`, which is explicitly allowed by `font-src`; no inline scripts or external script origins are required.
 
-Remediation plan:
+Configuration and verification:
 
-1. Configure the headers in Vercel using `vercel.json` in the Vercel project root, or use the equivalent Vercel project configuration.
-2. Start with a restrictive policy including `object-src 'none'`, `base-uri 'self'`, and `frame-ancestors 'none'`.
-3. Restrict `script-src` to the application origin and `connect-src` to the application origin plus `https://podium-u3rl.onrender.com`.
-4. Add `Strict-Transport-Security` only when HTTPS is guaranteed for the frontend domain and its subdomains. Vercel provides HTTPS/TLS and DDoS mitigation for deployed traffic.
-5. Add `X-Content-Type-Options: nosniff` and a restrictive `Referrer-Policy`.
-6. Roll out CSP in report-only mode first if existing dependencies require tuning.
-7. Test production headers with `curl -I` or browser developer tools and verify that the app still loads and calls the API.
-8. No Angular component, service, or template change is required solely to add these response headers.
+1. Keep the headers in `vercel.json` in the Vercel project root, or use the equivalent Vercel project configuration.
+2. Keep the restrictive policy including `object-src 'none'`, `base-uri 'self'`, and `frame-ancestors 'none'`.
+3. Keep `script-src` restricted to the application origin and `connect-src` restricted to the application origin plus `https://podium-u3rl.onrender.com`.
+4. Keep `font-src` restricted to the application origin, `https://fonts.gstatic.com`, and `data:` for the bundled Google Fonts assets.
+5. Keep `Strict-Transport-Security`, `X-Content-Type-Options: nosniff`, and the restrictive `Referrer-Policy` while HTTPS remains guaranteed by Vercel.
+6. Test production headers with `curl -I` or browser developer tools and verify that the app still loads, fonts render, and API calls succeed.
+7. No Angular component, service, or template change is required solely to configure these response headers.
 
 ### 12. The client-set user ID cookie is not secure and is redundant
 
