@@ -3,10 +3,36 @@
     <div class="brand"><span class="brand-mark">P</span><span>Podium</span></div>
     <div class="login-intro">
       <span class="eyebrow">Driver workspace</span>
-      <h1 id="login-title">Welcome back</h1>
-      <p>Sign in to review your pace, progress, and track days.</p>
+      <h1 id="login-title">{{ registering ? 'Create your account' : 'Welcome back' }}</h1>
+      <p>
+        {{
+          registering
+            ? 'Create a driver workspace to track your pace and progress.'
+            : 'Sign in to review your pace, progress, and track days.'
+        }}
+      </p>
     </div>
     <form (ngSubmit)="submit()">
+      @if (registering) {
+        <label for="first-name">First name</label>
+        <input
+          id="first-name"
+          name="firstName"
+          type="text"
+          [(ngModel)]="firstName"
+          autocomplete="given-name"
+          required
+        />
+        <label for="last-name">Last name</label>
+        <input
+          id="last-name"
+          name="lastName"
+          type="text"
+          [(ngModel)]="lastName"
+          autocomplete="family-name"
+          required
+        />
+      }
       <label for="email">Email</label>
       <input
         id="email"
@@ -25,12 +51,35 @@
         autocomplete="current-password"
         required
       />
+      @if (registering) {
+        <label for="confirm-password">Confirm password</label>
+        <input
+          id="confirm-password"
+          name="confirmPassword"
+          type="password"
+          [(ngModel)]="confirmPassword"
+          autocomplete="new-password"
+          required
+        />
+      }
       @if (error) {
         <p class="form-error" role="alert">{{ error }}</p>
       }
       <button class="login-button" type="submit" [disabled]="loading">
-        {{ loading ? 'Signing in...' : 'Sign in' }}
+        {{
+          loading
+            ? registering
+              ? 'Creating account...'
+              : 'Signing in...'
+            : registering
+              ? 'Create account'
+              : 'Sign
+        in'
+        }}
       </button>
     </form>
+    <button class="mode-button" type="button" (click)="toggleMode()">
+      {{ registering ? 'Already have an account? Sign in' : 'New to Podium? Create an account' }}
+    </button>
   </section>
 </main>
