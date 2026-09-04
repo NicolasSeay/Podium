@@ -27,6 +27,11 @@ review destructive statements before running them.
 Run the Angular frontend from the repository root with `npm start`. This
 delegates to `podium-web` and starts `ng serve` on port 4200.
 
+The local Angular development build keeps API requests relative and uses the
+development proxy to reach `http://localhost:8080`. Build the frontend with
+`npm --prefix podium-web run build` for production; Angular replaces the local
+API configuration with `https://podium-u3rl.onrender.com` in that build.
+
 ## Deploy the backend with Docker
 
 The backend includes a multi-stage Docker build in `podium-service/Dockerfile`.

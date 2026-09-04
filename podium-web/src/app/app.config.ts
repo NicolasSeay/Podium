@@ -13,11 +13,12 @@ import { vehiclesFeature } from './vehicles/vehicles.store';
 import { TrackDaysEffects } from './track-days/track-days.effects';
 import { trackDaysFeature } from './track-days/track-days.store';
 import { AuthEffects } from './auth.effects';
+import { apiUrlInterceptor } from './api-url.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([apiUrlInterceptor, authInterceptor])),
     provideRouter(routes),
     provideStore({
       [dashboardFeature.name]: dashboardFeature.reducer,
