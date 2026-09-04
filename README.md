@@ -27,6 +27,27 @@ review destructive statements before running them.
 Run the Angular frontend from the repository root with `npm start`. This
 delegates to `podium-web` and starts `ng serve` on port 4200.
 
+## Deploy the backend with Docker
+
+The backend includes a multi-stage Docker build in `podium-service/Dockerfile`.
+It expects a network-accessible MySQL database supplied through these
+environment variables:
+
+- `DB_URL`, for example `jdbc:mysql://db-host:3306/podium`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+
+Spring Boot uses Render's `PORT` value automatically and defaults to port 8080
+when running locally. Spring Boot Actuator exposes `/actuator/health` for the
+Render health check. Only the Actuator health endpoint is exposed over HTTP.
+The root `render.yaml` defines the Docker service and leaves the database
+values as secrets to be configured in Render.
+
+The service still uses MySQL and Hibernate's `ddl-auto=update`; it does not
+create or provision the external database. Create the database and grant the
+configured user access before deploying, and treat `SQL/hydration.sql` as an
+optional, reviewed data-load script rather than an automatic production step.
+
 ## Test coverage
 
 Run `mvn clean verify` from `podium-service` to generate the JaCoCo report at

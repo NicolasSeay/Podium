@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: podium-service
+    runtime: docker
+    dockerfilePath: ./podium-service/Dockerfile
+    dockerContext: ./podium-service
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
