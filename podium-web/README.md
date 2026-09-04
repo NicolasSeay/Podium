@@ -16,6 +16,11 @@ The dashboard requests `/api/dashboard` through the development proxy configured
 `proxy.conf.json`. Start `podium-service` on `http://localhost:8080` before loading
 the dashboard so the API requests can resolve.
 
+Production builds replace the local API configuration and send `/api` requests
+to `https://podium-u3rl.onrender.com`. Use `ng build` (the default production
+configuration) when deploying the frontend; use `ng serve` locally to retain
+the development proxy.
+
 ## Code scaffolding
 
 Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
