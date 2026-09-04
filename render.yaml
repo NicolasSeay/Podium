@@ -12,3 +12,5 @@ services:
         sync: false
       - key: DB_PASSWORD
         sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false

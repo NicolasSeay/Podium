@@ -41,12 +41,16 @@ environment variables:
 - `DB_URL`, for example `jdbc:mysql://db-host:3306/podium`
 - `DB_USERNAME`
 - `DB_PASSWORD`
+- `CORS_ALLOWED_ORIGINS`, a comma-separated list of origin patterns such as
+  `https://podium-*-bronze7.vercel.app`
 
 Spring Boot uses Render's `PORT` value automatically and defaults to port 8080
 when running locally. Spring Boot Actuator exposes `/actuator/health` for the
 Render health check. Only the Actuator health endpoint is exposed over HTTP.
-The root `render.yaml` defines the Docker service and leaves the database
-values as secrets to be configured in Render.
+The root `render.yaml` defines the Docker service and leaves the database and
+CORS origin values as secrets to be configured in Render. The backend defaults
+to Podium's Vercel deployment pattern and `http://localhost:4200` when the
+CORS variable is not set.
 
 The service still uses MySQL and Hibernate's `ddl-auto=update`; it does not
 create or provision the external database. Create the database and grant the
