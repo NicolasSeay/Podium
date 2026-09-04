@@ -38,6 +38,31 @@ class AuthServiceTest {
     }
 
     @Test
+    void acceptsAnEightCharacterPassword() {
+        def users = mock(UserRepository)
+        def tokens = mock(AuthTokenJpaRepository)
+        def passwordEncoder = new BCryptPasswordEncoder()
+        when(users.findByEmail('driver@example.com')).thenReturn(Optional.empty())
+        when(users.save(any(User))).thenAnswer { new User(1L, it.arguments[0].email(), it.arguments[0].password(), it.arguments[0].firstName(), it.arguments[0].lastName()) }
+        def service = new AuthServiceImpl(users, tokens, passwordEncoder)
+
+        def result = service.register(new RegisterRequest('driver@example.com', '12345678', 'Driver', 'Example'))
+
+        assertNotNull(result.token)
+    }
+
+    @Test
+    void rejectsPasswordsShorterThanEightCharacters() {
+        def users = mock(UserRepository)
+        def tokens = mock(AuthTokenJpaRepository)
+        def service = new AuthServiceImpl(users, tokens, new BCryptPasswordEncoder())
+
+        assertThrows(RuntimeException) {
+            service.register(new RegisterRequest('driver@example.com', '1234567', 'Driver', 'Example'))
+        }
+    }
+
+    @Test
     void rejectsIdentityHeadersAndMalformedTokens() {
         def users = mock(UserRepository)
         def tokens = mock(AuthTokenJpaRepository)

@@ -51,8 +51,11 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponse register(RegisterRequest request) {
         String email = request.email();
         String password = request.password();
-        if (email == null || password == null || email.isBlank() || password.length() < 12) {
+        if (email == null || password == null || email.isBlank()) {
             throw error(HttpStatus.BAD_REQUEST, "email and password are required");
+        }
+        if (password.length() < 8) {
+            throw error(HttpStatus.BAD_REQUEST, "password must be at least 8 characters");
         }
         email = email.trim();
         if (users.findByEmail(email).isPresent()) {

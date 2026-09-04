@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { finalize } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { authUserLoaded } from '../auth.store';
 import { environment } from '../../environments/environment';
@@ -44,13 +45,16 @@ export class LoginComponent {
     if (
       !this.email ||
       !this.password ||
+      (this.registering && this.password.length < 8) ||
       (this.registering &&
         (!this.firstName || !this.lastName || this.password !== this.confirmPassword))
     ) {
       this.error =
-        this.registering && this.password !== this.confirmPassword
-          ? 'Passwords do not match.'
-          : 'Please complete all required fields.';
+        this.registering && this.password.length < 8
+          ? 'Password must be at least 8 characters.'
+          : this.registering && this.password !== this.confirmPassword
+            ? 'Passwords do not match.'
+            : 'Please complete all required fields.';
       return;
     }
 
@@ -59,18 +63,18 @@ export class LoginComponent {
     const request = this.registering
       ? this.auth.register(this.email, this.password, this.firstName, this.lastName)
       : this.auth.login(this.email, this.password);
-    request.subscribe({
+    request.pipe(finalize(() => (this.loading = false))).subscribe({
       next: ({ user }) => {
         this.store.dispatch(authUserLoaded(user));
         void this.router.navigate(['/dashboard']);
       },
-      error: (error: { error?: { message?: string } }) => {
-        this.loading = false;
+      error: (error: { error?: { message?: string; detail?: string } }) => {
         this.error =
           error.error?.message ??
+          error.error?.detail ??
           (this.registering
-            ? 'Unable to create your account. Please try again.'
-            : 'Unable to sign in. Check your credentials.');
+            ? 'Registration failed. Please try again.'
+            : 'Sign in failed. Check your credentials.');
       },
     });
   }
