@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
         }
         email = email.trim();
         if (users.findByEmail(email).isPresent()) {
-            throw error(HttpStatus.CONFLICT, "email is already registered");
+            throw error(HttpStatus.BAD_REQUEST, "registration failed");
         }
         return response(users.save(new User(null, email, passwordEncoder.encode(password), request.firstName(), request.lastName())));
     }
@@ -98,10 +98,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void revoke(String authorization) {
-        AuthTokenEntity token = tokens.findByTokenHashAndRevokedAtIsNull(hash(bearer(authorization)))
-                .orElseThrow(() -> error(HttpStatus.UNAUTHORIZED, "invalid token"));
-        token.revoke();
-        tokens.save(token);
+        String tokenValue = bearer(authorization);
+        tokens.findByTokenHashAndRevokedAtIsNull(hash(tokenValue)).ifPresent(token -> {
+            token.revoke();
+            tokens.save(token);
+        });
     }
 
     private static String hash(String token) {

@@ -1,6 +1,13 @@
 package com.nico.podium.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,28 +22,36 @@ public final class PodiumModels {
     public record User(Long id, String email, @JsonIgnore String password, String firstName, String lastName) {
     }
 
-    public record RegisterRequest(String email, String password, String firstName, String lastName) {
+        public record RegisterRequest(
+            @NotBlank @Email @Size(max = 254) String email,
+            @NotBlank @Size(min = 12, max = 128) String password,
+            @NotBlank @Size(max = 100) String firstName,
+            @NotBlank @Size(max = 100) String lastName) {
     }
 
-    public record LoginRequest(String email, String password) {
+        public record LoginRequest(@NotBlank @Email @Size(max = 254) String email,
+                       @NotBlank String password) {
     }
 
     public record AuthResponse(User user, String token) {
     }
 
-    public record UserUpdateRequest(String firstName, String lastName) {
+    public record UserUpdateRequest(@Size(max = 100) String firstName, @Size(max = 100) String lastName) {
     }
 
     public record Track(Long id, String name, String city, String country, BigDecimal lengthMiles) {
     }
 
-    public record TrackRequest(String name, String city, String country, BigDecimal lengthMiles) {
+    public record TrackRequest(@Size(max = 200) String name, @Size(max = 100) String city,
+                               @Size(max = 100) String country, @Positive BigDecimal lengthMiles) {
     }
 
     public record Vehicle(Long id, Long userId, String name, String make, String model, String trim, Integer year) {
     }
 
-    public record VehicleRequest(String name, String make, String model, String trim, Integer year) {
+    public record VehicleRequest(@Size(max = 100) String name, @Size(max = 100) String make,
+                                 @Size(max = 100) String model, @Size(max = 100) String trim,
+                                 @Min(1886) @Max(2100) Integer year) {
     }
 
     public record TrackDay(Long id, Long userId, Long trackId, Long vehicleId,
@@ -51,18 +66,19 @@ public final class PodiumModels {
                                     Map<Long, List<Lap>> laps) {
     }
 
-    public record LapRequest(Integer lapNumber, Long timeMillis) {
+    public record LapRequest(@Positive Integer lapNumber, @Positive Long timeMillis) {
     }
 
-    public record SessionRequest(String name, String notes, List<LapRequest> laps, LocalDate sessionDate) {
+    public record SessionRequest(@Size(max = 100) String name, @Size(max = 2000) String notes,
+                                 List<@Valid LapRequest> laps, LocalDate sessionDate) {
         public SessionRequest(String name, String notes, List<LapRequest> laps) {
             this(name, notes, laps, null);
         }
     }
 
-    public record TrackDayRequest(Long trackId, Long vehicleId, LocalDate startDate,
+    public record TrackDayRequest(@Positive Long trackId, @Positive Long vehicleId, LocalDate startDate,
                                   LocalDate endDate, String notes, String conditions,
-                                  List<SessionRequest> sessions) {
+                                  List<@Valid SessionRequest> sessions) {
     }
 
     public record SessionDetailsResponse(Session session, List<Lap> laps) {

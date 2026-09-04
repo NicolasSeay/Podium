@@ -17,12 +17,12 @@ class TrackDayServiceTest {
         def vehicles = mock(VehicleService)
         def track = new Track(1L, 'Road Atlanta', 'Braselton', 'United States', 2.54G)
         def vehicle = new Vehicle(1L, 1L, 'MX-5', null, null, null, null)
-        when(tracks.get(1L, 1L)).thenReturn(track)
+        when(tracks.get(1L)).thenReturn(track)
         when(vehicles.get(1L, 1L)).thenReturn(vehicle)
         when(days.save(any(TrackDay))).thenAnswer { it.arguments[0] }
         def day = new TrackDayServiceImpl(days, tracks, vehicles).create(1L, new TrackDayRequest(1L, 1L, null, null, null, null, null))
         assertEquals(1L, day.trackId())
-        verify(tracks).get(1L, 1L)
+        verify(tracks).get(1L)
         verify(vehicles).get(1L, 1L)
     }
 }

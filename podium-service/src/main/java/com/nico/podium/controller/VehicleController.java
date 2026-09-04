@@ -3,6 +3,7 @@ package com.nico.podium.controller;
 import com.nico.podium.domain.PodiumModels.Vehicle;
 import com.nico.podium.domain.PodiumModels.VehicleRequest;
 import com.nico.podium.service.VehicleService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class VehicleController extends ControllerSupport {
     }
 
     @PostMapping
-    public Vehicle create(@RequestBody VehicleRequest request) {
+    public Vehicle create(@Valid @RequestBody VehicleRequest request) {
         return vehicles.create(userId(), request);
     }
 
@@ -33,7 +34,7 @@ public class VehicleController extends ControllerSupport {
     }
 
     @PatchMapping("/{id}")
-    public Vehicle update(@PathVariable Long id, @RequestBody VehicleRequest request) {
+    public Vehicle update(@PathVariable Long id, @Valid @RequestBody VehicleRequest request) {
         return vehicles.update(userId(), id, request);
     }
 

@@ -24,7 +24,7 @@ class AuthControllerTest {
         when(auth.login(any())).thenReturn(new AuthResponse(null, 'token'))
         when(auth.refresh(anyString())).thenReturn(new AuthResponse(null, 'token'))
 
-        mvc.perform(post('/api/auth/register').contentType(MediaType.APPLICATION_JSON).content('{"email":"driver@example.com","password":"secret"}')).andExpect(status().isOk())
+        mvc.perform(post('/api/auth/register').contentType(MediaType.APPLICATION_JSON).content('{"email":"driver@example.com","password":"long-enough-secret","firstName":"Driver","lastName":"Example"}')).andExpect(status().isOk())
         mvc.perform(post('/api/auth/login').contentType(MediaType.APPLICATION_JSON).content('{"email":"driver@example.com","password":"secret"}')).andExpect(status().isOk())
         mvc.perform(post('/api/auth/refresh').header('Authorization', 'Bearer token')).andExpect(status().isOk())
         mvc.perform(post('/api/auth/logout').header('Authorization', 'Bearer token')).andExpect(status().isNoContent())

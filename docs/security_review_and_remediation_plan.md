@@ -4,6 +4,8 @@ Review date: 2026-09-04
 
 This review covers the Spring Boot backend in `podium-service` and the Angular frontend in `podium-web`. It focuses on authentication, authorization, input handling, browser security, deployment hardening, and security regression coverage.
 
+Implementation status: the high-priority track catalog and fail-closed routing remediations, backend request validation, token lifecycle fixes, frontend session rehydration, browser security headers, and non-root runtime container changes described below are implemented in the current repository. CORS hardening, token cleanup, and development credential cleanup remain deferred as documented.
+
 The application already has several good foundations:
 
 - Passwords are encoded with BCrypt.

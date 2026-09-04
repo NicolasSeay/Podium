@@ -4,6 +4,7 @@ import com.nico.podium.domain.PodiumModels.AuthResponse;
 import com.nico.podium.domain.PodiumModels.LoginRequest;
 import com.nico.podium.domain.PodiumModels.RegisterRequest;
 import com.nico.podium.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +18,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public AuthResponse register(@RequestBody RegisterRequest request) {
+    public AuthResponse register(@Valid @RequestBody RegisterRequest request) {
         return auth.register(request);
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody LoginRequest request) {
+    public AuthResponse login(@Valid @RequestBody LoginRequest request) {
         return auth.login(request);
     }
 

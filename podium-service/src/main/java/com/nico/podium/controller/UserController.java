@@ -3,6 +3,7 @@ package com.nico.podium.controller;
 import com.nico.podium.domain.PodiumModels.User;
 import com.nico.podium.domain.PodiumModels.UserUpdateRequest;
 import com.nico.podium.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,7 +21,7 @@ public class UserController extends ControllerSupport {
     }
 
     @PatchMapping("/me")
-    public User update(@RequestBody UserUpdateRequest request) {
+    public User update(@Valid @RequestBody UserUpdateRequest request) {
         return users.update(userId(), request);
     }
 }
