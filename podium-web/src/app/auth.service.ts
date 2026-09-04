@@ -48,6 +48,22 @@ export class AuthService {
     );
   }
 
+  register(
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+  ): Observable<LoginResponse> {
+    return this.http
+      .post<LoginResponse>('/api/auth/register', { email, password, firstName, lastName })
+      .pipe(
+        tap(({ token, user }) => {
+          localStorage.setItem(this.tokenKey, token);
+          document.cookie = `${this.userIdCookieKey}=${encodeURIComponent(user.id)}; Max-Age=2592000; Path=/; SameSite=Lax`;
+        }),
+      );
+  }
+
   currentUser(): Observable<AuthUser> {
     return this.http.get<AuthUser>('/api/users/me');
   }

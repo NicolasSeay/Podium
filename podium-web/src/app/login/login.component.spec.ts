@@ -37,6 +37,60 @@ describe('LoginComponent', () => {
     storage.clear();
   });
 
+  it('prefills the demo credentials outside production', () => {
+    const fixture = TestBed.createComponent(LoginComponent);
+    const component = fixture.componentInstance as unknown as {
+      email: string;
+      password: string;
+    };
+
+    expect(component.email).toBe('nicolas.seay@gmail.com');
+    expect(component.password).toBe('password');
+  });
+
+  it('registers a new account and routes to the dashboard', () => {
+    const router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    const fixture = TestBed.createComponent(LoginComponent);
+    const component = fixture.componentInstance as unknown as {
+      registering: boolean;
+      email: string;
+      password: string;
+      firstName: string;
+      lastName: string;
+      confirmPassword: string;
+      toggleMode: () => void;
+      submit: () => void;
+    };
+    component.toggleMode();
+    component.email = 'new-driver@example.com';
+    component.password = 'secret';
+    component.firstName = 'New';
+    component.lastName = 'Driver';
+    component.confirmPassword = 'secret';
+    component.submit();
+
+    const request = http.expectOne('/api/auth/register');
+    expect(request.request.body).toEqual({
+      email: 'new-driver@example.com',
+      password: 'secret',
+      firstName: 'New',
+      lastName: 'Driver',
+    });
+    request.flush({
+      token: 'registration-token',
+      user: {
+        id: 2,
+        email: 'new-driver@example.com',
+        firstName: 'New',
+        lastName: 'Driver',
+      },
+    });
+
+    expect(localStorage.getItem('podium.auth.token')).toBe('registration-token');
+    expect(TestBed.inject(Router).navigate).toHaveBeenCalledWith(['/dashboard']);
+  });
+
   it('logs in and routes to the dashboard', () => {
     const router = TestBed.inject(Router);
     vi.spyOn(router, 'navigate').mockResolvedValue(true);
