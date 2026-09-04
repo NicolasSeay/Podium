@@ -48,6 +48,17 @@ describe('LoginComponent', () => {
     expect(component.password).toBe('password');
   });
 
+  it('shows the password requirement during registration', () => {
+    const fixture = TestBed.createComponent(LoginComponent);
+    const component = fixture.componentInstance as unknown as { toggleMode: () => void };
+    component.toggleMode();
+    fixture.detectChanges();
+
+    const passwordInput = fixture.nativeElement.querySelector('#password') as HTMLInputElement;
+    expect(passwordInput.minLength).toBe(8);
+    expect(fixture.nativeElement.textContent).toContain('Password must be at least 8 characters.');
+  });
+
   it('registers a new account and routes to the dashboard', () => {
     const router = TestBed.inject(Router);
     vi.spyOn(router, 'navigate').mockResolvedValue(true);
@@ -64,16 +75,16 @@ describe('LoginComponent', () => {
     };
     component.toggleMode();
     component.email = 'new-driver@example.com';
-    component.password = 'secret';
+    component.password = 'secret123';
     component.firstName = 'New';
     component.lastName = 'Driver';
-    component.confirmPassword = 'secret';
+    component.confirmPassword = 'secret123';
     component.submit();
 
     const request = http.expectOne('/api/auth/register');
     expect(request.request.body).toEqual({
       email: 'new-driver@example.com',
-      password: 'secret',
+      password: 'secret123',
       firstName: 'New',
       lastName: 'Driver',
     });
@@ -125,5 +136,66 @@ describe('LoginComponent', () => {
       firstName: 'Nicolas',
       lastName: 'Seay',
     });
+  });
+
+  it('shows a sign-in failure and stops loading when the login request fails', () => {
+    const fixture = TestBed.createComponent(LoginComponent);
+    const component = fixture.componentInstance as unknown as {
+      email: string;
+      password: string;
+      submit: () => void;
+    };
+    component.email = 'driver@example.com';
+    component.password = 'secret';
+    component.submit();
+
+    const request = http.expectOne('/api/auth/login');
+    request.flush({}, { status: 401, statusText: 'Unauthorized' });
+    fixture.detectChanges();
+
+    const button = fixture.nativeElement.querySelector(
+      'button[type="submit"]',
+    ) as HTMLButtonElement;
+    expect(button.disabled).toBe(false);
+    expect(button.textContent).toContain('Sign in');
+    expect(button.textContent).not.toContain('Signing in...');
+    expect(fixture.nativeElement.querySelector('[role="alert"]').textContent).toContain(
+      'Sign in failed.',
+    );
+  });
+
+  it('shows a registration failure and stops loading when the registration request fails', () => {
+    const fixture = TestBed.createComponent(LoginComponent);
+    const component = fixture.componentInstance as unknown as {
+      registering: boolean;
+      email: string;
+      password: string;
+      firstName: string;
+      lastName: string;
+      confirmPassword: string;
+      toggleMode: () => void;
+      submit: () => void;
+    };
+    component.toggleMode();
+    component.email = 'new-driver@example.com';
+    component.password = 'secret123';
+    component.firstName = 'New';
+    component.lastName = 'Driver';
+    component.confirmPassword = 'secret123';
+    component.submit();
+
+    const request = http.expectOne('/api/auth/register');
+    request.flush({}, { status: 500, statusText: 'Server Error' });
+    fixture.detectChanges();
+
+    const button = fixture.nativeElement.querySelector(
+      'button[type="submit"]',
+    ) as HTMLButtonElement;
+    expect(button.disabled).toBe(false);
+    expect(button.textContent).toContain('Create account');
+    expect(button.textContent).not.toContain('Creating account...');
+    expect(fixture.nativeElement.querySelector('[role="alert"]').textContent).toContain(
+      'Registration failed.',
+    );
   });
 });

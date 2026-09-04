@@ -48,9 +48,13 @@
         name="password"
         type="password"
         [(ngModel)]="password"
-        autocomplete="current-password"
+        [attr.minlength]="registering ? 8 : null"
+        [attr.autocomplete]="registering ? 'new-password' : 'current-password'"
         required
       />
+      @if (registering) {
+        <p class="password-requirements">Password must be at least 8 characters.</p>
+      }
       @if (registering) {
         <label for="confirm-password">Confirm password</label>
         <input
