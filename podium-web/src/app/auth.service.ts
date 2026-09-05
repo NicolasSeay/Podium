@@ -68,4 +68,20 @@ export class AuthService {
   currentUser(): Observable<AuthUser> {
     return this.http.get<AuthUser>('/api/users/me');
   }
+
+  updateUser(update: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    distanceUnit: AuthUser['distanceUnit'];
+    temperatureUnit: AuthUser['temperatureUnit'];
+    defaultTrackId: number | null;
+    defaultVehicleId: number | null;
+  }): Observable<AuthUser> {
+    return this.http.patch<AuthUser>('/api/users/me', update);
+  }
+
+  emailAvailable(email: string): Observable<boolean> {
+    return this.http.get<boolean>('/api/users/email-available', { params: { email } });
+  }
 }

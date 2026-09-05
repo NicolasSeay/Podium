@@ -30,7 +30,9 @@
               >
                 <span
                   ><strong>{{ formatDateRange(day) }}</strong
-                  ><small>{{ trackName(day.trackId) }}</small></span
+                  ><small
+                    >{{ trackName(day.trackId) }} · {{ trackLength(day.trackId) }}</small
+                  ></span
                 ><span
                   ><strong>{{ vehicleName(day.vehicleId) }}</strong
                   ><small>{{ day.conditions || 'Conditions not added' }}</small></span

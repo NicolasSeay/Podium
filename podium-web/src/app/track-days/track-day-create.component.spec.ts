@@ -3,11 +3,12 @@ import { provideRouter, Router } from '@angular/router';
 import { signal } from '@angular/core';
 import { TrackDayCreateComponent } from './track-day-create.component';
 import { TrackDaysFacade } from './track-days.facade';
+import { Track, TrackDay, Vehicle } from './track-days.store';
 
 const facadeMock = {
-  tracks: signal([]),
-  trackDays: signal([]),
-  vehicles: signal([]),
+  tracks: signal<Track[]>([]),
+  trackDays: signal<TrackDay[]>([]),
+  vehicles: signal<Vehicle[]>([]),
   loading: signal(false),
   saving: signal(false),
   error: signal(null),

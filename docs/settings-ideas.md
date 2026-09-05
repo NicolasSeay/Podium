@@ -33,4 +33,4 @@ Destructive actions should state exactly what will be removed and require confir
 
 ## Suggested first slice
 
-Start with profile display/editing and lap-time, distance, temperature, and date preferences. Add export next because it is useful before import and restore exist. Deletion and session management should wait until their backend audit and recovery behavior are specified.
+Profile editing and distance/temperature/default dashboard preferences are implemented through the authenticated user settings endpoint. Lap-time precision, date format, export, deletion, and session management remain future slices; deletion and session management should wait until their backend audit and recovery behavior are specified.

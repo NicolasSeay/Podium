@@ -20,7 +20,9 @@
       aria-label="Filter by track"
     >
       @for (track of attendedTracks(); track track.id) {
-        <option [value]="track.id">{{ track.name }}</option>
+        <option [value]="track.id">
+          {{ track.name }} · {{ formatTrackLength(track.lengthMiles) }}
+        </option>
       }
     </select>
     <select

@@ -11,6 +11,7 @@ import { MetricCardComponent } from './metric-card/metric-card.component';
 import { AnalyticsLap, AnalyticsSession, PersonalRecord } from './dashboard.store';
 import { DashboardFacade } from './dashboard.facade';
 import { TrackDaysFacade } from '../track-days/track-days.facade';
+import { DistanceUnit } from '../preferences';
 
 @Component({
   selector: 'app-dashboard',
@@ -90,7 +91,13 @@ export class DashboardComponent {
     this.dashboardFacade.load();
     effect(() => {
       const days = this.trackDays();
-      if (!days.length || this.selectedTrackId() !== null || this.selectedVehicleId() !== null)
+      const user = this.user();
+      if (
+        !days.length ||
+        !user ||
+        this.selectedTrackId() !== null ||
+        this.selectedVehicleId() !== null
+      )
         return;
       const latestDay = [...days].sort((left, right) =>
         right.startDate.localeCompare(left.startDate),
@@ -98,9 +105,18 @@ export class DashboardComponent {
       const latestVehicleDay = [...days]
         .filter((day) => day.vehicleId !== null)
         .sort((left, right) => right.startDate.localeCompare(left.startDate))[0];
-      this.selectedTrackId.set(latestDay.trackId);
-      this.selectedVehicleId.set(latestVehicleDay?.vehicleId ?? null);
-      this.dashboardFacade.load(latestDay.trackId, latestVehicleDay?.vehicleId ?? null);
+      const defaultTrackId =
+        user?.defaultTrackId && this.tracks().some((track) => track.id === user.defaultTrackId)
+          ? user.defaultTrackId
+          : latestDay.trackId;
+      const defaultVehicleId =
+        user?.defaultVehicleId &&
+        this.vehicles().some((vehicle) => vehicle.id === user.defaultVehicleId)
+          ? user.defaultVehicleId
+          : (latestVehicleDay?.vehicleId ?? null);
+      this.selectedTrackId.set(defaultTrackId);
+      this.selectedVehicleId.set(defaultVehicleId);
+      this.dashboardFacade.load(defaultTrackId, defaultVehicleId);
     });
   }
 
@@ -114,6 +130,15 @@ export class DashboardComponent {
     const vehicleId = Number((event.target as HTMLSelectElement).value);
     this.selectedVehicleId.set(vehicleId);
     this.dashboardFacade.load(this.selectedTrackId(), vehicleId);
+  }
+
+  protected formatTrackLength(lengthMiles: number | null): string {
+    if (lengthMiles === null) return 'Length unavailable';
+    const kilometers = lengthMiles * 1.609344;
+    const user = this.user();
+    return user?.distanceUnit === DistanceUnit.Kilometers
+      ? `${kilometers.toFixed(2)} km`
+      : `${lengthMiles.toFixed(2)} mi`;
   }
 
   protected retry(): void {

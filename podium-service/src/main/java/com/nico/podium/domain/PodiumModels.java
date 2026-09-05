@@ -20,7 +20,23 @@ public final class PodiumModels {
     private PodiumModels() {
     }
 
-    public record User(Long id, String email, @JsonIgnore String password, String firstName, String lastName) {
+    public enum DistanceUnit {
+        MILES,
+        KILOMETERS
+    }
+
+    public enum TemperatureUnit {
+        FAHRENHEIT,
+        CELSIUS
+    }
+
+    public record User(Long id, String email, @JsonIgnore String password, String firstName, String lastName,
+                       DistanceUnit distanceUnit, TemperatureUnit temperatureUnit, Long defaultTrackId,
+                       Long defaultVehicleId) {
+        public User(Long id, String email, String password, String firstName, String lastName) {
+            this(id, email, password, firstName, lastName, DistanceUnit.MILES, TemperatureUnit.FAHRENHEIT,
+                    null, null);
+        }
     }
 
         public record RegisterRequest(
@@ -37,7 +53,12 @@ public final class PodiumModels {
     public record AuthResponse(User user, String token) {
     }
 
-    public record UserUpdateRequest(@Size(max = 100) String firstName, @Size(max = 100) String lastName) {
+    public record UserUpdateRequest(@Email @Size(max = 254) String email, @Size(max = 100) String firstName,
+                                    @Size(max = 100) String lastName, DistanceUnit distanceUnit,
+                                    TemperatureUnit temperatureUnit, Long defaultTrackId, Long defaultVehicleId) {
+        public UserUpdateRequest(String firstName, String lastName) {
+            this(null, firstName, lastName, null, null, null, null);
+        }
     }
 
     public record Track(Long id, String name, String city, String country, BigDecimal lengthMiles) {

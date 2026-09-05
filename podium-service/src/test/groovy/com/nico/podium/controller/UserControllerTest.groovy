@@ -28,6 +28,6 @@ class UserControllerTest {
         when(users.update(anyLong(), any())).thenReturn(user)
 
         mvc.perform(get('/api/users/me').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
-        mvc.perform(patch('/api/users/me').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"name":"Updated"}')).andExpect(status().isMethodNotAllowed())
+        mvc.perform(patch('/api/users/me').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"firstName":"Updated"}')).andExpect(status().isOk())
     }
 }

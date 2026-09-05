@@ -97,7 +97,7 @@ describe('App', () => {
     expect(tracksButton).toBeUndefined();
   });
 
-  it('disables sidebar destinations without implemented views', () => {
+  it('enables the settings destination', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
@@ -109,7 +109,7 @@ describe('App', () => {
     );
 
     expect(incompleteButtons).toHaveLength(1);
-    expect(incompleteButtons.every((button) => button.disabled)).toBe(true);
+    expect(incompleteButtons.every((button) => button.disabled)).toBe(false);
   });
 });
 

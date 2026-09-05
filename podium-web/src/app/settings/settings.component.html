@@ -1,0 +1,112 @@
+<section class="settings-view" aria-labelledby="settings-title">
+  <div class="section-bar">
+    <div>
+      <span class="eyebrow">Account and preferences</span>
+      <h2 id="settings-title">Settings</h2>
+    </div>
+    <span class="muted">Your display choices stay with your account.</span>
+  </div>
+
+  <form class="settings-form" [formGroup]="form" (ngSubmit)="save()">
+    <section class="panel settings-section">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">Profile</span>
+          <h3>Account details</h3>
+        </div>
+      </div>
+      <div class="field-grid">
+        <label
+          >First name
+          <input id="first-name" type="text" formControlName="firstName" autocomplete="given-name"
+        /></label>
+        <label
+          >Last name
+          <input id="last-name" type="text" formControlName="lastName" autocomplete="family-name"
+        /></label>
+        <label class="wide-field"
+          >Email <input id="email" type="email" formControlName="email" autocomplete="email"
+        /></label>
+      </div>
+      @if (hasError('firstName', 'required') || hasError('lastName', 'required')) {
+        <p class="field-error" role="alert">First and last name are required.</p>
+      }
+      @if (hasError('email', 'email') || hasError('email', 'required')) {
+        <p class="field-error" role="alert">Enter a valid email address.</p>
+      } @else if (hasError('email', 'emailTaken')) {
+        <p class="field-error" role="alert">That email address is already in use.</p>
+      }
+    </section>
+
+    <section class="panel settings-section">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">Display</span>
+          <h3>Measurement preferences</h3>
+        </div>
+      </div>
+      <div class="field-grid">
+        <label
+          >Distance
+          <select id="distance-unit" formControlName="distanceUnit">
+            <option value="MILES">Miles</option>
+            <option value="KILOMETERS">Kilometers</option>
+          </select>
+        </label>
+        <label
+          >Temperature
+          <select id="temperature-unit" formControlName="temperatureUnit">
+            <option value="FAHRENHEIT">Fahrenheit</option>
+            <option value="CELSIUS">Celsius</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section class="panel settings-section">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">Dashboard</span>
+          <h3>Default view</h3>
+        </div>
+      </div>
+      <div class="field-grid">
+        <label
+          >Default track
+          <select id="default-track" formControlName="defaultTrackId">
+            <option [ngValue]="null">Choose a track</option>
+            @for (track of tracks(); track track.id) {
+              <option [ngValue]="track.id">{{ track.name }}</option>
+            }
+          </select>
+        </label>
+        <label
+          >Default vehicle
+          <select id="default-vehicle" formControlName="defaultVehicleId">
+            <option [ngValue]="null">Choose a vehicle</option>
+            @for (vehicle of vehicles(); track vehicle.id) {
+              <option [ngValue]="vehicle.id">{{ vehicle.name }}</option>
+            }
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <div class="settings-actions">
+      @if (error()) {
+        <p class="form-error" role="alert">{{ error() }}</p>
+      }
+      @if (saved()) {
+        <p class="saved-message" role="status">Settings saved.</p>
+      }
+      <button class="primary-button" type="submit" [disabled]="saving()">
+        {{
+          saving()
+            ? 'Saving...'
+            : 'Save
+                settings'
+        }}
+      </button>
+    </div>
+  </form>
+</section>
