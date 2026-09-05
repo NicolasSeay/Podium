@@ -8,6 +8,7 @@ import { VehiclesComponent } from './vehicles/vehicles.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { AppHeaderComponent } from './app-header/app-header.component';
 import { AuthFacade } from './auth.facade';
+import { SettingsComponent } from './settings/settings.component';
 
 @Component({
   selector: 'app-page',
@@ -19,6 +20,7 @@ import { AuthFacade } from './auth.facade';
     TrackDaysComponent,
     SidebarComponent,
     AppHeaderComponent,
+    SettingsComponent,
   ],
   styleUrl: './app.scss',
   templateUrl: './app.html',
@@ -37,10 +39,12 @@ export class App {
     const path = url.split('?')[0].split('/')[1] || 'dashboard';
     return (
       (
-        { dashboard: 'Dashboard', 'track-days': 'Track Days', vehicles: 'Vehicles' } as Record<
-          string,
-          string
-        >
+        {
+          dashboard: 'Dashboard',
+          'track-days': 'Track Days',
+          vehicles: 'Vehicles',
+          settings: 'Settings',
+        } as Record<string, string>
       )[path] ?? 'Dashboard'
     );
   }

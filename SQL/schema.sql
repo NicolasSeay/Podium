@@ -10,6 +10,10 @@ CREATE TABLE IF NOT EXISTS users (
     password   VARCHAR(255) NOT NULL,
     first_name VARCHAR(255),
     last_name  VARCHAR(255),
+    distance_unit ENUM('MILES', 'KILOMETERS') NOT NULL DEFAULT 'MILES',
+    temperature_unit ENUM('FAHRENHEIT', 'CELSIUS') NOT NULL DEFAULT 'FAHRENHEIT',
+    default_track_id BIGINT,
+    default_vehicle_id BIGINT,
     PRIMARY KEY (id),
     UNIQUE KEY uk_users_email (email)
 ) ENGINE = InnoDB;

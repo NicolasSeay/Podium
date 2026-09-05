@@ -33,7 +33,12 @@ export class SidebarComponent {
     Vehicles: 'vehicles',
     Settings: 'settings',
   };
-  protected readonly implementedNavigation = new Set(['Dashboard', 'Track Days', 'Vehicles']);
+  protected readonly implementedNavigation = new Set([
+    'Dashboard',
+    'Track Days',
+    'Vehicles',
+    'Settings',
+  ]);
 
   protected changeNav(item: string): void {
     this.dashboardFacade.setActiveNavigation(item);

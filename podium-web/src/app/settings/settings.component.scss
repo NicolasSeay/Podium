@@ -1,0 +1,89 @@
+.settings-view {
+  display: grid;
+  gap: 18px;
+}
+
+.settings-form {
+  display: grid;
+  gap: 11px;
+  max-width: 920px;
+}
+
+.settings-section {
+  display: grid;
+  gap: 16px;
+}
+
+.settings-section h3 {
+  color: #e3f0f4;
+  font-size: 15px;
+  margin: -5px 0 0;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.field-grid label {
+  display: grid;
+  gap: 7px;
+  color: #aac1ca;
+  font-size: 11px;
+}
+
+.wide-field {
+  grid-column: 1 / -1;
+}
+
+.field-grid input,
+.field-grid select {
+  width: 100%;
+  border: 1px solid #2b5366;
+  border-radius: 4px;
+  background: #071a25;
+  color: #edf7fa;
+  padding: 10px;
+  font: inherit;
+  font-size: 11px;
+}
+
+.field-grid input:focus,
+.field-grid select:focus {
+  outline: 2px solid #299df5;
+  outline-offset: 1px;
+}
+
+.settings-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 38px;
+}
+
+.field-error,
+.form-error {
+  color: #ef8a7f;
+  font-size: 10px;
+}
+
+.saved-message {
+  color: #8ecaa2;
+  font-size: 10px;
+}
+
+@media (max-width: 650px) {
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wide-field {
+    grid-column: auto;
+  }
+
+  .settings-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

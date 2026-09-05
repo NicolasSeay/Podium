@@ -27,4 +27,8 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<User> findByEmail(String email) {
         return repository.findByEmailIgnoreCase(email).map(UserEntity::toDomain);
     }
+
+    public boolean existsByEmail(String email) {
+        return repository.existsByEmailIgnoreCase(email);
+    }
 }
