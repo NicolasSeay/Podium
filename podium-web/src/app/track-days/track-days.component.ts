@@ -41,7 +41,7 @@ export class TrackDaysComponent {
   protected trackName(trackId: number): string {
     return this.tracks().find((track) => track.id === trackId)?.name ?? `Track ${trackId}`;
   }
-  protected vehicleName(vehicleId: number | null): string {
+  protected vehicleName(vehicleId: number): string {
     return vehicleId
       ? (this.vehicles().find((vehicle) => vehicle.id === vehicleId)?.name ??
           `Vehicle ${vehicleId}`)

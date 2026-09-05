@@ -204,6 +204,11 @@ export class TrackDayCreateComponent {
   }
 
   protected complete(): void {
+    if (this.eventForm.invalid) {
+      this.eventForm.markAllAsTouched();
+      this.error.set('Choose a track, vehicle, and valid dates before saving.');
+      return;
+    }
     const sessions = this.days().flatMap((day) =>
       day.sessions
         .filter((session) => session.name.trim())
@@ -227,7 +232,7 @@ export class TrackDayCreateComponent {
       .complete({
         ...event,
         trackId: Number(event.trackId),
-        vehicleId: event.vehicleId ? Number(event.vehicleId) : null,
+        vehicleId: Number(event.vehicleId),
         notes: event.notes.trim() || null,
         conditions: event.conditions.trim() || null,
         sessions,

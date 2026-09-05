@@ -8,7 +8,7 @@ describe('trackDaysFeature', () => {
         id: 7,
         userId: 1,
         trackId: 2,
-        vehicleId: null,
+        vehicleId: 1,
         startDate: '2026-09-03',
         notes: null,
         conditions: 'Dry',

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
@@ -76,7 +77,7 @@ public final class PodiumModels {
         }
     }
 
-    public record TrackDayRequest(@Positive Long trackId, @Positive Long vehicleId, LocalDate startDate,
+    public record TrackDayRequest(@Positive Long trackId, @NotNull @Positive Long vehicleId, LocalDate startDate,
                                   LocalDate endDate, String notes, String conditions,
                                   List<@Valid SessionRequest> sessions) {
     }

@@ -37,9 +37,10 @@ class TrackDayControllerTest {
 
         mvc.perform(get('/api/track-days?trackId=1&vehicleId=1&from=2026-01-01&to=2026-12-31').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
         mvc.perform(get('/api/track-days/stats').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
-        mvc.perform(post('/api/track-days').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"trackId":1}')).andExpect(status().isOk())
+        mvc.perform(post('/api/track-days').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"trackId":1,"vehicleId":1}')).andExpect(status().isOk())
+        mvc.perform(post('/api/track-days').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"trackId":1}')).andExpect(status().isBadRequest())
         mvc.perform(get('/api/track-days/1').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
-        mvc.perform(patch('/api/track-days/1').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"notes":"updated"}')).andExpect(status().isOk())
+        mvc.perform(patch('/api/track-days/1').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"trackId":1,"vehicleId":1,"notes":"updated"}')).andExpect(status().isOk())
         mvc.perform(delete('/api/track-days/1').header('Authorization', 'Bearer test-token')).andExpect(status().isNoContent())
         mvc.perform(get('/api/track-days/1/sessions').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
         mvc.perform(post('/api/track-days/1/sessions').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"name":"Open"}')).andExpect(status().isOk())

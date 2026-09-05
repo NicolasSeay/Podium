@@ -20,7 +20,7 @@ export interface TrackDay {
   id: number;
   userId: number;
   trackId: number;
-  vehicleId: number | null;
+  vehicleId: number;
   startDate: string;
   endDate?: string;
   notes: string | null;
@@ -81,7 +81,7 @@ export const trackDayCreateRequested = createAction(
   '[Track Days] Create Requested',
   (trackDay: {
     trackId: number;
-    vehicleId: number | null;
+    vehicleId: number;
     startDate: string;
     notes: string | null;
     conditions: string | null;

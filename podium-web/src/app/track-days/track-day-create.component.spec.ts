@@ -79,7 +79,7 @@ describe('TrackDayCreateComponent', () => {
   it('submits named sessions and excludes empty slots', () => {
     const fixture = TestBed.createComponent(TrackDayCreateComponent);
     const component = fixture.componentInstance as any;
-    component.eventForm.patchValue({ trackId: 1 });
+    component.eventForm.patchValue({ trackId: 1, vehicleId: 1 });
     component.days.set([
       {
         date: '2026-09-03',
@@ -190,7 +190,7 @@ describe('TrackDayCreateComponent', () => {
           id: 10,
           userId: 1,
           trackId: 2,
-          vehicleId: null,
+          vehicleId: 1,
           startDate: '2026-08-01',
           notes: null,
           conditions: null,
