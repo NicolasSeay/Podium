@@ -41,18 +41,21 @@ public class TrackDayController extends ControllerSupport {
         return days.complete(userId(), request);
     }
 
-    @GetMapping("/{id:\\d+}")
+    // Reserved until the Angular app has a standalone track-day detail workflow.
+    // @GetMapping("/{id:\\d+}")
     public TrackDayDetailsResponse get(@PathVariable Long id) {
         Long userId = userId();
         return new TrackDayDetailsResponse(days.get(userId, id), sessions.list(userId, id));
     }
 
-    @PatchMapping("/{id:\\d+}")
+    // Reserved until track-day editing is available in the Angular app.
+    // @PatchMapping("/{id:\\d+}")
     public TrackDay update(@PathVariable Long id, @Valid @RequestBody TrackDayRequest request) {
         return days.update(userId(), id, request);
     }
 
-    @DeleteMapping("/{id:\\d+}")
+    // Reserved until track-day deletion is available in the Angular app.
+    // @DeleteMapping("/{id:\\d+}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         days.delete(userId(), id);

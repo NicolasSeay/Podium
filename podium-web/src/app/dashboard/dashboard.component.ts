@@ -6,17 +6,11 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { authFeature } from '../auth.store';
+import { AuthFacade } from '../auth.facade';
 import { MetricCardComponent } from './metric-card/metric-card.component';
-import {
-  AnalyticsLap,
-  AnalyticsSession,
-  dashboardFeature,
-  dashboardLoadRequested,
-  PersonalRecord,
-} from './dashboard.store';
-import { trackDaysFeature, trackDaysLoadRequested } from '../track-days/track-days.store';
+import { AnalyticsLap, AnalyticsSession, PersonalRecord } from './dashboard.store';
+import { DashboardFacade } from './dashboard.facade';
+import { TrackDaysFacade } from '../track-days/track-days.facade';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,16 +20,18 @@ import { trackDaysFeature, trackDaysLoadRequested } from '../track-days/track-da
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
-  private readonly store = inject(Store);
+  private readonly dashboardFacade = inject(DashboardFacade);
+  private readonly trackDaysFacade = inject(TrackDaysFacade);
+  private readonly authFacade = inject(AuthFacade);
   protected readonly math = Math;
 
-  protected readonly dashboard = this.store.selectSignal(dashboardFeature.selectData);
-  protected readonly loading = this.store.selectSignal(dashboardFeature.selectLoading);
-  protected readonly error = this.store.selectSignal(dashboardFeature.selectError);
-  protected readonly user = this.store.selectSignal(authFeature.selectUser);
-  private readonly loadedTracks = this.store.selectSignal(trackDaysFeature.selectTracks);
-  private readonly loadedVehicles = this.store.selectSignal(trackDaysFeature.selectVehicles);
-  private readonly loadedTrackDays = this.store.selectSignal(trackDaysFeature.selectTrackDays);
+  protected readonly dashboard = this.dashboardFacade.data;
+  protected readonly loading = this.dashboardFacade.loading;
+  protected readonly error = this.dashboardFacade.error;
+  protected readonly user = this.authFacade.user;
+  private readonly loadedTracks = this.trackDaysFacade.tracks;
+  private readonly loadedVehicles = this.trackDaysFacade.vehicles;
+  private readonly loadedTrackDays = this.trackDaysFacade.trackDays;
   protected readonly tracks = computed(() => this.loadedTracks() ?? []);
   protected readonly vehicles = computed(() => this.loadedVehicles() ?? []);
   protected readonly trackDays = computed(() => this.loadedTrackDays() ?? []);
@@ -90,8 +86,8 @@ export class DashboardComponent {
   });
 
   constructor() {
-    this.store.dispatch(trackDaysLoadRequested());
-    this.store.dispatch(dashboardLoadRequested());
+    this.trackDaysFacade.load();
+    this.dashboardFacade.load();
     effect(() => {
       const days = this.trackDays();
       if (!days.length || this.selectedTrackId() !== null || this.selectedVehicleId() !== null)
@@ -104,26 +100,24 @@ export class DashboardComponent {
         .sort((left, right) => right.startDate.localeCompare(left.startDate))[0];
       this.selectedTrackId.set(latestDay.trackId);
       this.selectedVehicleId.set(latestVehicleDay?.vehicleId ?? null);
-      this.store.dispatch(
-        dashboardLoadRequested(latestDay.trackId, latestVehicleDay?.vehicleId ?? null),
-      );
+      this.dashboardFacade.load(latestDay.trackId, latestVehicleDay?.vehicleId ?? null);
     });
   }
 
   protected changeTrack(event: Event): void {
     const trackId = Number((event.target as HTMLSelectElement).value);
     this.selectedTrackId.set(trackId);
-    this.store.dispatch(dashboardLoadRequested(trackId, this.selectedVehicleId()));
+    this.dashboardFacade.load(trackId, this.selectedVehicleId());
   }
 
   protected changeVehicle(event: Event): void {
     const vehicleId = Number((event.target as HTMLSelectElement).value);
     this.selectedVehicleId.set(vehicleId);
-    this.store.dispatch(dashboardLoadRequested(this.selectedTrackId(), vehicleId));
+    this.dashboardFacade.load(this.selectedTrackId(), vehicleId);
   }
 
   protected retry(): void {
-    this.store.dispatch(dashboardLoadRequested());
+    this.dashboardFacade.load();
   }
 
   protected selectSession(sessionId: number): void {

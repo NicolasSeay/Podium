@@ -20,18 +20,21 @@ public class SessionController extends ControllerSupport {
         this.laps = laps;
     }
 
-    @GetMapping("/{id}")
+    // Reserved until the Angular app has a standalone session detail workflow.
+    // @GetMapping("/{id}")
     public SessionDetailsResponse get(@PathVariable Long id) {
         Long userId = userId();
         return new SessionDetailsResponse(sessions.get(userId, id), laps.list(userId, id));
     }
 
-    @PatchMapping("/{id}")
+    // Reserved until session editing is available in the Angular app.
+    // @PatchMapping("/{id}")
     public Session update(@PathVariable Long id, @Valid @RequestBody SessionRequest request) {
         return sessions.update(userId(), id, request);
     }
 
-    @DeleteMapping("/{id}")
+    // Reserved until session deletion is available in the Angular app.
+    // @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         sessions.delete(userId(), id);

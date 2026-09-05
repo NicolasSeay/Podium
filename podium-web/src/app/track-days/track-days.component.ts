@@ -1,12 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { Store } from '@ngrx/store';
-import {
-  sessionsLoadRequested,
-  trackDaySelected,
-  trackDaysFeature,
-  trackDaysLoadRequested,
-  TrackDay,
-} from './track-days.store';
+import { TrackDay } from './track-days.store';
+import { TrackDaysFacade } from './track-days.facade';
 
 @Component({
   selector: 'app-track-days',
@@ -16,32 +10,31 @@ import {
   styleUrl: './track-days.component.scss',
 })
 export class TrackDaysComponent {
-  private readonly store = inject(Store);
-  protected readonly tracks = this.store.selectSignal(trackDaysFeature.selectTracks);
-  protected readonly vehicles = this.store.selectSignal(trackDaysFeature.selectVehicles);
-  protected readonly trackDays = this.store.selectSignal(trackDaysFeature.selectTrackDays);
-  protected readonly sessions = this.store.selectSignal(trackDaysFeature.selectSessions);
-  protected readonly laps = this.store.selectSignal(trackDaysFeature.selectLaps);
-  protected readonly stats = this.store.selectSignal(trackDaysFeature.selectStats);
-  protected readonly loading = this.store.selectSignal(trackDaysFeature.selectLoading);
-  protected readonly error = this.store.selectSignal(trackDaysFeature.selectError);
-  protected readonly selectedDayId = this.store.selectSignal(trackDaysFeature.selectSelectedDayId);
+  private readonly facade = inject(TrackDaysFacade);
+  protected readonly tracks = this.facade.tracks;
+  protected readonly vehicles = this.facade.vehicles;
+  protected readonly trackDays = this.facade.trackDays;
+  protected readonly sessions = this.facade.sessions;
+  protected readonly laps = this.facade.laps;
+  protected readonly stats = this.facade.stats;
+  protected readonly loading = this.facade.loading;
+  protected readonly error = this.facade.error;
+  protected readonly selectedDayId = this.facade.selectedDayId;
   protected readonly selectedDay = computed(
     () => this.trackDays().find((day) => day.id === this.selectedDayId()) ?? null,
   );
 
   constructor() {
-    this.store.dispatch(trackDaysLoadRequested());
+    this.facade.load();
   }
 
   protected openDay(day: TrackDay): void {
-    this.store.dispatch(trackDaySelected(day));
-    this.store.dispatch(sessionsLoadRequested(day.id));
+    this.facade.selectDay(day);
   }
   protected trackName(trackId: number): string {
     return this.tracks().find((track) => track.id === trackId)?.name ?? `Track ${trackId}`;
   }
-  protected vehicleName(vehicleId: number | null): string {
+  protected vehicleName(vehicleId: number): string {
     return vehicleId
       ? (this.vehicles().find((vehicle) => vehicle.id === vehicleId)?.name ??
           `Vehicle ${vehicleId}`)

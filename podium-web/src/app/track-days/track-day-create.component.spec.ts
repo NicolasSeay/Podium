@@ -1,16 +1,19 @@
-import { provideHttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
-import { of } from 'rxjs';
+import { signal } from '@angular/core';
 import { TrackDayCreateComponent } from './track-day-create.component';
-import { TrackDaysApiService } from './track-days-api.service';
-import { Track, TrackDay, Vehicle } from './track-days.store';
+import { TrackDaysFacade } from './track-days.facade';
 
-const apiMock = {
-  tracks: vi.fn(() => of([] as Track[])),
-  list: vi.fn(() => of([] as TrackDay[])),
-  vehicles: vi.fn(() => of([] as Vehicle[])),
-  complete: vi.fn(() => of({})),
+const facadeMock = {
+  tracks: signal([]),
+  trackDays: signal([]),
+  vehicles: signal([]),
+  loading: signal(false),
+  saving: signal(false),
+  error: signal(null),
+  completedTrackDayId: signal(null),
+  load: vi.fn(),
+  complete: vi.fn(),
 };
 
 describe('TrackDayCreateComponent', () => {
@@ -19,9 +22,8 @@ describe('TrackDayCreateComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TrackDayCreateComponent],
       providers: [
-        provideHttpClient(),
         provideRouter([{ path: 'track-days', component: TrackDayCreateComponent }]),
-        { provide: TrackDaysApiService, useValue: apiMock },
+        { provide: TrackDaysFacade, useValue: facadeMock },
       ],
     }).compileComponents();
   });
@@ -79,7 +81,7 @@ describe('TrackDayCreateComponent', () => {
   it('submits named sessions and excludes empty slots', () => {
     const fixture = TestBed.createComponent(TrackDayCreateComponent);
     const component = fixture.componentInstance as any;
-    component.eventForm.patchValue({ trackId: 1 });
+    component.eventForm.patchValue({ trackId: 1, vehicleId: 1 });
     component.days.set([
       {
         date: '2026-09-03',
@@ -99,7 +101,7 @@ describe('TrackDayCreateComponent', () => {
 
     component.complete();
 
-    expect(apiMock.complete).toHaveBeenCalledWith(
+    expect(facadeMock.complete).toHaveBeenCalledWith(
       expect.objectContaining({
         sessions: [
           {
@@ -177,26 +179,22 @@ describe('TrackDayCreateComponent', () => {
   });
 
   it('groups previously raced tracks under Recents', () => {
-    apiMock.tracks.mockReturnValue(
-      of([
-        { id: 1, name: 'North Circuit', city: 'Northport', country: 'US', lengthMiles: 2 },
-        { id: 2, name: 'Summit Raceway', city: 'Summit', country: 'US', lengthMiles: 3 },
-        { id: 3, name: 'Lakeside Park', city: 'Lakeside', country: 'US', lengthMiles: 4 },
-      ]),
-    );
-    apiMock.list.mockReturnValue(
-      of([
-        {
-          id: 10,
-          userId: 1,
-          trackId: 2,
-          vehicleId: null,
-          startDate: '2026-08-01',
-          notes: null,
-          conditions: null,
-        },
-      ]),
-    );
+    facadeMock.tracks.set([
+      { id: 1, name: 'North Circuit', city: 'Northport', country: 'US', lengthMiles: 2 },
+      { id: 2, name: 'Summit Raceway', city: 'Summit', country: 'US', lengthMiles: 3 },
+      { id: 3, name: 'Lakeside Park', city: 'Lakeside', country: 'US', lengthMiles: 4 },
+    ]);
+    facadeMock.trackDays.set([
+      {
+        id: 10,
+        userId: 1,
+        trackId: 2,
+        vehicleId: 1,
+        startDate: '2026-08-01',
+        notes: null,
+        conditions: null,
+      },
+    ]);
 
     const fixture = TestBed.createComponent(TrackDayCreateComponent);
     fixture.detectChanges();

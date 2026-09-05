@@ -18,6 +18,7 @@ public class TrackDayEntity {
     private Long id;
     private Long userId;
     private Long trackId;
+    @Column(nullable = false)
     private Long vehicleId;
     private LocalDate startDate;
     private LocalDate endDate;

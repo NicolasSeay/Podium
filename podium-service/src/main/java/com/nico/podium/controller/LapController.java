@@ -16,12 +16,14 @@ public class LapController extends ControllerSupport {
         this.laps = laps;
     }
 
-    @PatchMapping("/{id}")
+    // Reserved until lap editing is available in the Angular app.
+    // @PatchMapping("/{id}")
     public Lap update(@PathVariable Long id, @Valid @RequestBody LapRequest request) {
         return laps.update(userId(), id, request);
     }
 
-    @DeleteMapping("/{id}")
+    // Reserved until lap deletion is available in the Angular app.
+    // @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         laps.delete(userId(), id);

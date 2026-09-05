@@ -20,7 +20,8 @@ public class UserController extends ControllerSupport {
         return currentUser();
     }
 
-    @PatchMapping("/me")
+    // Reserved until profile editing is available in the Angular app.
+    // @PatchMapping("/me")
     public User update(@Valid @RequestBody UserUpdateRequest request) {
         return users.update(userId(), request);
     }

@@ -29,7 +29,7 @@ export class TrackDaysApiService {
   }
   create(trackDay: {
     trackId: number;
-    vehicleId: number | null;
+    vehicleId: number;
     startDate: string;
     notes: string | null;
     conditions: string | null;
@@ -38,7 +38,7 @@ export class TrackDaysApiService {
   }
   complete(payload: {
     trackId: number;
-    vehicleId: number | null;
+    vehicleId: number;
     startDate: string;
     endDate: string;
     notes: string | null;

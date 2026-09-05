@@ -73,9 +73,10 @@ public class TrackDayServiceImpl implements TrackDayService {
         }
         tracks.get(trackId);
         Long vehicleId = request.vehicleId();
-        if (vehicleId != null) {
-            vehicles.get(userId, vehicleId);
+        if (vehicleId == null) {
+            throw error(HttpStatus.BAD_REQUEST, "vehicleId is required");
         }
+        vehicles.get(userId, vehicleId);
         LocalDate start = request.startDate() == null ? LocalDate.now() : request.startDate();
         return days.save(new TrackDay(null, userId, trackId, vehicleId, start, request.endDate() == null ? start : request.endDate(), request.notes(), request.conditions()));
     }
@@ -91,9 +92,10 @@ public class TrackDayServiceImpl implements TrackDayService {
         }
         tracks.get(trackId);
         Long vehicleId = request.vehicleId();
-        if (vehicleId != null) {
-            vehicles.get(userId, vehicleId);
+        if (vehicleId == null) {
+            throw error(HttpStatus.BAD_REQUEST, "vehicleId is required");
         }
+        vehicles.get(userId, vehicleId);
         LocalDate start = request.startDate() == null ? LocalDate.now() : request.startDate();
         LocalDate end = request.endDate() == null ? start : request.endDate();
         if (end.isBefore(start)) {
@@ -128,10 +130,11 @@ public class TrackDayServiceImpl implements TrackDayService {
         TrackDay c = get(userId, id);
         Long trackId = request.trackId() == null ? c.trackId() : request.trackId();
         tracks.get(trackId);
-        Long vehicleId = request.vehicleId() == null ? c.vehicleId() : request.vehicleId();
-        if (vehicleId != null) {
-            vehicles.get(userId, vehicleId);
+        Long vehicleId = request.vehicleId();
+        if (vehicleId == null) {
+            vehicleId = c.vehicleId();
         }
+        vehicles.get(userId, vehicleId);
         return days.save(new TrackDay(c.id(), c.userId(), trackId, vehicleId, request.startDate() == null ? c.startDate() : request.startDate(), request.endDate() == null ? c.endDate() : request.endDate(), request.notes() == null ? c.notes() : request.notes(), request.conditions() == null ? c.conditions() : request.conditions()));
     }
 

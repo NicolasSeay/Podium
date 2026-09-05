@@ -30,8 +30,8 @@ class VehicleControllerTest {
 
         mvc.perform(get('/api/vehicles').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
         mvc.perform(post('/api/vehicles').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"name":"MX-5"}')).andExpect(status().isOk())
-        mvc.perform(get('/api/vehicles/1').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
-        mvc.perform(patch('/api/vehicles/1').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"year":2020}')).andExpect(status().isOk())
+        mvc.perform(get('/api/vehicles/1').header('Authorization', 'Bearer test-token')).andExpect(status().isMethodNotAllowed())
+        mvc.perform(patch('/api/vehicles/1').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"year":2020}')).andExpect(status().isMethodNotAllowed())
         mvc.perform(delete('/api/vehicles/1').header('Authorization', 'Bearer test-token')).andExpect(status().isNoContent())
     }
 }

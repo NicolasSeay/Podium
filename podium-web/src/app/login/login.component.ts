@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { finalize } from 'rxjs';
 import { AuthService } from '../auth.service';
-import { authUserLoaded } from '../auth.store';
+import { AuthFacade } from '../auth.facade';
 import { environment } from '../../environments/environment';
 
 @Component({
@@ -17,7 +16,7 @@ import { environment } from '../../environments/environment';
 export class LoginComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly store = inject(Store);
+  private readonly authFacade = inject(AuthFacade);
   protected registering = false;
   protected email = environment.demoCredentials.email;
   protected password = environment.demoCredentials.password;
@@ -65,7 +64,7 @@ export class LoginComponent {
       : this.auth.login(this.email, this.password);
     request.pipe(finalize(() => (this.loading = false))).subscribe({
       next: ({ user }) => {
-        this.store.dispatch(authUserLoaded(user));
+        this.authFacade.userLoaded(user);
         void this.router.navigate(['/dashboard']);
       },
       error: (error: { error?: { message?: string; detail?: string } }) => {

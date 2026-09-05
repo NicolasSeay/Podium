@@ -36,7 +36,7 @@ const dashboardData: DashboardData = {
       sessionId: 1,
       trackDayId: 1,
       trackDayDate: '2026-08-01',
-      vehicleId: null,
+      vehicleId: 1,
       sessionName: 'Practice',
       laps: [
         { id: 1, sessionId: 1, lapNumber: 1, timeMillis: 110000 },
@@ -51,7 +51,7 @@ const trackDays = [
     id: 1,
     userId: 1,
     trackId: 1,
-    vehicleId: null,
+    vehicleId: 1,
     startDate: '2026-08-01',
     notes: null,
     conditions: null,

@@ -17,7 +17,8 @@ public class RecordController extends ControllerSupport {
         this.records = records;
     }
 
-    @GetMapping
+    // Reserved until the Angular app has a records view.
+    // @GetMapping
     public List<PersonalRecord> list() {
         return records.list(userId());
     }

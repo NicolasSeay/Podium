@@ -27,7 +27,8 @@ public class AuthController {
         return auth.login(request);
     }
 
-    @PostMapping("/refresh")
+    // Reserved until the Angular auth flow has a refresh-token workflow.
+    // @PostMapping("/refresh")
     public AuthResponse refresh(@RequestHeader("Authorization") String header) {
         return auth.refresh(header);
     }

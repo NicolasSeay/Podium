@@ -1,15 +1,17 @@
 <div class="app-shell">
   <app-sidebar />
   <main class="content-area">
-    <app-header [title]="activeNav()" />
-    <div class="content-body">
-      @if (activeNav() === 'Track Days') {
-        <app-track-days />
-      } @else if (activeNav() === 'Vehicles') {
-        <app-vehicles />
-      } @else {
-        <app-dashboard />
-      }
-    </div>
+    @if (dashboardFacade.activeNav$ | async; as activeNav) {
+      <app-header [title]="activeNav" />
+      <div class="content-body">
+        @if (activeNav === 'Track Days') {
+          <app-track-days />
+        } @else if (activeNav === 'Vehicles') {
+          <app-vehicles />
+        } @else {
+          <app-dashboard />
+        }
+      </div>
+    }
   </main>
 </div>

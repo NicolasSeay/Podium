@@ -1,18 +1,19 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { dashboardFeature, setActiveNav } from './dashboard/dashboard.store';
+import { DashboardFacade } from './dashboard/dashboard.facade';
 import { TrackDaysComponent } from './track-days/track-days.component';
 import { VehiclesComponent } from './vehicles/vehicles.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { AppHeaderComponent } from './app-header/app-header.component';
-import { authRehydrateRequested } from './auth.store';
+import { AuthFacade } from './auth.facade';
 
 @Component({
   selector: 'app-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    AsyncPipe,
     DashboardComponent,
     VehiclesComponent,
     TrackDaysComponent,
@@ -24,12 +25,12 @@ import { authRehydrateRequested } from './auth.store';
 })
 export class App {
   private readonly router = inject(Router);
-  private readonly store = inject(Store);
-  protected readonly activeNav = this.store.selectSignal(dashboardFeature.selectActiveNav);
+  protected readonly dashboardFacade = inject(DashboardFacade);
+  private readonly authFacade = inject(AuthFacade);
 
   constructor() {
-    this.store.dispatch(authRehydrateRequested());
-    this.store.dispatch(setActiveNav(this.navigationLabelForUrl(this.router.url)));
+    this.authFacade.rehydrate();
+    this.dashboardFacade.setActiveNavigation(this.navigationLabelForUrl(this.router.url));
   }
 
   private navigationLabelForUrl(url: string): string {

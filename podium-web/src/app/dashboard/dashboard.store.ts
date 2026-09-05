@@ -20,7 +20,7 @@ export interface AnalyticsSession {
   sessionId: number;
   trackDayId: number;
   trackDayDate: string;
-  vehicleId: number | null;
+  vehicleId: number;
   sessionName: string;
   laps: AnalyticsLap[];
 }

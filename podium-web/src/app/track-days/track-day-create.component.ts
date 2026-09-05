@@ -1,9 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
-import { TrackDaysApiService } from './track-days-api.service';
 import { Track, TrackDay, Vehicle } from './track-days.store';
+import { TrackDaysFacade } from './track-days.facade';
 import { AppHeaderComponent } from '../app-header/app-header.component';
 
 type DraftLap = { timeMillis: number; displayTime: string };
@@ -18,18 +24,20 @@ type DraftDay = { date: string; sessions: DraftSession[] };
   styleUrl: './track-day-create.component.scss',
 })
 export class TrackDayCreateComponent {
-  private readonly api = inject(TrackDaysApiService);
+  private readonly facade = inject(TrackDaysFacade);
   private readonly formBuilder = inject(FormBuilder);
   private readonly router = inject(Router);
 
-  protected readonly tracks = signal<Track[]>([]);
-  protected readonly trackDays = signal<TrackDay[]>([]);
-  protected readonly vehicles = signal<Vehicle[]>([]);
+  protected readonly tracks = this.facade.tracks;
+  protected readonly trackDays = this.facade.trackDays;
+  protected readonly vehicles = this.facade.vehicles;
   protected readonly days = signal<DraftDay[]>([]);
   protected readonly step = signal(1);
-  protected readonly saving = signal(false);
-  protected readonly loading = signal(true);
-  protected readonly error = signal<string | null>(null);
+  protected readonly saving = this.facade.saving;
+  protected readonly loading = this.facade.loading;
+  private readonly validationError = signal<string | null>(null);
+  protected readonly error = computed(() => this.validationError() ?? this.facade.error());
+  private readonly completedTrackDayId = this.facade.completedTrackDayId;
   protected readonly recentTracks = computed(() => {
     const racedTrackIds = new Set(this.trackDays().map((trackDay) => trackDay.trackId));
     return this.tracks().filter((track) => racedTrackIds.has(track.id));
@@ -47,21 +55,11 @@ export class TrackDayCreateComponent {
     notes: [''],
   });
   constructor() {
-    forkJoin({
-      tracks: this.api.tracks(),
-      vehicles: this.api.vehicles(),
-      trackDays: this.api.list(),
-    }).subscribe({
-      next: (data) => {
-        this.tracks.set(data.tracks);
-        this.trackDays.set(data.trackDays);
-        this.vehicles.set(data.vehicles);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.error.set('Unable to load tracks and vehicles.');
-        this.loading.set(false);
-      },
+    this.facade.load();
+    effect(() => {
+      if (this.completedTrackDayId() !== null) {
+        void this.router.navigate(['/track-days']);
+      }
     });
   }
 
@@ -72,17 +70,17 @@ export class TrackDayCreateComponent {
         this.eventForm.controls.endDate.value < this.eventForm.controls.startDate.value
       ) {
         this.eventForm.markAllAsTouched();
-        this.error.set('Choose an end date on or after the start date.');
+        this.validationError.set('Choose an end date on or after the start date.');
         return;
       }
-      this.error.set(null);
+      this.validationError.set(null);
       this.days.update((days) => this.buildDays(days));
     }
     this.step.update((value) => Math.min(value + 1, 3));
   }
 
   protected previousStep(): void {
-    this.error.set(null);
+    this.validationError.set(null);
     this.step.update((value) => Math.max(value - 1, 1));
   }
 
@@ -204,6 +202,11 @@ export class TrackDayCreateComponent {
   }
 
   protected complete(): void {
+    if (this.eventForm.invalid) {
+      this.eventForm.markAllAsTouched();
+      this.validationError.set('Choose a track, vehicle, and valid dates before saving.');
+      return;
+    }
     const sessions = this.days().flatMap((day) =>
       day.sessions
         .filter((session) => session.name.trim())
@@ -217,28 +220,19 @@ export class TrackDayCreateComponent {
         })),
     );
     if (!sessions.length) {
-      this.error.set('Add at least one session before completing the track day.');
+      this.validationError.set('Add at least one session before completing the track day.');
       return;
     }
-    this.saving.set(true);
-    this.error.set(null);
+    this.validationError.set(null);
     const event = this.eventForm.getRawValue();
-    this.api
-      .complete({
-        ...event,
-        trackId: Number(event.trackId),
-        vehicleId: event.vehicleId ? Number(event.vehicleId) : null,
-        notes: event.notes.trim() || null,
-        conditions: event.conditions.trim() || null,
-        sessions,
-      })
-      .subscribe({
-        next: () => void this.router.navigate(['/track-days']),
-        error: () => {
-          this.error.set('Unable to save the complete track day. Nothing was persisted.');
-          this.saving.set(false);
-        },
-      });
+    this.facade.complete({
+      ...event,
+      trackId: Number(event.trackId),
+      vehicleId: Number(event.vehicleId),
+      notes: event.notes.trim() || null,
+      conditions: event.conditions.trim() || null,
+      sessions,
+    });
   }
 
   protected dayLabel(date: string): string {
