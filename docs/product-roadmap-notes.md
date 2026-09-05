@@ -59,8 +59,8 @@ The backend should not expose or maintain application endpoints that are not par
 
 The current Angular app uses these endpoint groups:
 
-- `/api/auth/*`: registration, login, refresh, and logout
-- `/api/users/me`: authenticated-user loading and profile updates where supported
+- `/api/auth/register`, `/api/auth/login`, and `/api/auth/logout`
+- `/api/users/me`: authenticated-user loading
 - `/api/dashboard`: dashboard metrics and analytics data
 - `/api/track-days`: list, statistics, creation, completion, session loading, and session creation
 - `/api/tracks`: track catalog reads used when creating and viewing track days

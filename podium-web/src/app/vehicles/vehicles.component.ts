@@ -1,12 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import {
-  vehicleCreateRequested,
-  vehicleDeleteRequested,
-  vehiclesFeature,
-  vehiclesLoadRequested,
-} from './vehicles.store';
+import { VehiclesFacade } from './vehicles.facade';
 
 @Component({
   selector: 'app-vehicles',
@@ -16,12 +10,12 @@ import {
   styleUrl: './vehicles.component.scss',
 })
 export class VehiclesComponent {
-  private readonly store = inject(Store);
+  private readonly facade = inject(VehiclesFacade);
   private readonly formBuilder = inject(FormBuilder);
-  protected readonly vehicles = this.store.selectSignal(vehiclesFeature.selectVehicles);
-  protected readonly loading = this.store.selectSignal(vehiclesFeature.selectLoading);
-  protected readonly saving = this.store.selectSignal(vehiclesFeature.selectSaving);
-  protected readonly error = this.store.selectSignal(vehiclesFeature.selectError);
+  protected readonly vehicles = this.facade.vehicles;
+  protected readonly loading = this.facade.loading;
+  protected readonly saving = this.facade.saving;
+  protected readonly error = this.facade.error;
   protected readonly form = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.maxLength(100)]],
     make: [''],
@@ -31,7 +25,7 @@ export class VehiclesComponent {
   });
 
   constructor() {
-    this.store.dispatch(vehiclesLoadRequested());
+    this.facade.load();
   }
 
   protected createVehicle(): void {
@@ -41,15 +35,13 @@ export class VehiclesComponent {
     }
 
     const { name, make, model, trim, year } = this.form.getRawValue();
-    this.store.dispatch(
-      vehicleCreateRequested({
-        name: name.trim(),
-        make: make.trim() || null,
-        model: model.trim() || null,
-        trim: trim.trim() || null,
-        year,
-      }),
-    );
+    this.facade.create({
+      name: name.trim(),
+      make: make.trim() || null,
+      model: model.trim() || null,
+      trim: trim.trim() || null,
+      year,
+    });
     this.form.reset();
   }
 
@@ -59,6 +51,6 @@ export class VehiclesComponent {
       return;
     }
 
-    this.store.dispatch(vehicleDeleteRequested(vehicleId));
+    this.facade.delete(vehicleId);
   }
 }

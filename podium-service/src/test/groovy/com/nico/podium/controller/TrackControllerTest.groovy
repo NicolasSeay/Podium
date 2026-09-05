@@ -26,9 +26,9 @@ class TrackControllerTest {
         when(tracks.get(1L)).thenReturn(track)
 
         mvc.perform(get('/api/tracks').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
-        mvc.perform(get('/api/tracks/1').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
+        mvc.perform(get('/api/tracks/1').header('Authorization', 'Bearer test-token')).andExpect(status().isNotFound())
         mvc.perform(post('/api/tracks').header('Authorization', 'Bearer test-token')).andExpect(status().isMethodNotAllowed())
-        mvc.perform(patch('/api/tracks/1').header('Authorization', 'Bearer test-token')).andExpect(status().isMethodNotAllowed())
-        mvc.perform(delete('/api/tracks/1').header('Authorization', 'Bearer test-token')).andExpect(status().isMethodNotAllowed())
+        mvc.perform(patch('/api/tracks/1').header('Authorization', 'Bearer test-token')).andExpect(status().isNotFound())
+        mvc.perform(delete('/api/tracks/1').header('Authorization', 'Bearer test-token')).andExpect(status().isNotFound())
     }
 }

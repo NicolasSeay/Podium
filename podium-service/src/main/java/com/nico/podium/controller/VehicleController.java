@@ -28,12 +28,14 @@ public class VehicleController extends ControllerSupport {
         return vehicles.create(userId(), request);
     }
 
-    @GetMapping("/{id}")
+    // Reserved until the Angular app has a vehicle detail workflow.
+    // @GetMapping("/{id}")
     public Vehicle get(@PathVariable Long id) {
         return vehicles.get(userId(), id);
     }
 
-    @PatchMapping("/{id}")
+    // Reserved until vehicle editing is available in the Angular app.
+    // @PatchMapping("/{id}")
     public Vehicle update(@PathVariable Long id, @Valid @RequestBody VehicleRequest request) {
         return vehicles.update(userId(), id, request);
     }

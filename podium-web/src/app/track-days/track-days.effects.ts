@@ -11,6 +11,8 @@ import {
   sessionsLoadRequested,
   sessionsLoaded,
   trackDayCreateRequested,
+  trackDayCompleteRequested,
+  trackDayCompleted,
   trackDayCreated,
   trackDaysLoaded,
   trackDaysLoadRequested,
@@ -46,6 +48,18 @@ export class TrackDaysEffects {
         this.api.create(trackDay).pipe(
           map((created) => trackDayCreated(created)),
           catchError(() => of(trackDaysRequestFailed('Unable to save the track day'))),
+        ),
+      ),
+    ),
+  );
+
+  readonly completeTrackDay$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(trackDayCompleteRequested),
+      switchMap(({ payload }) =>
+        this.api.complete(payload).pipe(
+          map((completed) => trackDayCompleted(completed)),
+          catchError(() => of(trackDaysRequestFailed('Unable to save the complete track day'))),
         ),
       ),
     ),

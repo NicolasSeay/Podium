@@ -65,6 +65,7 @@ export interface TrackDaysState {
   loading: boolean;
   saving: boolean;
   error: string | null;
+  completedTrackDayId: number | null;
 }
 
 export const trackDaysLoadRequested = createAction('[Track Days] Load Requested');
@@ -90,6 +91,27 @@ export const trackDayCreateRequested = createAction(
 export const trackDayCreated = createAction('[Track Days] Created', (trackDay: TrackDay) => ({
   trackDay,
 }));
+export const trackDayCompleteRequested = createAction(
+  '[Track Days] Complete Requested',
+  (payload: {
+    trackId: number;
+    vehicleId: number;
+    startDate: string;
+    endDate: string;
+    notes: string | null;
+    conditions: string | null;
+    sessions: {
+      name: string;
+      notes: string | null;
+      sessionDate: string;
+      laps: { lapNumber: number; timeMillis: number }[];
+    }[];
+  }) => ({ payload }),
+);
+export const trackDayCompleted = createAction(
+  '[Track Days] Completed',
+  (completed: CompletedTrackDay) => ({ completed }),
+);
 export const trackDaySelected = createAction('[Track Days] Selected', (trackDay: TrackDay) => ({
   trackDay,
 }));
@@ -136,6 +158,7 @@ const initialState: TrackDaysState = {
   loading: false,
   saving: false,
   error: null,
+  completedTrackDayId: null,
 };
 
 export const trackDaysFeature = createFeature({
@@ -160,6 +183,19 @@ export const trackDaysFeature = createFeature({
       trackDays: [trackDay, ...state.trackDays],
       selectedDayId: trackDay.id,
       saving: false,
+    })),
+    on(trackDayCompleteRequested, (state) => ({ ...state, saving: true, error: null })),
+    on(trackDayCompleted, (state, { completed }) => ({
+      ...state,
+      trackDays: [completed.trackDay, ...state.trackDays],
+      sessions: completed.sessions,
+      laps: Object.fromEntries(
+        completed.sessions.map((session) => [session.id, completed.laps[session.id] ?? []]),
+      ),
+      selectedDayId: completed.trackDay.id,
+      completedTrackDayId: completed.trackDay.id,
+      saving: false,
+      error: null,
     })),
     on(trackDaySelected, (state, { trackDay }) => ({ ...state, selectedDayId: trackDay.id })),
     on(sessionsLoaded, (state, { sessions }) => ({

@@ -4,8 +4,8 @@ The Angular application currently uses authentication, the current user, dashboa
 
 ## Keep active
 
-- `/api/auth/*`
-- `/api/users/me`
+- `/api/auth/register`, `/api/auth/login`, and `/api/auth/logout`
+- `/api/users/me` read
 - `/api/dashboard`
 - `/api/track-days` list, stats, create, complete, session list, and session create
 - `/api/tracks` list
@@ -14,7 +14,7 @@ The Angular application currently uses authentication, the current user, dashboa
 
 ## Hold for an explicit UI workflow
 
-The following mappings are currently covered by backend tests but have no Angular caller:
+The following mappings are disabled because they are covered by backend tests but have no Angular caller:
 
 - Track-day detail, patch, and delete.
 - Session detail, patch, and delete.
@@ -23,7 +23,7 @@ The following mappings are currently covered by backend tests but have no Angula
 - Personal-record reads.
 - Track detail reads.
 
-They should not be removed until external clients, deployment checks, scripts, and backend tests have been checked. When a mapping is removed, remove its service method and focused tests in the same change. When a feature is imminent, implement its Angular workflow and endpoint together.
+Their service methods remain reserved, but the controller mappings are commented out until external clients, deployment checks, scripts, and backend tests justify reactivation. When a feature is imminent, implement its Angular workflow and endpoint together.
 
 ## Contract decisions
 

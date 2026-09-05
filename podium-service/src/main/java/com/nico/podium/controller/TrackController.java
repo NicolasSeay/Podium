@@ -20,7 +20,8 @@ public class TrackController extends ControllerSupport {
         return tracks.list();
     }
 
-    @GetMapping("/{id}")
+    // Reserved until the Angular app has a track detail workflow.
+    // @GetMapping("/{id}")
     public Track get(@PathVariable Long id) {
         return tracks.get(id);
     }

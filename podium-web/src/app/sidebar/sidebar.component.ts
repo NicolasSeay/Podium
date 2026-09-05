@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { AuthService } from '../auth.service';
-import { authFeature, authLoggedOut } from '../auth.store';
-import { dashboardFeature, setActiveNav } from '../dashboard/dashboard.store';
+import { AuthFacade } from '../auth.facade';
+import { DashboardFacade } from '../dashboard/dashboard.facade';
 
 @Component({
   selector: 'app-sidebar',
@@ -14,10 +13,11 @@ import { dashboardFeature, setActiveNav } from '../dashboard/dashboard.store';
 export class SidebarComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly store = inject(Store);
+  private readonly authFacade = inject(AuthFacade);
+  private readonly dashboardFacade = inject(DashboardFacade);
 
-  protected readonly activeNav = this.store.selectSignal(dashboardFeature.selectActiveNav);
-  protected readonly user = this.store.selectSignal(authFeature.selectUser);
+  protected readonly activeNav = this.dashboardFacade.activeNav;
+  protected readonly user = this.authFacade.user;
   protected readonly sidebarName = computed(() => {
     const user = this.user();
     return user ? `${user.firstName} ${user.lastName.charAt(0)}.` : 'Driver';
@@ -36,7 +36,7 @@ export class SidebarComponent {
   protected readonly implementedNavigation = new Set(['Dashboard', 'Track Days', 'Vehicles']);
 
   protected changeNav(item: string): void {
-    this.store.dispatch(setActiveNav(item));
+    this.dashboardFacade.setActiveNavigation(item);
     void this.router.navigate([this.navigationRoutes[item]]).catch(() => undefined);
   }
 
@@ -48,7 +48,7 @@ export class SidebarComponent {
   }
 
   private finishLogout(): void {
-    this.store.dispatch(authLoggedOut());
+    this.authFacade.loggedOut();
     void this.router.navigate(['/login']);
   }
 }

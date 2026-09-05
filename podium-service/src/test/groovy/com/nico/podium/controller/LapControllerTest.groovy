@@ -24,7 +24,7 @@ class LapControllerTest {
     void exposesLapUpdateAndDeleteEndpoints() {
         when(auth.currentUser(any(), any())).thenReturn(new User(1L, 'driver@example.com', 'secret', 'Driver', 'Example'))
         when(laps.update(anyLong(), eq(1L), any())).thenReturn(new Lap(1L, 1L, 1, 94000L))
-        mvc.perform(patch('/api/laps/1').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"timeMillis":94000}')).andExpect(status().isOk())
-        mvc.perform(delete('/api/laps/1').header('Authorization', 'Bearer test-token')).andExpect(status().isNoContent())
+        mvc.perform(patch('/api/laps/1').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"timeMillis":94000}')).andExpect(status().isNotFound())
+        mvc.perform(delete('/api/laps/1').header('Authorization', 'Bearer test-token')).andExpect(status().isNotFound())
     }
 }
