@@ -7,8 +7,8 @@ import { Vehicle } from './vehicles.store';
 export class VehiclesApiService {
   private readonly http = inject(HttpClient);
 
-  list(): Observable<Vehicle[]> {
-    return this.http.get<Vehicle[]>('/api/vehicles');
+  list(): Observable<Vehicle[] | null> {
+    return this.http.get<Vehicle[] | null>('/api/vehicles');
   }
 
   create(vehicle: {

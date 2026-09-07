@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { computed, Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   vehicleCreateRequested,
@@ -11,7 +11,8 @@ import {
 export class VehiclesFacade {
   private readonly store = inject(Store);
 
-  readonly vehicles = this.store.selectSignal(vehiclesFeature.selectVehicles);
+  private readonly storedVehicles = this.store.selectSignal(vehiclesFeature.selectVehicles);
+  readonly vehicles = computed(() => this.storedVehicles() ?? []);
   readonly loading = this.store.selectSignal(vehiclesFeature.selectLoading);
   readonly saving = this.store.selectSignal(vehiclesFeature.selectSaving);
   readonly error = this.store.selectSignal(vehiclesFeature.selectError);

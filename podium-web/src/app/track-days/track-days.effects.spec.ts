@@ -3,7 +3,12 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of } from 'rxjs';
 import { TrackDaysApiService } from './track-days-api.service';
 import { TrackDaysEffects } from './track-days.effects';
-import { trackDaysLoadRequested, trackDaysLoaded } from './track-days.store';
+import {
+  trackDayOptionsLoaded,
+  trackDayOptionsLoadRequested,
+  trackDaysLoadRequested,
+  trackDaysLoaded,
+} from './track-days.store';
 
 describe('TrackDaysEffects', () => {
   let actions$: Observable<unknown>;
@@ -58,5 +63,22 @@ describe('TrackDaysEffects', () => {
         stats: [],
       }),
     );
+  });
+
+  it('loads only tracks and vehicles for option lists', () => {
+    const tracks = [
+      { id: 2, name: 'Road Atlanta', city: 'Braselton', country: 'US', lengthMiles: 2.54 },
+    ];
+    const vehicles = [{ id: 3, name: 'MX-5', make: 'Mazda', model: 'Miata', year: 2020 }];
+    api.tracks.mockReturnValue(of(tracks));
+    api.vehicles.mockReturnValue(of(vehicles));
+    actions$ = of(trackDayOptionsLoadRequested());
+
+    let received: unknown;
+    effects.loadOptions$.subscribe((action) => (received = action));
+
+    expect(api.list).not.toHaveBeenCalled();
+    expect(api.stats).not.toHaveBeenCalled();
+    expect(received).toEqual(trackDayOptionsLoaded({ tracks, vehicles }));
   });
 });

@@ -5,6 +5,8 @@ import { TrackDaysApiService } from './track-days-api.service';
 import {
   trackDayCompleteRequested,
   trackDayCompleted,
+  trackDayOptionsLoaded,
+  trackDayOptionsLoadRequested,
   trackDaysLoaded,
   trackDaysLoadRequested,
   trackDaysRequestFailed,
@@ -36,6 +38,21 @@ export class TrackDaysEffects {
             }),
           ),
           catchError(() => of(trackDaysRequestFailed('Unable to load track-day data'))),
+        ),
+      ),
+    ),
+  );
+
+  readonly loadOptions$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(trackDayOptionsLoadRequested),
+      switchMap(() =>
+        forkJoin({
+          tracks: this.api.tracks(),
+          vehicles: this.api.vehicles(),
+        }).pipe(
+          map((data) => trackDayOptionsLoaded(data)),
+          catchError(() => of(trackDaysRequestFailed('Unable to load track options'))),
         ),
       ),
     ),
