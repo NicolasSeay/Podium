@@ -20,7 +20,6 @@ describe('DashboardService', () => {
 
   it('requests the dashboard endpoint', () => {
     const data: DashboardData = {
-      personalRecords: [],
       totalTrackDays: 1,
       totalSessions: 0,
       totalLaps: 0,
@@ -41,7 +40,6 @@ describe('DashboardService', () => {
     const request = http.expectOne('/api/dashboard?trackId=10&vehicleId=20');
     expect(request.request.method).toBe('GET');
     request.flush({
-      personalRecords: [],
       totalTrackDays: 0,
       totalSessions: 0,
       totalLaps: 0,

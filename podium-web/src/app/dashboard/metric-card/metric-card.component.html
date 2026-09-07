@@ -1,5 +1,7 @@
 <article class="metric-card">
-  <div class="metric-label">{{ label() }} <span class="metric-icon">{{ icon() }}</span></div>
+  <div class="metric-label">
+    {{ label() }} <span class="metric-icon"><ng-icon [name]="icon()" /></span>
+  </div>
   <div class="metric-value">{{ value() }}</div>
   <div class="metric-foot" [class.positive]="positive()">{{ detail() }}</div>
 </article>

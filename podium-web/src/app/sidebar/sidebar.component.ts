@@ -1,4 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import {
+  lucideCalendarDays,
+  lucideCar,
+  lucideChartNoAxesCombined,
+  lucideLayoutDashboard,
+  lucideLogOut,
+  lucideSettings,
+} from '@ng-icons/lucide';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { AuthFacade } from '../store/auth.facade';
@@ -7,6 +16,17 @@ import { DashboardFacade } from '../dashboard/store/dashboard.facade';
 @Component({
   selector: 'app-sidebar',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgIcon],
+  providers: [
+    provideIcons({
+      lucideCalendarDays,
+      lucideCar,
+      lucideChartNoAxesCombined,
+      lucideLayoutDashboard,
+      lucideLogOut,
+      lucideSettings,
+    }),
+  ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })
@@ -26,15 +46,17 @@ export class SidebarComponent {
     const user = this.user();
     return user ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase() : 'D';
   });
-  protected readonly navigation = ['Dashboard', 'Track Days', 'Vehicles', 'Settings'];
+  protected readonly navigation = ['Dashboard', 'Analytics', 'Track Days', 'Vehicles', 'Settings'];
   protected readonly navigationRoutes: Record<string, string> = {
     Dashboard: 'dashboard',
+    Analytics: 'analytics',
     'Track Days': 'track-days',
     Vehicles: 'vehicles',
     Settings: 'settings',
   };
   protected readonly implementedNavigation = new Set([
     'Dashboard',
+    'Analytics',
     'Track Days',
     'Vehicles',
     'Settings',

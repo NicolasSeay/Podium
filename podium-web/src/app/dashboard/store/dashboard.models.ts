@@ -1,12 +1,3 @@
-export interface PersonalRecord {
-  id: number;
-  userId: number;
-  lapId: number;
-  trackId: number;
-  vehicleId: number;
-  timeMillis: number;
-}
-
 export interface AnalyticsLap {
   id: number;
   sessionId: number;
@@ -35,7 +26,6 @@ export interface RecentTrackDay {
 }
 
 export interface DashboardData {
-  personalRecords: PersonalRecord[];
   totalTrackDays: number;
   totalSessions: number;
   totalLaps: number;

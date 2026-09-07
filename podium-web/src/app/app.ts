@@ -9,6 +9,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { AppHeaderComponent } from './app-header/app-header.component';
 import { AuthFacade } from './store/auth.facade';
 import { SettingsComponent } from './settings/settings.component';
+import { AnalyticsComponent } from './analytics/analytics.component';
 
 @Component({
   selector: 'app-page',
@@ -21,6 +22,7 @@ import { SettingsComponent } from './settings/settings.component';
     SidebarComponent,
     AppHeaderComponent,
     SettingsComponent,
+    AnalyticsComponent,
   ],
   styleUrl: './app.scss',
   templateUrl: './app.html',
@@ -41,6 +43,7 @@ export class App {
       (
         {
           dashboard: 'Dashboard',
+          analytics: 'Analytics',
           'track-days': 'Track Days',
           vehicles: 'Vehicles',
           settings: 'Settings',

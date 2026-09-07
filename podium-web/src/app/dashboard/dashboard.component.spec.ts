@@ -10,10 +10,6 @@ import { trackDaysFeature } from '../track-days/store/track-days.store';
 import { trackDaysLoaded } from '../track-days/store/track-days.actions';
 
 const dashboardData: DashboardData = {
-  personalRecords: [
-    { id: 1, userId: 1, lapId: 1, trackId: 1, vehicleId: 1, timeMillis: 102350 },
-    { id: 2, userId: 1, lapId: 2, trackId: 1, vehicleId: 1, timeMillis: 101900 },
-  ],
   totalTrackDays: 3,
   totalSessions: 2,
   totalLaps: 4,
@@ -72,7 +68,10 @@ const tracks = [
   { id: 3, name: 'Unused Track', city: 'Elsewhere', country: 'US', lengthMiles: 4 },
 ];
 
-const vehicles = [{ id: 1, name: 'Track car', make: 'Example', model: 'GT', year: 2024 }];
+const vehicles = [
+  { id: 1, name: 'Track car', make: 'Example', model: 'GT', year: 2024 },
+  { id: 2, name: 'Empty car', make: 'Example', model: 'GT', year: 2024 },
+];
 
 describe('DashboardComponent', () => {
   beforeEach(async () => {
@@ -88,7 +87,7 @@ describe('DashboardComponent', () => {
     }).compileComponents();
   });
 
-  it('renders metrics and analytics from store data', () => {
+  it('renders metrics and the timeline chart from store data', () => {
     const fixture = TestBed.createComponent(DashboardComponent);
     const store = TestBed.inject(Store);
     store.dispatch(
@@ -104,28 +103,65 @@ describe('DashboardComponent', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.textContent).toContain('Welcome back, Driver');
-    expect(fixture.nativeElement.textContent).toContain('1:41.900');
+    expect(fixture.nativeElement.textContent).toContain('1:40.000');
     expect(fixture.nativeElement.textContent).toContain('1h 1m');
-    expect(fixture.nativeElement.textContent).toContain('Practice');
-    expect(fixture.nativeElement.textContent).toContain('Qualifying');
-    expect(fixture.nativeElement.querySelectorAll('.range-column')).toHaveLength(2);
-    expect(fixture.nativeElement.querySelectorAll('.histogram-column')).toHaveLength(5);
+    expect(fixture.nativeElement.querySelector('.timeline-chart')).not.toBeNull();
+    const trackGroups = fixture.nativeElement.querySelectorAll(
+      '[aria-label="Filter by track"] optgroup',
+    ) as NodeListOf<HTMLOptGroupElement>;
+    expect(Array.from(trackGroups).map((group) => group.label)).toEqual(['Recents', 'All tracks']);
+    expect(trackGroups[0].querySelectorAll('option')).toHaveLength(2);
+    expect(trackGroups[1].querySelector('option[value="3"]')).not.toBeNull();
+    expect(
+      fixture.nativeElement.querySelector('[aria-label="View graph by"]')?.getAttribute('role'),
+    ).toBe('group');
   });
 
-  it('selects sessions and dispatches filter and retry actions', () => {
+  it('switches the lap time graph between views and metrics', () => {
+    const fixture = TestBed.createComponent(DashboardComponent);
+    const store = TestBed.inject(Store);
+    store.dispatch(trackDaysLoaded({ tracks, vehicles, trackDays }));
+    store.dispatch(dashboardLoaded(dashboardData));
+    fixture.detectChanges();
+
+    const graph = fixture.nativeElement as HTMLElement;
+    (
+      graph.querySelector('[aria-label="View graph by"] button:nth-child(2)') as HTMLButtonElement
+    ).click();
+    fixture.detectChanges();
+    expect(graph.querySelector('.timeline-chart')).not.toBeNull();
+
+    (
+      graph.querySelector('[aria-label="View graph by"] button:nth-child(3)') as HTMLButtonElement
+    ).click();
+    fixture.detectChanges();
+    expect(graph.querySelector('.timeline-chart')).not.toBeNull();
+    expect(graph.querySelector('[aria-label="Graph lap time metric"]')).toBeNull();
+
+    (
+      graph.querySelector('[aria-label="View graph by"] button:nth-child(1)') as HTMLButtonElement
+    ).click();
+    fixture.detectChanges();
+    (
+      graph.querySelector(
+        '[aria-label="Graph lap time metric"] button:nth-child(2)',
+      ) as HTMLButtonElement
+    ).click();
+    fixture.detectChanges();
+    expect(
+      graph
+        .querySelector('[aria-label="Graph lap time metric"] button:nth-child(2)')
+        ?.classList.contains('selected'),
+    ).toBe(true);
+  });
+
+  it('dispatches filter and retry actions', () => {
     const fixture = TestBed.createComponent(DashboardComponent);
     const store = TestBed.inject(Store);
     const dispatch = vi.spyOn(store, 'dispatch');
     store.dispatch(trackDaysLoaded({ tracks, vehicles, trackDays }));
     store.dispatch(dashboardLoaded(dashboardData));
     fixture.detectChanges();
-
-    const sessionButtons = fixture.nativeElement.querySelectorAll('.range-column');
-    (sessionButtons[1] as HTMLButtonElement).click();
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.trace-panel h2').textContent).toContain(
-      'Practice',
-    );
 
     const trackSelect = fixture.nativeElement.querySelector(
       '[aria-label="Filter by track"]',
@@ -181,5 +217,30 @@ describe('DashboardComponent', () => {
     store.dispatch(dashboardLoaded({ ...dashboardData, analyticsSessions: [] }));
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toContain('No lap data yet');
+  });
+
+  it('recreates the timeline chart after switching from an empty vehicle to one with data', () => {
+    const fixture = TestBed.createComponent(DashboardComponent);
+    const store = TestBed.inject(Store);
+    store.dispatch(trackDaysLoaded({ tracks, vehicles, trackDays }));
+    store.dispatch(dashboardLoaded(dashboardData));
+    fixture.detectChanges();
+
+    const vehicleSelect = fixture.nativeElement.querySelector(
+      '[aria-label="Filter by vehicle"]',
+    ) as HTMLSelectElement;
+    vehicleSelect.value = '2';
+    vehicleSelect.dispatchEvent(new Event('change'));
+    store.dispatch(dashboardLoaded({ ...dashboardData, analyticsSessions: [] }));
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.timeline-chart')).toBeNull();
+
+    vehicleSelect.value = '1';
+    vehicleSelect.dispatchEvent(new Event('change'));
+    store.dispatch(dashboardLoaded(dashboardData));
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.timeline-chart')).not.toBeNull();
+    expect(fixture.nativeElement.textContent).not.toContain('No lap data yet');
   });
 });

@@ -109,8 +109,8 @@ public final class PodiumModels {
     public record TrackDayDetailsResponse(TrackDay trackDay, List<Session> sessions) {
     }
 
-    public record DashboardResponse(List<PersonalRecord> personalRecords, int totalTrackDays,
-                                    int totalSessions, int totalLaps, long totalLapTimeMillis,
+    public record DashboardResponse(int totalTrackDays, int totalSessions, int totalLaps,
+                                    long totalLapTimeMillis,
                                     List<TrackDay> recentTrackDays,
                                     List<DashboardSession> analyticsSessions) {
     }

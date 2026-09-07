@@ -4,7 +4,6 @@ import { App } from '../app';
 
 export function flushDashboardRequest(http: HttpTestingController): void {
   http.expectOne('/api/dashboard').flush({
-    personalRecords: [],
     totalTrackDays: 0,
     totalSessions: 0,
     totalLaps: 0,
@@ -41,7 +40,6 @@ export async function flushDashboardEntry(
   http
     .expectOne((request) => request.url === '/api/dashboard')
     .flush({
-      personalRecords: [],
       totalTrackDays: 0,
       totalSessions: 0,
       totalLaps: 0,
