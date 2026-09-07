@@ -41,7 +41,9 @@ export class SidebarComponent {
   ]);
 
   protected changeNav(item: string): void {
-    this.dashboardFacade.setActiveNavigation(item);
+    if (item !== 'Dashboard') {
+      this.dashboardFacade.setActiveNavigation(item);
+    }
     void this.router.navigate([this.navigationRoutes[item]]).catch(() => undefined);
   }
 

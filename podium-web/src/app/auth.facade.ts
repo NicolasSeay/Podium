@@ -13,6 +13,7 @@ export class AuthFacade {
   private readonly store = inject(Store);
 
   readonly user = this.store.selectSignal(authFeature.selectUser);
+  readonly rehydrating = this.store.selectSignal(authFeature.selectRehydrating);
 
   rehydrate(): void {
     this.store.dispatch(authRehydrateRequested());

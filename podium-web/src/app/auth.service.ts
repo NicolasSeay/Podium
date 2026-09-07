@@ -18,11 +18,19 @@ export class AuthService {
   }
 
   token(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    try {
+      return localStorage.getItem(this.tokenKey);
+    } catch {
+      return null;
+    }
   }
 
   clearSession(): void {
-    localStorage.removeItem(this.tokenKey);
+    try {
+      localStorage.removeItem(this.tokenKey);
+    } catch {
+      // Storage may be unavailable in restricted browser contexts.
+    }
   }
 
   ensureAuthenticated(): Observable<boolean> {
@@ -45,7 +53,11 @@ export class AuthService {
   login(email: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>('/api/auth/login', { email, password }).pipe(
       tap(({ token }) => {
-        localStorage.setItem(this.tokenKey, token);
+        try {
+          localStorage.setItem(this.tokenKey, token);
+        } catch {
+          // Continue with the authenticated response when storage is unavailable.
+        }
       }),
     );
   }
@@ -60,7 +72,11 @@ export class AuthService {
       .post<LoginResponse>('/api/auth/register', { email, password, firstName, lastName })
       .pipe(
         tap(({ token }) => {
-          localStorage.setItem(this.tokenKey, token);
+          try {
+            localStorage.setItem(this.tokenKey, token);
+          } catch {
+            // Continue with the authenticated response when storage is unavailable.
+          }
         }),
       );
   }
