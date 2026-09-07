@@ -8,9 +8,9 @@ import {
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Track, TrackDay, Vehicle } from './store/track-days.models';
-import { TrackDaysFacade } from './store/track-days.facade';
-import { AppHeaderComponent } from '../app-header/app-header.component';
+import { Track, TrackDay, Vehicle } from '../store/track-days.models';
+import { TrackDaysFacade } from '../store/track-days.facade';
+import { AppHeaderComponent } from '../../app-header/app-header.component';
 
 type DraftLap = { timeMillis: number; displayTime: string };
 type DraftSession = { name: string; notes: string | null; laps: DraftLap[] };
@@ -20,8 +20,8 @@ type DraftDay = { date: string; sessions: DraftSession[] };
   selector: 'app-track-day-create',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, AppHeaderComponent],
-  templateUrl: './track-day-create.component.html',
-  styleUrl: './track-day-create.component.scss',
+  templateUrl: './create-track-day.component.html',
+  styleUrl: './create-track-day.component.scss',
 })
 export class TrackDayCreateComponent {
   private readonly facade = inject(TrackDaysFacade);
