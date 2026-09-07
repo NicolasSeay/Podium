@@ -9,15 +9,15 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface TrackDayService {
-    List<TrackDay> list(Long userId, Long trackId, Long vehicleId, LocalDate from, LocalDate to);
+    List<CompletedTrackDay> list(Long userId, Long trackId, Long vehicleId, LocalDate from, LocalDate to);
 
     List<TrackDayStats> stats(Long userId);
 
     TrackDay get(Long userId, Long id);
 
-    TrackDay create(Long userId, TrackDayRequest request);
+    CompletedTrackDay details(Long userId, Long id);
 
-    CompletedTrackDay complete(Long userId, TrackDayRequest request);
+    CompletedTrackDay create(Long userId, TrackDayRequest request);
 
     TrackDay update(Long userId, Long id, TrackDayRequest request);
 

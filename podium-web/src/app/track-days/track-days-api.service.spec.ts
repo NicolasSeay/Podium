@@ -30,56 +30,22 @@ describe('TrackDaysApiService', () => {
     http.match(() => true).forEach((request) => request.flush([]));
   });
 
-  it('creates and completes track days', () => {
+  it('creates a complete track day with nested sessions and laps', () => {
     const createPayload = {
       trackId: 1,
       vehicleId: 2,
       startDate: '2026-09-04',
+      endDate: '2026-09-04',
       notes: 'dry day',
       conditions: 'dry',
-    };
-    const completePayload = {
-      ...createPayload,
-      endDate: '2026-09-04',
       sessions: [],
     };
 
     service.create(createPayload).subscribe();
-    service.complete(completePayload).subscribe();
 
     const createRequest = http.expectOne('/api/track-days');
     expect(createRequest.request.method).toBe('POST');
     expect(createRequest.request.body).toEqual(createPayload);
     createRequest.flush({});
-
-    const completeRequest = http.expectOne('/api/track-days/complete');
-    expect(completeRequest.request.method).toBe('POST');
-    expect(completeRequest.request.body).toEqual(completePayload);
-    completeRequest.flush({});
-  });
-
-  it('requests and creates sessions and laps', () => {
-    const sessionPayload = { name: 'Session 1', notes: null };
-    const lapPayload = { lapNumber: 1, timeMillis: 90000 };
-
-    service.sessions(3).subscribe();
-    service.createSession(3, sessionPayload).subscribe();
-    service.laps(4).subscribe();
-    service.createLap(4, lapPayload).subscribe();
-
-    const sessionsRequest = http.expectOne({ method: 'GET', url: '/api/track-days/3/sessions' });
-    sessionsRequest.flush([]);
-    const createSessionRequest = http.expectOne({
-      method: 'POST',
-      url: '/api/track-days/3/sessions',
-    });
-    expect(createSessionRequest.request.body).toEqual(sessionPayload);
-    createSessionRequest.flush({});
-    const lapsRequest = http.expectOne({ method: 'GET', url: '/api/sessions/4/laps' });
-    lapsRequest.flush([]);
-    const createLapRequest = http.expectOne({ method: 'POST', url: '/api/sessions/4/laps' });
-    expect(createLapRequest.request.body).toEqual(lapPayload);
-    createLapRequest.flush({});
-    http.match(() => true).forEach((request) => request.flush([]));
   });
 });

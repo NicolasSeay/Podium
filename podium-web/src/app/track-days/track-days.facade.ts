@@ -1,8 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
-  lapCreateRequested,
-  sessionsLoadRequested,
   trackDayCompleteRequested,
   trackDaySelected,
   trackDaysFeature,
@@ -33,14 +31,9 @@ export class TrackDaysFacade {
 
   selectDay(trackDay: Parameters<typeof trackDaySelected>[0]): void {
     this.store.dispatch(trackDaySelected(trackDay));
-    this.store.dispatch(sessionsLoadRequested(trackDay.id));
   }
 
   complete(payload: Parameters<typeof trackDayCompleteRequested>[0]): void {
     this.store.dispatch(trackDayCompleteRequested(payload));
-  }
-
-  createLap(sessionId: number, lap: { lapNumber: number; timeMillis: number }): void {
-    this.store.dispatch(lapCreateRequested(sessionId, lap));
   }
 }

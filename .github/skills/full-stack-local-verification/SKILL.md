@@ -98,7 +98,7 @@ The expected result is HTTP 200 and a successful Angular compilation. Use anothe
 Confirm the Angular proxy can reach the backend through the frontend origin. Request a protected API route through port 4200, for example:
 
 ```text
-GET http://127.0.0.1:4200/api/users/me
+GET http://127.0.0.1:4200/api/users/1
 ```
 
 An HTTP 401/403 is acceptable for this unauthenticated probe because it proves the request reached the backend. A proxy error, HTML fallback, connection refusal, or 5xx response indicates a frontend proxy or backend reachability problem.

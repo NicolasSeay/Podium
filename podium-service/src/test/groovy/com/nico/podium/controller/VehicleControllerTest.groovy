@@ -24,14 +24,10 @@ class VehicleControllerTest {
         when(auth.currentUser(any(), any())).thenReturn(new User(1L, 'driver@example.com', 'secret', 'Driver', 'Example'))
         def vehicle = new Vehicle(1L, 1L, 'MX-5', 'Mazda', 'MX-5', 'ND', 2020)
         when(vehicles.list(anyLong())).thenReturn([])
-        when(vehicles.get(anyLong(), eq(1L))).thenReturn(vehicle)
         when(vehicles.create(anyLong(), any())).thenReturn(vehicle)
-        when(vehicles.update(anyLong(), eq(1L), any())).thenReturn(vehicle)
 
         mvc.perform(get('/api/vehicles').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
         mvc.perform(post('/api/vehicles').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"name":"MX-5"}')).andExpect(status().isOk())
-        mvc.perform(get('/api/vehicles/1').header('Authorization', 'Bearer test-token')).andExpect(status().isMethodNotAllowed())
-        mvc.perform(patch('/api/vehicles/1').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"year":2020}')).andExpect(status().isMethodNotAllowed())
         mvc.perform(delete('/api/vehicles/1').header('Authorization', 'Bearer test-token')).andExpect(status().isNoContent())
     }
 }

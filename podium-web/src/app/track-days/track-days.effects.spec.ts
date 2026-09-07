@@ -3,15 +3,20 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of } from 'rxjs';
 import { TrackDaysApiService } from './track-days-api.service';
 import { TrackDaysEffects } from './track-days.effects';
-import { lapsLoaded, sessionsLoaded } from './track-days.store';
+import { trackDaysLoadRequested, trackDaysLoaded } from './track-days.store';
 
 describe('TrackDaysEffects', () => {
   let actions$: Observable<unknown>;
   let effects: TrackDaysEffects;
-  let api: { laps: ReturnType<typeof vi.fn> };
+  let api: {
+    tracks: ReturnType<typeof vi.fn>;
+    vehicles: ReturnType<typeof vi.fn>;
+    list: ReturnType<typeof vi.fn>;
+    stats: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(() => {
-    api = { laps: vi.fn() };
+    api = { tracks: vi.fn(), vehicles: vi.fn(), list: vi.fn(), stats: vi.fn() };
     TestBed.configureTestingModule({
       providers: [
         TrackDaysEffects,
@@ -22,24 +27,36 @@ describe('TrackDaysEffects', () => {
     effects = TestBed.inject(TrackDaysEffects);
   });
 
-  it('loads laps for sessions returned when opening a recorded track day', () => {
-    const firstLap = { id: 11, sessionId: 4, lapNumber: 1, timeMillis: 92350 };
-    const secondLap = { id: 12, sessionId: 5, lapNumber: 1, timeMillis: 90100 };
-    api.laps.mockImplementation((sessionId: number) =>
-      of(sessionId === 4 ? [firstLap] : [secondLap]),
-    );
-    actions$ = of(
-      sessionsLoaded([
-        { id: 4, trackDayId: 7, name: 'Practice', notes: null },
-        { id: 5, trackDayId: 7, name: 'Qualifying', notes: null },
-      ]),
-    );
+  it('loads sessions and laps with each track-day aggregate', () => {
+    const trackDay = {
+      id: 7,
+      userId: 1,
+      trackId: 2,
+      vehicleId: 3,
+      startDate: '2026-09-04',
+      notes: null,
+      conditions: null,
+    };
+    const session = { id: 4, trackDayId: 7, name: 'Practice', notes: null };
+    const laps = [{ id: 11, sessionId: 4, lapNumber: 1, timeMillis: 92350 }];
+    api.tracks.mockReturnValue(of([]));
+    api.vehicles.mockReturnValue(of([]));
+    api.stats.mockReturnValue(of([]));
+    api.list.mockReturnValue(of([{ trackDay, sessions: [session], laps: { 4: laps } }]));
+    actions$ = of(trackDaysLoadRequested());
 
-    const received: unknown[] = [];
-    effects.loadLapsForSessions$.subscribe((action) => received.push(action));
+    let received: unknown;
+    effects.load$.subscribe((action) => (received = action));
 
-    expect(received).toEqual([lapsLoaded(4, [firstLap]), lapsLoaded(5, [secondLap])]);
-    expect(api.laps).toHaveBeenNthCalledWith(1, 4);
-    expect(api.laps).toHaveBeenNthCalledWith(2, 5);
+    expect(received).toEqual(
+      trackDaysLoaded({
+        tracks: [],
+        vehicles: [],
+        trackDays: [trackDay],
+        sessions: [session],
+        laps: { 4: laps },
+        stats: [],
+      }),
+    );
   });
 });

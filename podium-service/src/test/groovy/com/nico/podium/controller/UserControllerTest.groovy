@@ -22,12 +22,13 @@ class UserControllerTest {
     private final mvc = MockMvcBuilders.standaloneSetup(new UserController(users)).addFilters(new TokenAuthenticationFilter(auth)).build()
 
     @Test
-    void exposesCurrentUserEndpoints() {
+    void exposesCurrentUserEndpointsForTheAuthenticatedUser() {
         def user = new User(1L, 'driver@example.com', 'secret', 'Driver', 'Example')
         when(auth.currentUser(any(), any())).thenReturn(user)
         when(users.update(anyLong(), any())).thenReturn(user)
 
-        mvc.perform(get('/api/users/me').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
-        mvc.perform(patch('/api/users/me').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"firstName":"Updated"}')).andExpect(status().isOk())
+        mvc.perform(get('/api/users/1').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
+        mvc.perform(patch('/api/users/1').header('Authorization', 'Bearer test-token').contentType(MediaType.APPLICATION_JSON).content('{"firstName":"Updated"}')).andExpect(status().isOk())
+        mvc.perform(get('/api/users/2').header('Authorization', 'Bearer test-token')).andExpect(status().isNotFound())
     }
 }

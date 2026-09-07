@@ -6,6 +6,4 @@ import com.nico.podium.domain.PodiumModels.UserUpdateRequest;
 
 public interface UserService {
     User update(Long userId, UserUpdateRequest request);
-
-    boolean emailAvailable(Long userId, String email);
 }

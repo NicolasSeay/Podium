@@ -21,7 +21,7 @@ The terms **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, and **MAY** are us
 - Use the existing `/api` base path.
 - Use lowercase, plural, hyphen-separated resource names: `/api/track-days`, `/api/vehicles`.
 - Use path segments for resource identity: `/api/vehicles/{vehicleId}`.
-- Use nested paths only when the child has no useful independent identity or the relationship is central to the operation: `/api/track-days/{trackDayId}/sessions`.
+- Return sessions and laps in the track-day aggregate when the client needs the complete recorded event; do not expose child CRUD paths for this workflow.
 - Use query parameters for filtering, sorting, pagination, and representation options: `/api/sessions?status=completed&sort=-startedAt`.
 - Do not put secrets, access tokens, passwords, or sensitive personal data in URLs. URLs are commonly logged, cached, and copied into browser history.
 - Use stable opaque identifiers where possible. Do not expose database implementation details as part of the public contract.
@@ -38,7 +38,8 @@ The terms **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, and **MAY** are us
 | Replace a vehicle | `PUT /api/vehicles/{vehicleId}` |
 | Partially update a vehicle | `PATCH /api/vehicles/{vehicleId}` |
 | Delete a vehicle | `DELETE /api/vehicles/{vehicleId}` |
-| List sessions for a track day | `GET /api/track-days/{trackDayId}/sessions` |
+| List track days with sessions and laps | `GET /api/track-days` |
+| Create a track day with sessions and laps | `POST /api/track-days` |
 
 For domain operations that are not naturally CRUD, use a subordinate action resource rather than overloading `GET` or inventing verbs in the path. For example, `POST /api/sessions/{sessionId}/cancel` can be appropriate when cancellation has domain rules and is not equivalent to deleting the session.
 

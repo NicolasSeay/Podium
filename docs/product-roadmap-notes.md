@@ -60,16 +60,16 @@ The backend should not expose or maintain application endpoints that are not par
 The current Angular app uses these endpoint groups:
 
 - `/api/auth/register`, `/api/auth/login`, and `/api/auth/logout`
-- `/api/users/me`: authenticated-user loading
+- `/api/users/{userId}`: authenticated-user loading and profile updates
 - `/api/dashboard`: dashboard metrics and analytics data
-- `/api/track-days`: list, statistics, creation, completion, session loading, and session creation
+- `/api/track-days`: aggregate track-day listing, detail reads, statistics, and creation with nested sessions and laps
 - `/api/tracks`: track catalog reads used when creating and viewing track days
 - `/api/vehicles`: list, creation, and deletion
-- `/api/sessions/{id}/laps`: lap loading and creation
 
 The following backend capabilities are currently not called by the Angular app and should be commented out, disabled, or removed from the active API surface until their UI workflow exists:
 
 - Standalone track-day detail reads if the Angular app uses the list and in-memory selection instead
+- Standalone session and lap reads or writes; sessions and laps are persisted and returned as part of a track-day aggregate
 - Track-day patch and delete operations until edit and delete controls are implemented
 - Session detail, patch, and delete operations until session editing is implemented
 - Lap patch and delete operations until lap editing is implemented

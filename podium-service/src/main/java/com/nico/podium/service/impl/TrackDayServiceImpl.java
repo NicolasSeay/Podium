@@ -45,8 +45,14 @@ public class TrackDayServiceImpl implements TrackDayService {
         this.records = records;
     }
 
-    public List<TrackDay> list(Long userId, Long trackId, Long vehicleId, LocalDate from, LocalDate to) {
-        return days.findByUserId(userId).stream().filter(d -> trackId == null || d.trackId().equals(trackId)).filter(d -> vehicleId == null || vehicleId.equals(d.vehicleId())).filter(d -> from == null || !d.startDate().isBefore(from)).filter(d -> to == null || !d.startDate().isAfter(to)).toList();
+    public List<CompletedTrackDay> list(Long userId, Long trackId, Long vehicleId, LocalDate from, LocalDate to) {
+        return days.findByUserId(userId).stream()
+                .filter(d -> trackId == null || d.trackId().equals(trackId))
+                .filter(d -> vehicleId == null || vehicleId.equals(d.vehicleId()))
+                .filter(d -> from == null || !d.startDate().isBefore(from))
+                .filter(d -> to == null || !d.startDate().isAfter(to))
+                .map(day -> details(userId, day.id()))
+                .toList();
     }
 
     public List<TrackDayStats> stats(Long userId) {
@@ -66,23 +72,18 @@ public class TrackDayServiceImpl implements TrackDayService {
         return d;
     }
 
-    public TrackDay create(Long userId, TrackDayRequest request) {
-        Long trackId = request.trackId();
-        if (trackId == null) {
-            throw error(HttpStatus.BAD_REQUEST, "trackId is required");
+    public CompletedTrackDay details(Long userId, Long id) {
+        TrackDay day = get(userId, id);
+        List<Session> daySessions = sessions.findByTrackDayId(id);
+        Map<Long, List<Lap>> dayLaps = new LinkedHashMap<>();
+        for (Session session : daySessions) {
+            dayLaps.put(session.id(), laps.findBySessionId(session.id()));
         }
-        tracks.get(trackId);
-        Long vehicleId = request.vehicleId();
-        if (vehicleId == null) {
-            throw error(HttpStatus.BAD_REQUEST, "vehicleId is required");
-        }
-        vehicles.get(userId, vehicleId);
-        LocalDate start = request.startDate() == null ? LocalDate.now() : request.startDate();
-        return days.save(new TrackDay(null, userId, trackId, vehicleId, start, request.endDate() == null ? start : request.endDate(), request.notes(), request.conditions()));
+        return new CompletedTrackDay(day, daySessions, dayLaps);
     }
 
     @Transactional
-    public CompletedTrackDay complete(Long userId, TrackDayRequest request) {
+    public CompletedTrackDay create(Long userId, TrackDayRequest request) {
         if (sessions == null || laps == null || records == null) {
             throw error(HttpStatus.INTERNAL_SERVER_ERROR, "completion is unavailable");
         }

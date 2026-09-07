@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
-import { AsyncValidatorFn, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { catchError, map, of } from 'rxjs';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthFacade } from '../auth.facade';
 import { AuthService } from '../auth.service';
 import { TrackDaysFacade } from '../track-days/track-days.facade';
@@ -28,11 +27,7 @@ export class SettingsComponent {
   protected readonly form = this.formBuilder.nonNullable.group({
     firstName: ['', [Validators.required, Validators.maxLength(100)]],
     lastName: ['', [Validators.required, Validators.maxLength(100)]],
-    email: [
-      '',
-      [Validators.required, Validators.email, Validators.maxLength(254)],
-      [this.emailAvailableValidator()],
-    ],
+    email: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
     distanceUnit: [DistanceUnit.Miles],
     temperatureUnit: [TemperatureUnit.Fahrenheit],
     defaultTrackId: [null as number | null],
@@ -87,13 +82,5 @@ export class SettingsComponent {
     const control = this.form.get(controlName);
     if (!control) return false;
     return control.invalid && (control.dirty || control.touched) && control.hasError(errorName);
-  }
-
-  private emailAvailableValidator(): AsyncValidatorFn {
-    return (control) =>
-      this.auth.emailAvailable(control.value).pipe(
-        map((available) => (available ? null : { emailTaken: true })),
-        catchError(() => of(null)),
-      );
   }
 }

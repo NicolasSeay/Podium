@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { catchError, finalize, map, Observable, of, tap } from 'rxjs';
+import { catchError, finalize, map, Observable, of, tap, throwError } from 'rxjs';
 import { AuthUser } from './auth.store';
 
 interface LoginResponse {
@@ -12,6 +12,7 @@ interface LoginResponse {
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly tokenKey = 'podium.auth.token';
+  private readonly userIdKey = 'podium.auth.user-id';
 
   isAuthenticated(): boolean {
     return Boolean(this.token());
@@ -28,6 +29,7 @@ export class AuthService {
   clearSession(): void {
     try {
       localStorage.removeItem(this.tokenKey);
+      localStorage.removeItem(this.userIdKey);
     } catch {
       // Storage may be unavailable in restricted browser contexts.
     }
@@ -52,9 +54,10 @@ export class AuthService {
 
   login(email: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>('/api/auth/login', { email, password }).pipe(
-      tap(({ token }) => {
+      tap(({ token, user }) => {
         try {
           localStorage.setItem(this.tokenKey, token);
+          localStorage.setItem(this.userIdKey, String(user.id));
         } catch {
           // Continue with the authenticated response when storage is unavailable.
         }
@@ -71,9 +74,10 @@ export class AuthService {
     return this.http
       .post<LoginResponse>('/api/auth/register', { email, password, firstName, lastName })
       .pipe(
-        tap(({ token }) => {
+        tap(({ token, user }) => {
           try {
             localStorage.setItem(this.tokenKey, token);
+            localStorage.setItem(this.userIdKey, String(user.id));
           } catch {
             // Continue with the authenticated response when storage is unavailable.
           }
@@ -82,7 +86,10 @@ export class AuthService {
   }
 
   currentUser(): Observable<AuthUser> {
-    return this.http.get<AuthUser>('/api/users/me');
+    const userId = this.userId();
+    return userId === null
+      ? throwError(() => new Error('authenticated user id is unavailable'))
+      : this.http.get<AuthUser>(`/api/users/${userId}`);
   }
 
   updateUser(update: {
@@ -94,10 +101,19 @@ export class AuthService {
     defaultTrackId: number | null;
     defaultVehicleId: number | null;
   }): Observable<AuthUser> {
-    return this.http.patch<AuthUser>('/api/users/me', update);
+    const userId = this.userId();
+    return userId === null
+      ? throwError(() => new Error('authenticated user id is unavailable'))
+      : this.http.patch<AuthUser>(`/api/users/${userId}`, update);
   }
 
-  emailAvailable(email: string): Observable<boolean> {
-    return this.http.get<boolean>('/api/users/email-available', { params: { email } });
+  private userId(): number | null {
+    try {
+      const value = localStorage.getItem(this.userIdKey);
+      const userId = value === null ? NaN : Number(value);
+      return Number.isInteger(userId) && userId > 0 ? userId : null;
+    } catch {
+      return null;
+    }
   }
 }

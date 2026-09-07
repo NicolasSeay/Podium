@@ -23,13 +23,17 @@ export async function flushDashboardEntry(
   http.expectOne('/api/vehicles').flush([]);
   http.expectOne('/api/track-days').flush([
     {
-      id: 1,
-      userId: 1,
-      trackId: 1,
-      vehicleId: 1,
-      startDate: '2026-09-03',
-      notes: null,
-      conditions: null,
+      trackDay: {
+        id: 1,
+        userId: 1,
+        trackId: 1,
+        vehicleId: 1,
+        startDate: '2026-09-03',
+        notes: null,
+        conditions: null,
+      },
+      sessions: [],
+      laps: {},
     },
   ]);
   http.expectOne('/api/track-days/stats').flush([]);

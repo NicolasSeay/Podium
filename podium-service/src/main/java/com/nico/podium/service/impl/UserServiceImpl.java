@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     public User update(Long userId, UserUpdateRequest request) {
         User current = users.findById(userId).orElseThrow(() -> missing("user"));
         String email = request.email() == null ? current.email() : request.email().trim();
-        if (!email.equalsIgnoreCase(current.email()) && !emailAvailable(userId, email)) {
+        if (!email.equalsIgnoreCase(current.email()) && !isEmailAvailable(userId, email)) {
             throw error(HttpStatus.CONFLICT, "email is already in use");
         }
         User updated = new User(current.id(), email,
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public boolean emailAvailable(Long userId, String email) {
+    private boolean isEmailAvailable(Long userId, String email) {
         User current = users.findById(userId).orElseThrow(() -> missing("user"));
         return email != null && !email.isBlank()
                 && (email.equalsIgnoreCase(current.email()) || !users.existsByEmail(email.trim()));
