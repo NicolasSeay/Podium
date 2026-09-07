@@ -34,7 +34,13 @@ Podium/
             ├── app.config.ts
             ├── app.routes.ts
             ├── app.spec.ts
-            └── dashboard/
+            ├── store/                     # Auth NgRx actions, models, reducer, effects, and facade
+            ├── dashboard/
+            │   └── store/                 # Feature NgRx modules and specs
+            ├── vehicles/
+            │   └── store/                 # Feature NgRx modules and specs
+            └── track-days/
+                └── store/                 # Feature NgRx modules and specs
 ```
 
 Keep backend and frontend changes in their owning module. Do not place generated output from `target/`, `dist/`, or dependency folders into source control.

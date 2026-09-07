@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { AuthService } from '../auth.service';
-import { AuthFacade } from '../auth.facade';
+import { AuthFacade } from '../store/auth.facade';
 import { environment } from '../../environments/environment';
 
 @Component({

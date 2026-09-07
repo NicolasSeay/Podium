@@ -4,15 +4,15 @@ import { provideRouter } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 import { routes } from './app.routes';
-import { DashboardEffects } from './dashboard/dashboard.effects';
-import { dashboardFeature } from './dashboard/dashboard.store';
+import { DashboardEffects } from './dashboard/store/dashboard.effects';
+import { dashboardFeature } from './dashboard/store/dashboard.store';
 import { authInterceptor } from './auth.interceptor';
-import { authFeature } from './auth.store';
-import { VehiclesEffects } from './vehicles/vehicles.effects';
-import { vehiclesFeature } from './vehicles/vehicles.store';
-import { TrackDaysEffects } from './track-days/track-days.effects';
-import { trackDaysFeature } from './track-days/track-days.store';
-import { AuthEffects } from './auth.effects';
+import { authFeature } from './store/auth.store';
+import { VehiclesEffects } from './vehicles/store/vehicles.effects';
+import { vehiclesFeature } from './vehicles/store/vehicles.store';
+import { TrackDaysEffects } from './track-days/store/track-days.effects';
+import { trackDaysFeature } from './track-days/store/track-days.store';
+import { AuthEffects } from './store/auth.effects';
 import { apiUrlInterceptor } from './api-url.interceptor';
 
 export const appConfig: ApplicationConfig = {

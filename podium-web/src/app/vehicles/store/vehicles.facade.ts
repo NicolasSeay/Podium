@@ -1,0 +1,31 @@
+import { computed, Injectable, inject } from '@angular/core';
+import { Store } from '@ngrx/store';
+import {
+  vehicleCreateRequested,
+  vehicleDeleteRequested,
+  vehiclesLoadRequested,
+} from './vehicles.actions';
+import { vehiclesFeature } from './vehicles.store';
+
+@Injectable({ providedIn: 'root' })
+export class VehiclesFacade {
+  private readonly store = inject(Store);
+
+  private readonly storedVehicles = this.store.selectSignal(vehiclesFeature.selectVehicles);
+  readonly vehicles = computed(() => this.storedVehicles() ?? []);
+  readonly loading = this.store.selectSignal(vehiclesFeature.selectLoading);
+  readonly saving = this.store.selectSignal(vehiclesFeature.selectSaving);
+  readonly error = this.store.selectSignal(vehiclesFeature.selectError);
+
+  load(): void {
+    this.store.dispatch(vehiclesLoadRequested());
+  }
+
+  create(vehicle: Parameters<typeof vehicleCreateRequested>[0]): void {
+    this.store.dispatch(vehicleCreateRequested(vehicle));
+  }
+
+  delete(id: number): void {
+    this.store.dispatch(vehicleDeleteRequested(id));
+  }
+}

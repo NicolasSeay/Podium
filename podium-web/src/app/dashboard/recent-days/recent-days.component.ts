@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
-import { RecentTrackDay } from '../dashboard.store';
+import { RecentTrackDay } from '../store/dashboard.models';
 
 @Component({
   selector: 'app-recent-days',

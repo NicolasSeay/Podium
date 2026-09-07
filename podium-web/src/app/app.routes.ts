@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { authGuard } from './auth.guard';
 import { App } from './app';
 import { LoginComponent } from './login/login.component';
-import { TrackDayCreateComponent } from './track-days/track-day-create.component';
+import { TrackDayCreateComponent } from './track-days/create-track-day/create-track-day.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },

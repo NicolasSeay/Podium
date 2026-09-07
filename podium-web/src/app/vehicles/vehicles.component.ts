@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { VehiclesFacade } from './vehicles.facade';
+import { VehiclesFacade } from './store/vehicles.facade';
 
 @Component({
   selector: 'app-vehicles',

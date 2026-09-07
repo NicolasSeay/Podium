@@ -2,12 +2,12 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { DashboardFacade } from './dashboard/dashboard.facade';
+import { DashboardFacade } from './dashboard/store/dashboard.facade';
 import { TrackDaysComponent } from './track-days/track-days.component';
 import { VehiclesComponent } from './vehicles/vehicles.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { AppHeaderComponent } from './app-header/app-header.component';
-import { AuthFacade } from './auth.facade';
+import { AuthFacade } from './store/auth.facade';
 import { SettingsComponent } from './settings/settings.component';
 
 @Component({

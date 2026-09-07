@@ -1,0 +1,35 @@
+import { Injectable, inject } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { authLoggedOut, authRehydrateRequested, authUserLoaded } from './auth.actions';
+import { authFeature } from './auth.store';
+import { AuthUser } from './auth.models';
+
+@Injectable({ providedIn: 'root' })
+export class AuthFacade {
+  private readonly store = inject(Store);
+
+  readonly user = this.store.selectSignal(authFeature.selectUser);
+  readonly rehydrating = this.store.selectSignal(authFeature.selectRehydrating);
+
+  rehydrate(): void {
+    this.store.dispatch(authRehydrateRequested());
+  }
+
+  loggedOut(): void {
+    this.store.dispatch(authLoggedOut());
+  }
+
+  userLoaded(user: AuthUser): void {
+    this.store.dispatch(authUserLoaded(user));
+  }
+
+  userName(): string {
+    const user = this.user();
+    return user ? `${user.firstName} ${user.lastName.charAt(0)}.` : 'Driver';
+  }
+
+  initials(): string {
+    const user: AuthUser | null = this.user();
+    return user ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase() : 'D';
+  }
+}

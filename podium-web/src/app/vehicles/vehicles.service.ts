@@ -1,0 +1,27 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Vehicle } from './store/vehicles.models';
+
+@Injectable({ providedIn: 'root' })
+export class VehiclesService {
+  private readonly http = inject(HttpClient);
+
+  list(): Observable<Vehicle[] | null> {
+    return this.http.get<Vehicle[] | null>('/api/vehicles');
+  }
+
+  create(vehicle: {
+    name: string;
+    make: string | null;
+    model: string | null;
+    trim: string | null;
+    year: number | null;
+  }): Observable<Vehicle> {
+    return this.http.post<Vehicle>('/api/vehicles', vehicle);
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`/api/vehicles/${id}`);
+  }
+}

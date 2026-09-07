@@ -1,6 +1,6 @@
 import { routes } from './app.routes';
 import { App } from './app';
-import { TrackDayCreateComponent } from './track-days/track-day-create.component';
+import { TrackDayCreateComponent } from './track-days/create-track-day/create-track-day.component';
 
 describe('application routes', () => {
   it('does not expose a standalone analytics route', () => {

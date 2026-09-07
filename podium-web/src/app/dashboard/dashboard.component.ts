@@ -6,11 +6,11 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { AuthFacade } from '../auth.facade';
+import { AuthFacade } from '../store/auth.facade';
 import { MetricCardComponent } from './metric-card/metric-card.component';
-import { AnalyticsLap, AnalyticsSession, PersonalRecord } from './dashboard.store';
-import { DashboardFacade } from './dashboard.facade';
-import { TrackDaysFacade } from '../track-days/track-days.facade';
+import { AnalyticsLap, AnalyticsSession, PersonalRecord } from './store/dashboard.models';
+import { DashboardFacade } from './store/dashboard.facade';
+import { TrackDaysFacade } from '../track-days/store/track-days.facade';
 import { DistanceUnit } from '../preferences';
 
 @Component({
