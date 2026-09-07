@@ -1,9 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthFacade } from '../auth.facade';
+import { AuthFacade } from '../store/auth.facade';
 import { AuthService } from '../auth.service';
-import { TrackDaysFacade } from '../track-days/track-days.facade';
+import { TrackDaysFacade } from '../track-days/store/track-days.facade';
 import { DistanceUnit, TemperatureUnit } from '../preferences';
 
 @Component({

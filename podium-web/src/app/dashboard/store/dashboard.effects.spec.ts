@@ -2,14 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Actions } from '@ngrx/effects';
 import { Observable, of, throwError } from 'rxjs';
-import { DashboardApiService } from './dashboard-api.service';
+import { DashboardService } from '../dashboard.service';
 import { DashboardEffects } from './dashboard.effects';
-import {
-  dashboardLoadFailed,
-  dashboardLoadRequested,
-  dashboardLoaded,
-  DashboardData,
-} from './dashboard.store';
+import { dashboardLoadFailed, dashboardLoadRequested, dashboardLoaded } from './dashboard.actions';
+import { DashboardData } from './dashboard.models';
 
 describe('DashboardEffects', () => {
   let actions$: Observable<unknown>;
@@ -22,7 +18,7 @@ describe('DashboardEffects', () => {
       providers: [
         DashboardEffects,
         provideMockActions(() => actions$),
-        { provide: DashboardApiService, useValue: api },
+        { provide: DashboardService, useValue: api },
       ],
     });
     effects = TestBed.inject(DashboardEffects);

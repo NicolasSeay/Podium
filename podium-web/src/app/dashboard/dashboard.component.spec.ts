@@ -1,14 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { provideStore, Store } from '@ngrx/store';
 import { DashboardComponent } from './dashboard.component';
-import {
-  dashboardFeature,
-  dashboardLoadFailed,
-  dashboardLoaded,
-  DashboardData,
-} from './dashboard.store';
-import { authFeature, authUserLoaded } from '../auth.store';
-import { trackDaysFeature, trackDaysLoaded } from '../track-days/track-days.store';
+import { dashboardLoadFailed, dashboardLoaded } from './store/dashboard.actions';
+import { dashboardFeature } from './store/dashboard.store';
+import { DashboardData } from './store/dashboard.models';
+import { authFeature } from '../store/auth.store';
+import { authUserLoaded } from '../store/auth.actions';
+import { trackDaysFeature } from '../track-days/store/track-days.store';
+import { trackDaysLoaded } from '../track-days/store/track-days.actions';
 
 const dashboardData: DashboardData = {
   personalRecords: [

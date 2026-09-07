@@ -4,7 +4,8 @@ import { TestBed } from '@angular/core/testing';
 import { provideEffects } from '@ngrx/effects';
 import { provideStore, Store } from '@ngrx/store';
 import { AuthEffects } from './auth.effects';
-import { authFeature, authRehydrateRequested } from './auth.store';
+import { authRehydrateRequested } from './auth.actions';
+import { authFeature } from './auth.store';
 
 describe('AuthEffects', () => {
   let http: HttpTestingController;

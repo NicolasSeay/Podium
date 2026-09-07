@@ -1,9 +1,5 @@
-import {
-  trackDayOptionsLoaded,
-  trackDayCompleted,
-  trackDaysFeature,
-  trackDaysLoaded,
-} from './track-days.store';
+import { trackDayOptionsLoaded, trackDayCompleted, trackDaysLoaded } from './track-days.actions';
+import { trackDaysFeature } from './track-days.store';
 
 describe('trackDaysFeature', () => {
   it('starts option collections as undefined until they are requested', () => {

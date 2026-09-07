@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CompletedTrackDay, Track, TrackDayStats, Vehicle } from './track-days.store';
+import { CompletedTrackDay, Track, TrackDayStats, Vehicle } from './store/track-days.models';
 
 @Injectable({ providedIn: 'root' })
-export class TrackDaysApiService {
+export class TrackDaysService {
   private readonly http = inject(HttpClient);
 
   list(): Observable<CompletedTrackDay[]> {

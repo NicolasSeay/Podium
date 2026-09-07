@@ -1,13 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, of, switchMap } from 'rxjs';
-import { DashboardApiService } from './dashboard-api.service';
-import { dashboardLoadFailed, dashboardLoadRequested, dashboardLoaded } from './dashboard.store';
+import { DashboardService } from '../dashboard.service';
+import { dashboardLoadFailed, dashboardLoadRequested, dashboardLoaded } from './dashboard.actions';
 
 @Injectable()
 export class DashboardEffects {
   private readonly actions$ = inject(Actions);
-  private readonly dashboardApi = inject(DashboardApiService);
+  private readonly dashboardApi = inject(DashboardService);
 
   readonly loadDashboard$ = createEffect(() =>
     this.actions$.pipe(

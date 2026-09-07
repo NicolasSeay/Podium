@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { catchError, finalize, map, Observable, of, tap, throwError } from 'rxjs';
-import { AuthUser } from './auth.store';
+import { AuthUser } from './store/auth.models';
 
 interface LoginResponse {
   token: string;

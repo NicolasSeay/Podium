@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, forkJoin, map, of, switchMap } from 'rxjs';
-import { TrackDaysApiService } from './track-days-api.service';
+import { TrackDaysService } from '../track-days.service';
 import {
   trackDayCompleteRequested,
   trackDayCompleted,
@@ -10,12 +10,12 @@ import {
   trackDaysLoaded,
   trackDaysLoadRequested,
   trackDaysRequestFailed,
-} from './track-days.store';
+} from './track-days.actions';
 
 @Injectable()
 export class TrackDaysEffects {
   private readonly actions$ = inject(Actions);
-  private readonly api = inject(TrackDaysApiService);
+  private readonly api = inject(TrackDaysService);
 
   readonly load$ = createEffect(() =>
     this.actions$.pipe(

@@ -1,12 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import {
-  authFeature,
-  authLoggedOut,
-  authRehydrateRequested,
-  authUserLoaded,
-  AuthUser,
-} from './auth.store';
+import { authLoggedOut, authRehydrateRequested, authUserLoaded } from './auth.actions';
+import { authFeature } from './auth.store';
+import { AuthUser } from './auth.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthFacade {

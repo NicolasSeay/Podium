@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
-import { AuthFacade } from '../auth.facade';
-import { DashboardFacade } from '../dashboard/dashboard.facade';
+import { AuthFacade } from '../store/auth.facade';
+import { DashboardFacade } from '../dashboard/store/dashboard.facade';
 
 @Component({
   selector: 'app-sidebar',

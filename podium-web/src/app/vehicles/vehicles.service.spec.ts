@@ -1,17 +1,17 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { VehiclesApiService } from './vehicles-api.service';
+import { VehiclesService } from './vehicles.service';
 
-describe('VehiclesApiService', () => {
-  let service: VehiclesApiService;
+describe('VehiclesService', () => {
+  let service: VehiclesService;
   let http: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [VehiclesApiService, provideHttpClient(), provideHttpClientTesting()],
+      providers: [VehiclesService, provideHttpClient(), provideHttpClientTesting()],
     });
-    service = TestBed.inject(VehiclesApiService);
+    service = TestBed.inject(VehiclesService);
     http = TestBed.inject(HttpTestingController);
   });
 

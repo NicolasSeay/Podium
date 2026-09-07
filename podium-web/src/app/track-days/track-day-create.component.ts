@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Track, TrackDay, Vehicle } from './track-days.store';
-import { TrackDaysFacade } from './track-days.facade';
+import { Track, TrackDay, Vehicle } from './store/track-days.models';
+import { TrackDaysFacade } from './store/track-days.facade';
 import { AppHeaderComponent } from '../app-header/app-header.component';
 
 type DraftLap = { timeMillis: number; displayTime: string };

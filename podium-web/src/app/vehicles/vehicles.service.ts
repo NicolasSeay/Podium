@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Vehicle } from './vehicles.store';
+import { Vehicle } from './store/vehicles.models';
 
 @Injectable({ providedIn: 'root' })
-export class VehiclesApiService {
+export class VehiclesService {
   private readonly http = inject(HttpClient);
 
   list(): Observable<Vehicle[] | null> {

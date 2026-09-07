@@ -1,18 +1,18 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { DashboardApiService } from './dashboard-api.service';
-import { DashboardData } from './dashboard.store';
+import { DashboardService } from './dashboard.service';
+import { DashboardData } from './store/dashboard.models';
 
-describe('DashboardApiService', () => {
-  let service: DashboardApiService;
+describe('DashboardService', () => {
+  let service: DashboardService;
   let http: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [DashboardApiService, provideHttpClient(), provideHttpClientTesting()],
+      providers: [DashboardService, provideHttpClient(), provideHttpClientTesting()],
     });
-    service = TestBed.inject(DashboardApiService);
+    service = TestBed.inject(DashboardService);
     http = TestBed.inject(HttpTestingController);
   });
 

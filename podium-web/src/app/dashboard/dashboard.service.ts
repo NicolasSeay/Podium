@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DashboardData } from './dashboard.store';
+import { DashboardData } from './store/dashboard.models';
 
 @Injectable({ providedIn: 'root' })
-export class DashboardApiService {
+export class DashboardService {
   private readonly http = inject(HttpClient);
 
   getDashboard(

@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { dashboardFeature, dashboardLoadRequested, setActiveNav } from './dashboard.store';
+import { dashboardLoadRequested, setActiveNav } from './dashboard.actions';
+import { dashboardFeature } from './dashboard.store';
 
 @Injectable({ providedIn: 'root' })
 export class DashboardFacade {

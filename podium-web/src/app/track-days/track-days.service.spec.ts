@@ -1,17 +1,17 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { TrackDaysApiService } from './track-days-api.service';
+import { TrackDaysService } from './track-days.service';
 
-describe('TrackDaysApiService', () => {
-  let service: TrackDaysApiService;
+describe('TrackDaysService', () => {
+  let service: TrackDaysService;
   let http: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [TrackDaysApiService, provideHttpClient(), provideHttpClientTesting()],
+      providers: [TrackDaysService, provideHttpClient(), provideHttpClientTesting()],
     });
-    service = TestBed.inject(TrackDaysApiService);
+    service = TestBed.inject(TrackDaysService);
     http = TestBed.inject(HttpTestingController);
   });
 

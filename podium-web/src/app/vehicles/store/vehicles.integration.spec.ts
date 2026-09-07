@@ -3,15 +3,15 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
-import { App } from '../app';
-import { authFeature } from '../auth.store';
-import { AuthEffects } from '../auth.effects';
-import { DashboardEffects } from '../dashboard/dashboard.effects';
-import { dashboardFeature } from '../dashboard/dashboard.store';
-import { AppPage } from '../testing/app-page';
-import { flushDashboardEntry } from '../testing/http-test-data';
-import { TrackDaysEffects } from '../track-days/track-days.effects';
-import { trackDaysFeature } from '../track-days/track-days.store';
+import { App } from '../../app';
+import { authFeature } from '../../store/auth.store';
+import { AuthEffects } from '../../store/auth.effects';
+import { DashboardEffects } from '../../dashboard/store/dashboard.effects';
+import { dashboardFeature } from '../../dashboard/store/dashboard.store';
+import { AppPage } from '../../testing/app-page';
+import { flushDashboardEntry } from '../../testing/http-test-data';
+import { TrackDaysEffects } from '../../track-days/store/track-days.effects';
+import { trackDaysFeature } from '../../track-days/store/track-days.store';
 import { VehiclesEffects } from './vehicles.effects';
 import { vehiclesFeature } from './vehicles.store';
 

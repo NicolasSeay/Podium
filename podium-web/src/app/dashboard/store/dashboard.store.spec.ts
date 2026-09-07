@@ -1,11 +1,11 @@
 import {
-  dashboardFeature,
   dashboardLoadFailed,
   dashboardLoaded,
   dashboardLoadRequested,
-  DashboardData,
   setActiveNav,
-} from './dashboard.store';
+} from './dashboard.actions';
+import { dashboardFeature } from './dashboard.store';
+import { DashboardData } from './dashboard.models';
 
 describe('dashboardFeature', () => {
   const initialState = dashboardFeature.reducer(undefined, { type: '@@init' });

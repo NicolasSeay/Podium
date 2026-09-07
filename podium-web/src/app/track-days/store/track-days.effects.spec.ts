@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of } from 'rxjs';
-import { TrackDaysApiService } from './track-days-api.service';
+import { TrackDaysService } from '../track-days.service';
 import { TrackDaysEffects } from './track-days.effects';
 import {
   trackDayOptionsLoaded,
   trackDayOptionsLoadRequested,
   trackDaysLoadRequested,
   trackDaysLoaded,
-} from './track-days.store';
+} from './track-days.actions';
 
 describe('TrackDaysEffects', () => {
   let actions$: Observable<unknown>;
@@ -26,7 +26,7 @@ describe('TrackDaysEffects', () => {
       providers: [
         TrackDaysEffects,
         provideMockActions(() => actions$),
-        { provide: TrackDaysApiService, useValue: api },
+        { provide: TrackDaysService, useValue: api },
       ],
     });
     effects = TestBed.inject(TrackDaysEffects);

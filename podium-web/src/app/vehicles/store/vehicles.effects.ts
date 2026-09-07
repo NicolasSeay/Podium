@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, of, switchMap } from 'rxjs';
-import { VehiclesApiService } from './vehicles-api.service';
+import { VehiclesService } from '../vehicles.service';
 import {
   vehicleCreateRequested,
   vehicleCreated,
@@ -10,12 +10,12 @@ import {
   vehiclesLoaded,
   vehiclesLoadRequested,
   vehiclesRequestFailed,
-} from './vehicles.store';
+} from './vehicles.actions';
 
 @Injectable()
 export class VehiclesEffects {
   private readonly actions$ = inject(Actions);
-  private readonly vehiclesApi = inject(VehiclesApiService);
+  private readonly vehiclesApi = inject(VehiclesService);
 
   readonly loadVehicles$ = createEffect(() =>
     this.actions$.pipe(

@@ -3,9 +3,9 @@ import { Store } from '@ngrx/store';
 import {
   vehicleCreateRequested,
   vehicleDeleteRequested,
-  vehiclesFeature,
   vehiclesLoadRequested,
-} from './vehicles.store';
+} from './vehicles.actions';
+import { vehiclesFeature } from './vehicles.store';
 
 @Injectable({ providedIn: 'root' })
 export class VehiclesFacade {

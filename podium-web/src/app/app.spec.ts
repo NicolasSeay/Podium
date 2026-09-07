@@ -6,15 +6,17 @@ import { provideRouter, Router } from '@angular/router';
 import { provideStore } from '@ngrx/store';
 import { Store } from '@ngrx/store';
 import { App } from './app';
-import { DashboardEffects } from './dashboard/dashboard.effects';
-import { dashboardFeature, dashboardLoaded } from './dashboard/dashboard.store';
-import { authFeature, authUserLoaded } from './auth.store';
-import { AuthEffects } from './auth.effects';
-import { TrackDaysEffects } from './track-days/track-days.effects';
-import { trackDaysFeature } from './track-days/track-days.store';
+import { DashboardEffects } from './dashboard/store/dashboard.effects';
+import { dashboardFeature } from './dashboard/store/dashboard.store';
+import { dashboardLoaded } from './dashboard/store/dashboard.actions';
+import { authFeature } from './store/auth.store';
+import { authUserLoaded } from './store/auth.actions';
+import { AuthEffects } from './store/auth.effects';
+import { TrackDaysEffects } from './track-days/store/track-days.effects';
+import { trackDaysFeature } from './track-days/store/track-days.store';
 import { flushDashboardEntry } from './testing/http-test-data';
-import { VehiclesEffects } from './vehicles/vehicles.effects';
-import { vehiclesFeature } from './vehicles/vehicles.store';
+import { VehiclesEffects } from './vehicles/store/vehicles.effects';
+import { vehiclesFeature } from './vehicles/store/vehicles.store';
 
 describe('App', () => {
   beforeEach(async () => {

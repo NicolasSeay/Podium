@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { TrackDay } from './track-days.store';
-import { TrackDaysFacade } from './track-days.facade';
-import { AuthFacade } from '../auth.facade';
+import { TrackDay } from './store/track-days.models';
+import { TrackDaysFacade } from './store/track-days.facade';
+import { AuthFacade } from '../store/auth.facade';
 import { DistanceUnit } from '../preferences';
 
 @Component({
