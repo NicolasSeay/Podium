@@ -49,22 +49,21 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     TestBed.inject(Store).dispatch(
       dashboardLoaded({
-        personalRecords: [
-          {
-            id: 1,
-            userId: 1,
-            lapId: 1,
-            trackId: 1,
-            vehicleId: 1,
-            timeMillis: 158421,
-          },
-        ],
         totalTrackDays: 4,
         totalSessions: 7,
         totalLaps: 42,
         totalLapTimeMillis: 3600000,
         recentTrackDays: [],
-        analyticsSessions: [],
+        analyticsSessions: [
+          {
+            sessionId: 1,
+            trackDayId: 1,
+            trackDayDate: '2026-09-03',
+            vehicleId: 1,
+            sessionName: 'Practice',
+            laps: [{ id: 1, sessionId: 1, lapNumber: 1, timeMillis: 158421 }],
+          },
+        ],
       }),
     );
     fixture.detectChanges();
@@ -145,7 +144,7 @@ describe('App vehicle flow', () => {
     fixture.detectChanges();
 
     (
-      fixture.nativeElement.querySelector('button.nav-item:nth-of-type(3)') as HTMLButtonElement
+      fixture.nativeElement.querySelector('button.nav-item:nth-of-type(4)') as HTMLButtonElement
     ).click();
     await fixture.whenStable();
     fixture.detectChanges();

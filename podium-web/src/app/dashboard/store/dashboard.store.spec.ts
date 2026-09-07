@@ -10,7 +10,6 @@ import { DashboardData } from './dashboard.models';
 describe('dashboardFeature', () => {
   const initialState = dashboardFeature.reducer(undefined, { type: '@@init' });
   const data: DashboardData = {
-    personalRecords: [],
     totalTrackDays: 2,
     totalSessions: 3,
     totalLaps: 12,

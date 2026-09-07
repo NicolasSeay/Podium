@@ -1,11 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideTrash2 } from '@ng-icons/lucide';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { VehiclesFacade } from './store/vehicles.facade';
 
 @Component({
   selector: 'app-vehicles',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule],
+  imports: [NgIcon, ReactiveFormsModule],
+  providers: [provideIcons({ lucideTrash2 })],
   templateUrl: './vehicles.component.html',
   styleUrl: './vehicles.component.scss',
 })

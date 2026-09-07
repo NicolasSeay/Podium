@@ -3,11 +3,13 @@ import { App } from './app';
 import { TrackDayCreateComponent } from './track-days/create-track-day/create-track-day.component';
 
 describe('application routes', () => {
-  it('does not expose a standalone analytics route', () => {
-    expect(routes.some((route) => route.path === 'analytics')).toBe(false);
+  it('exposes analytics as a protected standalone destination', () => {
+    const analyticsRoute = routes.find((route) => route.path === 'analytics');
+    expect(analyticsRoute?.component).toBe(App);
+    expect(analyticsRoute?.canActivate).toBeDefined();
   });
 
-  it('keeps dashboard as the analytics destination', () => {
+  it('keeps dashboard as the performance snapshot destination', () => {
     expect(routes.find((route) => route.path === 'dashboard')?.component).toBeDefined();
   });
 

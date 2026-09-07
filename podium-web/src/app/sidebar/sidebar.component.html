@@ -10,9 +10,24 @@
         [disabled]="!implementedNavigation.has(item)"
         (click)="changeNav(item)"
       >
-        <span class="nav-icon">{{
-          item === 'Dashboard' ? '▦' : item === 'Track Days' ? '◫' : item === 'Vehicles' ? '▱' : '⚙'
-        }}</span
+        <span class="nav-icon">
+          @switch (item) {
+            @case ('Dashboard') {
+              <ng-icon name="lucideLayoutDashboard" />
+            }
+            @case ('Analytics') {
+              <ng-icon name="lucideChartNoAxesCombined" />
+            }
+            @case ('Track Days') {
+              <ng-icon name="lucideCalendarDays" />
+            }
+            @case ('Vehicles') {
+              <ng-icon name="lucideCar" />
+            }
+            @case ('Settings') {
+              <ng-icon name="lucideSettings" />
+            }
+          }</span
         >{{ item }}
       </button>
     }
@@ -24,7 +39,7 @@
       ><span>Track driver</span>
     </div>
     <button class="logout-button" type="button" aria-label="Log out" (click)="logout()">
-      ↪ <span>Log out</span>
+      <ng-icon name="lucideLogOut" aria-hidden="true" /> <span>Log out</span>
     </button>
   </div>
 </aside>

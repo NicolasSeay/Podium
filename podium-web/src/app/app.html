@@ -6,6 +6,8 @@
       <div class="content-body">
         @if (activeNav === 'Track Days') {
           <app-track-days />
+        } @else if (activeNav === 'Analytics') {
+          <app-analytics />
         } @else if (activeNav === 'Vehicles') {
           <app-vehicles />
         } @else if (activeNav === 'Settings') {
