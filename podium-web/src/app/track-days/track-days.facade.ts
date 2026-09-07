@@ -1,8 +1,9 @@
-import { Injectable, inject } from '@angular/core';
+import { computed, Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   trackDayCompleteRequested,
   trackDaySelected,
+  trackDayOptionsLoadRequested,
   trackDaysFeature,
   trackDaysLoadRequested,
 } from './track-days.store';
@@ -11,8 +12,10 @@ import {
 export class TrackDaysFacade {
   private readonly store = inject(Store);
 
-  readonly tracks = this.store.selectSignal(trackDaysFeature.selectTracks);
-  readonly vehicles = this.store.selectSignal(trackDaysFeature.selectVehicles);
+  private readonly storedTracks = this.store.selectSignal(trackDaysFeature.selectTracks);
+  private readonly storedVehicles = this.store.selectSignal(trackDaysFeature.selectVehicles);
+  readonly tracks = computed(() => this.storedTracks() ?? []);
+  readonly vehicles = computed(() => this.storedVehicles() ?? []);
   readonly trackDays = this.store.selectSignal(trackDaysFeature.selectTrackDays);
   readonly sessions = this.store.selectSignal(trackDaysFeature.selectSessions);
   readonly laps = this.store.selectSignal(trackDaysFeature.selectLaps);
@@ -27,6 +30,12 @@ export class TrackDaysFacade {
 
   load(): void {
     this.store.dispatch(trackDaysLoadRequested());
+  }
+
+  loadOptions(): void {
+    if (this.storedTracks() === undefined || this.storedVehicles() === undefined) {
+      this.store.dispatch(trackDayOptionsLoadRequested());
+    }
   }
 
   selectDay(trackDay: Parameters<typeof trackDaySelected>[0]): void {

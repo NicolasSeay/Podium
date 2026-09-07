@@ -55,8 +55,8 @@ export interface CompletedTrackDay {
 }
 
 export interface TrackDaysState {
-  tracks: Track[];
-  vehicles: Vehicle[];
+  tracks: Track[] | undefined;
+  vehicles: Vehicle[] | undefined;
   trackDays: TrackDay[];
   sessions: Session[];
   laps: Record<number, Lap[]>;
@@ -69,16 +69,21 @@ export interface TrackDaysState {
 }
 
 export const trackDaysLoadRequested = createAction('[Track Days] Load Requested');
+export const trackDayOptionsLoadRequested = createAction('[Track Days] Options Load Requested');
 export const trackDaysLoaded = createAction(
   '[Track Days] Loaded',
   (data: {
-    tracks: Track[];
-    vehicles: Vehicle[];
+    tracks: Track[] | null;
+    vehicles: Vehicle[] | null;
     trackDays: TrackDay[];
     sessions?: Session[];
     laps?: Record<number, Lap[]>;
     stats?: TrackDayStats[];
   }) => data,
+);
+export const trackDayOptionsLoaded = createAction(
+  '[Track Days] Options Loaded',
+  (data: { tracks: Track[] | null; vehicles: Vehicle[] | null }) => data,
 );
 export const trackDayCreateRequested = createAction(
   '[Track Days] Create Requested',
@@ -123,8 +128,8 @@ export const trackDaysRequestFailed = createAction(
 );
 
 const initialState: TrackDaysState = {
-  tracks: [],
-  vehicles: [],
+  tracks: undefined,
+  vehicles: undefined,
   trackDays: [],
   sessions: [],
   laps: {},
@@ -141,9 +146,19 @@ export const trackDaysFeature = createFeature({
   reducer: createReducer(
     initialState,
     on(trackDaysLoadRequested, (state) => ({ ...state, loading: true, error: null })),
+    on(trackDayOptionsLoadRequested, (state) => ({ ...state, loading: true, error: null })),
+    on(trackDayOptionsLoaded, (state, data) => ({
+      ...state,
+      tracks: data.tracks ?? [],
+      vehicles: data.vehicles ?? [],
+      loading: false,
+      error: null,
+    })),
     on(trackDaysLoaded, (state, data) => ({
       ...state,
       ...data,
+      tracks: data.tracks ?? [],
+      vehicles: data.vehicles ?? [],
       sessions: data.sessions ?? [],
       laps: data.laps ?? {},
       stats: Object.fromEntries((data.stats ?? []).map((summary) => [summary.trackDayId, summary])),

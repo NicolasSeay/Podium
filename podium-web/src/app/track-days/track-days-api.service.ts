@@ -13,11 +13,11 @@ export class TrackDaysApiService {
   stats(): Observable<TrackDayStats[]> {
     return this.http.get<TrackDayStats[]>('/api/track-days/stats');
   }
-  tracks(): Observable<Track[]> {
-    return this.http.get<Track[]>('/api/tracks');
+  tracks(): Observable<Track[] | null> {
+    return this.http.get<Track[] | null>('/api/tracks');
   }
-  vehicles(): Observable<Vehicle[]> {
-    return this.http.get<Vehicle[]>('/api/vehicles');
+  vehicles(): Observable<Vehicle[] | null> {
+    return this.http.get<Vehicle[] | null>('/api/vehicles');
   }
   create(trackDay: {
     trackId: number;

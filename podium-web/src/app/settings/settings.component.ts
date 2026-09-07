@@ -35,7 +35,7 @@ export class SettingsComponent {
   });
 
   constructor() {
-    this.trackDaysFacade.load();
+    this.trackDaysFacade.loadOptions();
     effect(() => {
       const user = this.authFacade.user();
       if (user && !this.form.dirty) {

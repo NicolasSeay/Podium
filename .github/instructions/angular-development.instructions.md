@@ -49,6 +49,7 @@ export class MetricCardComponent {
 - Preserve immutable state updates.
 - Prefer strict, explicit types over `any`; type DOM events at the boundary and cast only after checking the expected element type.
 - Use single quotes and trailing commas consistent with the existing TypeScript formatting.
+- For API-backed collection state, initialize collections as `undefined` to represent untouched state. Normalize successful `null` or empty API responses to `[]`; use facade signals that fall back to `[]` when templates or component methods need an iterable.
 
 ```typescript
 export type DashboardRange = 'Last 12 Months' | 'Last 6 Months' | 'This Year';

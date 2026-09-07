@@ -11,14 +11,14 @@ export interface Vehicle {
 }
 
 export interface VehiclesState {
-  vehicles: Vehicle[];
+  vehicles: Vehicle[] | undefined;
   loading: boolean;
   saving: boolean;
   error: string | null;
 }
 
 export const vehiclesLoadRequested = createAction('[Vehicles] Load Requested');
-export const vehiclesLoaded = createAction('[Vehicles] Loaded', (vehicles: Vehicle[]) => ({
+export const vehiclesLoaded = createAction('[Vehicles] Loaded', (vehicles: Vehicle[] | null) => ({
   vehicles,
 }));
 export const vehicleCreateRequested = createAction(
@@ -47,7 +47,7 @@ export const vehiclesRequestFailed = createAction('[Vehicles] Request Failed', (
 }));
 
 const initialState: VehiclesState = {
-  vehicles: [],
+  vehicles: undefined,
   loading: false,
   saving: false,
   error: null,
@@ -60,14 +60,14 @@ export const vehiclesFeature = createFeature({
     on(vehiclesLoadRequested, (state) => ({ ...state, loading: true, error: null })),
     on(vehiclesLoaded, (state, { vehicles }) => ({
       ...state,
-      vehicles,
+      vehicles: vehicles ?? [],
       loading: false,
       error: null,
     })),
     on(vehicleCreateRequested, (state) => ({ ...state, saving: true, error: null })),
     on(vehicleCreated, (state, { vehicle }) => ({
       ...state,
-      vehicles: [...state.vehicles, vehicle],
+      vehicles: [...(state.vehicles ?? []), vehicle],
       saving: false,
       error: null,
     })),
@@ -78,7 +78,7 @@ export const vehiclesFeature = createFeature({
     })),
     on(vehicleDeleted, (state, { id }) => ({
       ...state,
-      vehicles: state.vehicles.filter((vehicle) => vehicle.id !== id),
+      vehicles: (state.vehicles ?? []).filter((vehicle) => vehicle.id !== id),
       saving: false,
       error: null,
     })),
