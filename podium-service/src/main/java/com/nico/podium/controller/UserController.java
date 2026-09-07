@@ -15,18 +15,14 @@ public class UserController extends ControllerSupport {
         this.users = users;
     }
 
-    @GetMapping("/me")
-    public User me() {
+    @GetMapping("/{userId}")
+    public User get(@PathVariable Long userId) {
+        requireCurrentUser(userId);
         return currentUser();
     }
 
-    @PatchMapping("/me")
-    public User update(@Valid @RequestBody UserUpdateRequest request) {
-        return users.update(userId(), request);
-    }
-
-    @GetMapping("/email-available")
-    public boolean emailAvailable(@RequestParam String email) {
-        return users.emailAvailable(userId(), email);
+    @PatchMapping("/{userId}")
+    public User update(@PathVariable Long userId, @Valid @RequestBody UserUpdateRequest request) {
+        return users.update(requireCurrentUser(userId), request);
     }
 }

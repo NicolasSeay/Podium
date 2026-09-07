@@ -1,10 +1,8 @@
 package com.nico.podium.controller;
 
 import com.nico.podium.domain.PodiumModels.*;
-import com.nico.podium.service.SessionService;
 import com.nico.podium.service.TrackDayService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -14,15 +12,13 @@ import java.util.List;
 @RequestMapping("/api/track-days")
 public class TrackDayController extends ControllerSupport {
     private final TrackDayService days;
-    private final SessionService sessions;
 
-    public TrackDayController(TrackDayService days, SessionService sessions) {
+    public TrackDayController(TrackDayService days) {
         this.days = days;
-        this.sessions = sessions;
     }
 
     @GetMapping
-    public List<TrackDay> list(@RequestParam(required = false) Long trackId, @RequestParam(required = false) Long vehicleId, @RequestParam(required = false) LocalDate from, @RequestParam(required = false) LocalDate to) {
+    public List<CompletedTrackDay> list(@RequestParam(required = false) Long trackId, @RequestParam(required = false) Long vehicleId, @RequestParam(required = false) LocalDate from, @RequestParam(required = false) LocalDate to) {
         return days.list(userId(), trackId, vehicleId, from, to);
     }
 
@@ -32,42 +28,13 @@ public class TrackDayController extends ControllerSupport {
     }
 
     @PostMapping
-    public TrackDay create(@Valid @RequestBody TrackDayRequest request) {
+    public CompletedTrackDay create(@Valid @RequestBody TrackDayRequest request) {
         return days.create(userId(), request);
     }
 
-    @PostMapping("/complete")
-    public CompletedTrackDay complete(@Valid @RequestBody TrackDayRequest request) {
-        return days.complete(userId(), request);
+    @GetMapping("/{id:\\d+}")
+    public CompletedTrackDay get(@PathVariable Long id) {
+        return days.details(userId(), id);
     }
 
-    // Reserved until the Angular app has a standalone track-day detail workflow.
-    // @GetMapping("/{id:\\d+}")
-    public TrackDayDetailsResponse get(@PathVariable Long id) {
-        Long userId = userId();
-        return new TrackDayDetailsResponse(days.get(userId, id), sessions.list(userId, id));
-    }
-
-    // Reserved until track-day editing is available in the Angular app.
-    // @PatchMapping("/{id:\\d+}")
-    public TrackDay update(@PathVariable Long id, @Valid @RequestBody TrackDayRequest request) {
-        return days.update(userId(), id, request);
-    }
-
-    // Reserved until track-day deletion is available in the Angular app.
-    // @DeleteMapping("/{id:\\d+}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        days.delete(userId(), id);
-    }
-
-    @GetMapping("/{id:\\d+}/sessions")
-    public List<Session> listSessions(@PathVariable Long id) {
-        return sessions.list(userId(), id);
-    }
-
-    @PostMapping("/{id:\\d+}/sessions")
-    public Session createSession(@PathVariable Long id, @Valid @RequestBody SessionRequest request) {
-        return sessions.create(userId(), id, request);
-    }
 }

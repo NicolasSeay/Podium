@@ -99,6 +99,7 @@ describe('LoginComponent', () => {
     });
 
     expect(localStorage.getItem('podium.auth.token')).toBe('registration-token');
+    expect(localStorage.getItem('podium.auth.user-id')).toBe('2');
     expect(TestBed.inject(Router).navigate).toHaveBeenCalledWith(['/dashboard']);
   });
 
@@ -128,6 +129,7 @@ describe('LoginComponent', () => {
     });
 
     expect(localStorage.getItem('podium.auth.token')).toBe('session-token');
+    expect(localStorage.getItem('podium.auth.user-id')).toBe('1');
     expect(document.cookie).not.toContain('podium.user.id=');
     expect(TestBed.inject(Router).navigate).toHaveBeenCalledWith(['/dashboard']);
     expect(TestBed.inject(Store).selectSignal(authFeature.selectUser)()).toEqual({

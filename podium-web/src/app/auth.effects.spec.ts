@@ -20,6 +20,7 @@ describe('AuthEffects', () => {
       },
     });
     storage.set('podium.auth.token', 'session-token');
+    storage.set('podium.auth.user-id', '1');
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),
@@ -40,7 +41,7 @@ describe('AuthEffects', () => {
     TestBed.inject(Store).dispatch(authRehydrateRequested());
     expect(TestBed.inject(Store).selectSignal(authFeature.selectRehydrating)()).toBe(true);
 
-    const request = http.expectOne('/api/users/me');
+    const request = http.expectOne('/api/users/1');
     expect(request.request.method).toBe('GET');
     request.flush({
       id: 1,

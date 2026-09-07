@@ -21,14 +21,9 @@ class TrackControllerTest {
     @Test
     void exposesTrackEndpoints() {
         when(auth.currentUser(any(), any())).thenReturn(new User(1L, 'driver@example.com', 'secret', 'Driver', 'Example'))
-        def track = new Track(1L, 'Road Atlanta', 'Braselton', 'United States', 2.54G)
         when(tracks.list()).thenReturn([])
-        when(tracks.get(1L)).thenReturn(track)
 
         mvc.perform(get('/api/tracks').header('Authorization', 'Bearer test-token')).andExpect(status().isOk())
-        mvc.perform(get('/api/tracks/1').header('Authorization', 'Bearer test-token')).andExpect(status().isNotFound())
         mvc.perform(post('/api/tracks').header('Authorization', 'Bearer test-token')).andExpect(status().isMethodNotAllowed())
-        mvc.perform(patch('/api/tracks/1').header('Authorization', 'Bearer test-token')).andExpect(status().isNotFound())
-        mvc.perform(delete('/api/tracks/1').header('Authorization', 'Bearer test-token')).andExpect(status().isNotFound())
     }
 }

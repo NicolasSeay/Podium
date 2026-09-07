@@ -75,6 +75,8 @@ export const trackDaysLoaded = createAction(
     tracks: Track[];
     vehicles: Vehicle[];
     trackDays: TrackDay[];
+    sessions?: Session[];
+    laps?: Record<number, Lap[]>;
     stats?: TrackDayStats[];
   }) => data,
 );
@@ -115,33 +117,6 @@ export const trackDayCompleted = createAction(
 export const trackDaySelected = createAction('[Track Days] Selected', (trackDay: TrackDay) => ({
   trackDay,
 }));
-export const sessionsLoadRequested = createAction(
-  '[Track Days] Sessions Load Requested',
-  (trackDayId: number) => ({ trackDayId }),
-);
-export const sessionsLoaded = createAction(
-  '[Track Days] Sessions Loaded',
-  (sessions: Session[]) => ({ sessions }),
-);
-export const sessionCreateRequested = createAction(
-  '[Track Days] Session Create Requested',
-  (trackDayId: number, session: { name: string; notes: string | null }) => ({
-    trackDayId,
-    session,
-  }),
-);
-export const sessionCreated = createAction('[Track Days] Session Created', (session: Session) => ({
-  session,
-}));
-export const lapsLoaded = createAction(
-  '[Track Days] Laps Loaded',
-  (sessionId: number, laps: Lap[]) => ({ sessionId, laps }),
-);
-export const lapCreateRequested = createAction(
-  '[Track Days] Lap Create Requested',
-  (sessionId: number, lap: { lapNumber: number; timeMillis: number }) => ({ sessionId, lap }),
-);
-export const lapCreated = createAction('[Track Days] Lap Created', (lap: Lap) => ({ lap }));
 export const trackDaysRequestFailed = createAction(
   '[Track Days] Request Failed',
   (error: string) => ({ error }),
@@ -169,11 +144,13 @@ export const trackDaysFeature = createFeature({
     on(trackDaysLoaded, (state, data) => ({
       ...state,
       ...data,
+      sessions: data.sessions ?? [],
+      laps: data.laps ?? {},
       stats: Object.fromEntries((data.stats ?? []).map((summary) => [summary.trackDayId, summary])),
       loading: false,
       error: null,
     })),
-    on(trackDayCreateRequested, sessionCreateRequested, lapCreateRequested, (state) => ({
+    on(trackDayCreateRequested, (state) => ({
       ...state,
       saving: true,
       error: null,
@@ -198,30 +175,6 @@ export const trackDaysFeature = createFeature({
       error: null,
     })),
     on(trackDaySelected, (state, { trackDay }) => ({ ...state, selectedDayId: trackDay.id })),
-    on(sessionsLoaded, (state, { sessions }) => ({
-      ...state,
-      sessions,
-      saving: false,
-      error: null,
-    })),
-    on(sessionCreated, (state, { session }) => ({
-      ...state,
-      sessions: [...state.sessions, session],
-      saving: false,
-      error: null,
-    })),
-    on(lapsLoaded, (state, { sessionId, laps }) => ({
-      ...state,
-      laps: { ...state.laps, [sessionId]: laps },
-      saving: false,
-      error: null,
-    })),
-    on(lapCreated, (state, { lap }) => ({
-      ...state,
-      laps: { ...state.laps, [lap.sessionId]: [...(state.laps[lap.sessionId] ?? []), lap] },
-      saving: false,
-      error: null,
-    })),
     on(trackDaysRequestFailed, (state, { error }) => ({
       ...state,
       loading: false,
