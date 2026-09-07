@@ -28,6 +28,7 @@ import { TrackDaysFacade } from '../track-days/store/track-days.facade';
 import { DistanceUnit } from '../preferences';
 
 Chart.register(CategoryScale, LineController, LineElement, LinearScale, PointElement, Tooltip);
+Chart.defaults.font.family = "'Manrope', sans-serif";
 
 @Component({
   selector: 'app-dashboard',
@@ -203,6 +204,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.updateTimelineChart(this.graphPoints());
+    void document.fonts?.ready.then(() => this.updateTimelineChart(this.graphPoints()));
   }
 
   ngOnDestroy(): void {
@@ -330,6 +332,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
       responsive: true,
       maintainAspectRatio: false,
       animation: false,
+      font: { family: "'Manrope', sans-serif" },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -344,16 +347,32 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
       scales: {
         x: {
           grid: { color: '#1a3441' },
-          ticks: { color: '#66828e', maxRotation: 0, autoSkip: true },
-          title: { display: true, text: 'Date', color: '#66828e' },
+          ticks: {
+            color: '#66828e',
+            maxRotation: 0,
+            autoSkip: true,
+            font: { family: "'Manrope', sans-serif" },
+          },
+          title: {
+            display: true,
+            text: 'Date',
+            color: '#66828e',
+            font: { family: "'Manrope', sans-serif" },
+          },
         },
         y: {
           grid: { color: '#1a3441' },
           ticks: {
             color: '#66828e',
+            font: { family: "'Manrope', sans-serif" },
             callback: (value) => this.formatLapTime(Number(value)),
           },
-          title: { display: true, text: 'Lap time', color: '#66828e' },
+          title: {
+            display: true,
+            text: 'Lap time',
+            color: '#66828e',
+            font: { family: "'Manrope', sans-serif" },
+          },
         },
       },
     };
