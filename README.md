@@ -2,6 +2,14 @@
 
 Application for logging track day information and visualizing progression.
 
+## Tech stack
+
+- Frontend: Angular 22 with TypeScript, NgRx, and RxJS, deployed to Vercel.
+- Backend: Spring Boot 4.1 with Java 26, deployed to Render using Docker.
+- Database: MySQL, hosted on Aiven.
+- Testing: Vitest for the frontend and JUnit 5, Groovy, H2, and JaCoCo for
+  the backend.
+
 ## Local database
 
 The backend uses MySQL at `jdbc:mysql://localhost:3306/podium` with the
@@ -68,7 +76,7 @@ optional, reviewed data-load script rather than an automatic production step.
 
 Run `mvn clean verify` from `podium-service` to generate the JaCoCo report at
 `podium-service/target/site/jacoco/index.html`. Run `npm run coverage` from
-`podium-web` to generate the Angular report at `podium-web/coverage/index.html`.
+`podium-web` to generate the Angular report at `podium-web/coverage/podium-web/index.html`.
 
 ## Commit formatting
 
