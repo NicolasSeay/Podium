@@ -144,6 +144,31 @@ describe('DashboardComponent', () => {
     expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({ vehicleId: 1 }));
   });
 
+  it('includes a saved default track even when it has not been visited', () => {
+    const store = TestBed.inject(Store);
+    store.dispatch(
+      authUserLoaded({
+        id: 1,
+        email: 'driver@example.com',
+        firstName: 'Driver',
+        lastName: 'Example',
+        defaultTrackId: 3,
+        defaultVehicleId: 1,
+      }),
+    );
+    store.dispatch(trackDaysLoaded({ tracks, vehicles, trackDays }));
+    const fixture = TestBed.createComponent(DashboardComponent);
+    fixture.detectChanges();
+
+    expect(
+      fixture.nativeElement.querySelector('[aria-label="Filter by track"] option[value="3"]'),
+    ).not.toBeNull();
+    expect(
+      (fixture.nativeElement.querySelector('[aria-label="Filter by vehicle"]') as HTMLSelectElement)
+        .value,
+    ).toBe('1');
+  });
+
   it('renders loading, error, and empty analytics states', () => {
     const fixture = TestBed.createComponent(DashboardComponent);
     const store = TestBed.inject(Store);

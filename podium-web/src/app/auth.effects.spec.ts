@@ -38,6 +38,7 @@ describe('AuthEffects', () => {
 
   it('loads the current user when a token exists', () => {
     TestBed.inject(Store).dispatch(authRehydrateRequested());
+    expect(TestBed.inject(Store).selectSignal(authFeature.selectRehydrating)()).toBe(true);
 
     const request = http.expectOne('/api/users/me');
     expect(request.request.method).toBe('GET');
@@ -54,5 +55,6 @@ describe('AuthEffects', () => {
       firstName: 'Nicolas',
       lastName: 'Seay',
     });
+    expect(TestBed.inject(Store).selectSignal(authFeature.selectRehydrating)()).toBe(false);
   });
 });

@@ -30,16 +30,13 @@ export class DashboardComponent {
   protected readonly loading = this.dashboardFacade.loading;
   protected readonly error = this.dashboardFacade.error;
   protected readonly user = this.authFacade.user;
+  private readonly rehydrating = this.authFacade.rehydrating;
   private readonly loadedTracks = this.trackDaysFacade.tracks;
   private readonly loadedVehicles = this.trackDaysFacade.vehicles;
   private readonly loadedTrackDays = this.trackDaysFacade.trackDays;
   protected readonly tracks = computed(() => this.loadedTracks() ?? []);
   protected readonly vehicles = computed(() => this.loadedVehicles() ?? []);
   protected readonly trackDays = computed(() => this.loadedTrackDays() ?? []);
-  protected readonly attendedTracks = computed(() => {
-    const attendedTrackIds = new Set(this.trackDays().map((day) => day.trackId));
-    return this.tracks().filter((track) => attendedTrackIds.has(track.id));
-  });
   protected readonly selectedTrackId = signal<number | null>(null);
   protected readonly selectedVehicleId = signal<number | null>(null);
   protected readonly firstName = computed(() => this.user()?.firstName ?? 'Driver');
@@ -88,13 +85,16 @@ export class DashboardComponent {
 
   constructor() {
     this.trackDaysFacade.load();
-    this.dashboardFacade.load();
     effect(() => {
       const days = this.trackDays();
       const user = this.user();
+      const tracks = this.tracks();
+      const vehicles = this.vehicles();
       if (
+        this.rehydrating() ||
+        this.trackDaysFacade.loading() ||
         !days.length ||
-        !user ||
+        !tracks.length ||
         this.selectedTrackId() !== null ||
         this.selectedVehicleId() !== null
       )
@@ -106,12 +106,11 @@ export class DashboardComponent {
         .filter((day) => day.vehicleId !== null)
         .sort((left, right) => right.startDate.localeCompare(left.startDate))[0];
       const defaultTrackId =
-        user?.defaultTrackId && this.tracks().some((track) => track.id === user.defaultTrackId)
+        user?.defaultTrackId && tracks.some((track) => track.id === user.defaultTrackId)
           ? user.defaultTrackId
           : latestDay.trackId;
       const defaultVehicleId =
-        user?.defaultVehicleId &&
-        this.vehicles().some((vehicle) => vehicle.id === user.defaultVehicleId)
+        user?.defaultVehicleId && vehicles.some((vehicle) => vehicle.id === user.defaultVehicleId)
           ? user.defaultVehicleId
           : (latestVehicleDay?.vehicleId ?? null);
       this.selectedTrackId.set(defaultTrackId);

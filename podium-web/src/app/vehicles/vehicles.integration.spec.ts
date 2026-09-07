@@ -5,10 +5,13 @@ import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 import { App } from '../app';
 import { authFeature } from '../auth.store';
+import { AuthEffects } from '../auth.effects';
 import { DashboardEffects } from '../dashboard/dashboard.effects';
 import { dashboardFeature } from '../dashboard/dashboard.store';
 import { AppPage } from '../testing/app-page';
-import { flushDashboardRequest } from '../testing/http-test-data';
+import { flushDashboardEntry } from '../testing/http-test-data';
+import { TrackDaysEffects } from '../track-days/track-days.effects';
+import { trackDaysFeature } from '../track-days/track-days.store';
 import { VehiclesEffects } from './vehicles.effects';
 import { vehiclesFeature } from './vehicles.store';
 
@@ -23,21 +26,23 @@ describe('Vehicles page integration', () => {
           [dashboardFeature.name]: dashboardFeature.reducer,
           [authFeature.name]: authFeature.reducer,
           [vehiclesFeature.name]: vehiclesFeature.reducer,
+          [trackDaysFeature.name]: trackDaysFeature.reducer,
         }),
-        provideEffects(DashboardEffects, VehiclesEffects),
+        provideEffects(AuthEffects, DashboardEffects, TrackDaysEffects, VehiclesEffects),
       ],
     }).compileComponents();
   });
 
-  it('loads saved vehicles after navigating to the page', () => {
+  it('loads saved vehicles after navigating to the page', async () => {
     const fixture = TestBed.createComponent(App);
     const page = new AppPage(fixture);
     const http = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
-    flushDashboardRequest(http);
+    await flushDashboardEntry(http, fixture);
     fixture.detectChanges();
 
     page.clickNavigation('Vehicles');
+    await fixture.whenStable();
     http.expectOne('/api/vehicles').flush([
       {
         id: 1,
@@ -57,14 +62,15 @@ describe('Vehicles page integration', () => {
     expect(page.text('.vehicle-list li span')).toBe('Mazda · MX-5 Miata · Club · 2020');
   });
 
-  it('validates and creates a vehicle through the API', () => {
+  it('validates and creates a vehicle through the API', async () => {
     const fixture = TestBed.createComponent(App);
     const page = new AppPage(fixture);
     const http = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
-    flushDashboardRequest(http);
+    await flushDashboardEntry(http, fixture);
     fixture.detectChanges();
     page.clickNavigation('Vehicles');
+    await fixture.whenStable();
     http.expectOne('/api/vehicles').flush([]);
     fixture.detectChanges();
 
@@ -104,7 +110,7 @@ describe('Vehicles page integration', () => {
     expect(page.text('.vehicle-list li span')).toBe('Mazda · MX-5 Miata · LT1 · 2020');
   });
 
-  it('prompts before deleting a saved vehicle and removes it from the list', () => {
+  it('prompts before deleting a saved vehicle and removes it from the list', async () => {
     const fixture = TestBed.createComponent(App);
     const page = new AppPage(fixture);
     const http = TestBed.inject(HttpTestingController);
@@ -116,9 +122,10 @@ describe('Vehicles page integration', () => {
     };
 
     fixture.detectChanges();
-    flushDashboardRequest(http);
+    await flushDashboardEntry(http, fixture);
     fixture.detectChanges();
     page.clickNavigation('Vehicles');
+    await fixture.whenStable();
     http.expectOne('/api/vehicles').flush([
       {
         id: 1,

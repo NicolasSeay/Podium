@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, filter, map, of, switchMap } from 'rxjs';
+import { catchError, map, of, switchMap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { authRehydrateFailed, authRehydrateRequested, authUserLoaded } from './auth.store';
 
@@ -12,12 +12,13 @@ export class AuthEffects {
   readonly rehydrate$ = createEffect(() =>
     this.actions$.pipe(
       ofType(authRehydrateRequested),
-      filter(() => this.auth.isAuthenticated()),
       switchMap(() =>
-        this.auth.currentUser().pipe(
-          map((user) => authUserLoaded(user)),
-          catchError(() => of(authRehydrateFailed())),
-        ),
+        this.auth.isAuthenticated()
+          ? this.auth.currentUser().pipe(
+              map((user) => authUserLoaded(user)),
+              catchError(() => of(authRehydrateFailed())),
+            )
+          : of(authRehydrateFailed()),
       ),
     ),
   );

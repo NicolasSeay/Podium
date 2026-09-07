@@ -9,6 +9,10 @@ import { App } from './app';
 import { DashboardEffects } from './dashboard/dashboard.effects';
 import { dashboardFeature, dashboardLoaded } from './dashboard/dashboard.store';
 import { authFeature, authUserLoaded } from './auth.store';
+import { AuthEffects } from './auth.effects';
+import { TrackDaysEffects } from './track-days/track-days.effects';
+import { trackDaysFeature } from './track-days/track-days.store';
+import { flushDashboardEntry } from './testing/http-test-data';
 import { VehiclesEffects } from './vehicles/vehicles.effects';
 import { vehiclesFeature } from './vehicles/vehicles.store';
 
@@ -123,29 +127,25 @@ describe('App vehicle flow', () => {
         provideStore({
           [dashboardFeature.name]: dashboardFeature.reducer,
           [vehiclesFeature.name]: vehiclesFeature.reducer,
+          [authFeature.name]: authFeature.reducer,
+          [trackDaysFeature.name]: trackDaysFeature.reducer,
         }),
-        provideEffects(DashboardEffects, VehiclesEffects),
+        provideEffects(DashboardEffects, AuthEffects, TrackDaysEffects, VehiclesEffects),
       ],
     }).compileComponents();
   });
 
-  it('posts a new vehicle and renders the persisted response', () => {
+  it('posts a new vehicle and renders the persisted response', async () => {
     const fixture = TestBed.createComponent(App);
     const http = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
-    http.expectOne('/api/dashboard').flush({
-      personalRecords: [],
-      totalTrackDays: 0,
-      totalSessions: 0,
-      totalLaps: 0,
-      totalLapTimeMillis: 0,
-      recentTrackDays: [],
-    });
+    await flushDashboardEntry(http, fixture);
     fixture.detectChanges();
 
     (
       fixture.nativeElement.querySelector('button.nav-item:nth-of-type(3)') as HTMLButtonElement
     ).click();
+    await fixture.whenStable();
     fixture.detectChanges();
     http.expectOne('/api/vehicles').flush([]);
     fixture.detectChanges();

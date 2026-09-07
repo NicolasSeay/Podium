@@ -14,6 +14,7 @@ export interface AuthUser {
 
 export interface AuthState {
   user: AuthUser | null;
+  rehydrating: boolean;
 }
 
 export const authUserLoaded = createAction('[Auth] User Loaded', (user: AuthUser) => ({ user }));
@@ -24,8 +25,10 @@ export const authRehydrateFailed = createAction('[Auth] Rehydrate Failed');
 export const authFeature = createFeature({
   name: 'auth',
   reducer: createReducer<AuthState>(
-    { user: null },
-    on(authUserLoaded, (state, { user }) => ({ ...state, user })),
-    on(authLoggedOut, () => ({ user: null })),
+    { user: null, rehydrating: false },
+    on(authRehydrateRequested, (state) => ({ ...state, rehydrating: true })),
+    on(authUserLoaded, (state, { user }) => ({ ...state, user, rehydrating: false })),
+    on(authRehydrateFailed, (state) => ({ ...state, rehydrating: false })),
+    on(authLoggedOut, () => ({ user: null, rehydrating: false })),
   ),
 });
