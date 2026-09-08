@@ -8,11 +8,11 @@ INSERT INTO tracks (name, city, country, length_miles) VALUES ('2K International
 -- Add Vehicles
 INSERT INTO vehicles (user_id, name, make, model, trim, vehicle_year) VALUES (1, 'Daily Driver', 'Chevrolet', 'Camaro', 'LT1', 2020), (1, 'Track Beast', 'Chevrolet', 'Corvette', 'Stringray', 2026);
 
--- Add Track Events
-INSERT INTO track_days (user_id, track_id, vehicle_id, start_date, end_date, notes, conditions) VALUES (1, 720, 2, '2026-06-14', '2026-06-14', 'First full day in the Track Beast', 'Dry and warm'), (1, 720, 2, '2026-07-19', '2026-07-20', 'Two-day club event', 'Dry with light wind'), (1, 504, 1, '2026-08-16', '2026-08-16', 'Shakedown with the Daily Driver', 'Overcast and dry');
+-- Add Track Event
+INSERT INTO track_days (user_id, track_id, vehicle_id, start_date, end_date, notes, conditions) VALUES (1, 720, 1, '2025-10-18', '2025-10-19', 'VIR - NASA HPDE1', 'Dry');
 
 -- Add Sessions
-INSERT INTO sessions (track_day_id, name, notes, session_date) VALUES (1, 'Morning practice', 'Learning the line', '2026-06-14'), (1, 'Afternoon pace', 'Building consistency', '2026-06-14'), (2, 'Day one', 'Baseline setup', '2026-07-19'), (2, 'Day two', 'Chasing a clean lap', '2026-07-20'), (3, 'Shakedown', 'Street tires', '2026-08-16');
+INSERT INTO sessions (track_day_id, name, notes, session_date) VALUES (1, 'Session 1', 'October 18, 2025', '2025-10-18'), (1, 'Session 2', 'October 18, 2025', '2025-10-18'), (1, 'Session 3', 'October 18, 2025', '2025-10-18'), (1, 'Session 4', 'October 18, 2025', '2025-10-18'), (1, 'Session 1', 'October 19, 2025', '2025-10-19'), (1, 'Session 2', 'October 19, 2025', '2025-10-19'), (1, 'Session 3', 'October 19, 2025', '2025-10-19'), (1, 'Session 4', 'October 19, 2025', '2025-10-19');
 
 -- Add Laps
-INSERT INTO laps (session_id, lap_number, time_millis) VALUES (1, 1, 96842), (1, 2, 95110), (1, 3, 94785), (2, 1, 93421), (2, 2, 92988), (2, 3, 93140), (3, 1, 100215), (3, 2, 98764), (3, 3, 98102), (4, 1, 96554), (4, 2, 95880), (4, 3, 96112), (5, 1, 112430), (5, 2, 110875), (5, 3, 109992);
+INSERT INTO laps (session_id, lap_number, time_millis) VALUES (1, 1, 192000), (1, 2, 176000), (1, 3, 156000), (1, 4, 165000), (1, 5, 175000), (1, 6, 166000), (1, 7, 165000), (2, 1, 174000), (2, 2, 154000), (2, 3, 175000), (2, 4, 155000), (2, 5, 157000), (3, 1, 174000), (3, 2, 155000), (3, 3, 157000), (3, 4, 156000), (4, 1, 166000), (4, 2, 150000), (4, 3, 151000), (4, 4, 150000), (4, 5, 166000), (5, 1, 162000), (5, 2, 163000), (5, 3, 151000), (5, 4, 149000), (5, 5, 157000), (5, 6, 149000), (6, 1, 165000), (6, 2, 167000), (6, 3, 165000), (6, 4, 161000), (6, 5, 151000), (6, 6, 146000), (6, 7, 147000), (6, 8, 153000), (7, 1, 157000), (7, 2, 149000), (7, 3, 151000), (7, 4, 149000), (8, 1, 157000), (8, 2, 149000), (8, 3, 151000), (8, 4, 149000);

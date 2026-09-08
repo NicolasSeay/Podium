@@ -10,7 +10,7 @@
     @for (day of days(); track day.id) {
       <div class="recent-row">
         <div class="date-block">
-          <strong>{{ day.startDate }}</strong
+          <strong>{{ formatTrackDayDate(day.startDate, day.endDate) }}</strong
           ><span>Track day</span>
         </div>
         <div class="day-main"><strong>Recorded event</strong><span>Performance log</span></div>

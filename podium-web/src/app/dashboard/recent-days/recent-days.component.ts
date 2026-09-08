@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { RecentTrackDay } from '../store/dashboard.models';
+import { formatDateRange } from '../../shared/date-format';
 
 @Component({
   selector: 'app-recent-days',
@@ -11,6 +12,9 @@ import { RecentTrackDay } from '../store/dashboard.models';
 export class RecentDaysComponent {
   private readonly router = inject(Router);
   readonly days = input<RecentTrackDay[]>([]);
+  protected formatTrackDayDate(startDate: string, endDate?: string): string {
+    return formatDateRange(startDate, endDate);
+  }
   protected viewAll(): void {
     void this.router.navigate(['/track-days']).catch(() => undefined);
   }

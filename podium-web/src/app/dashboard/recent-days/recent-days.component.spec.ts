@@ -34,7 +34,7 @@ describe('RecentDaysComponent', () => {
     ]);
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain('2026-08-24');
+    expect(fixture.nativeElement.textContent).toContain('Aug 24, 2026');
     expect(fixture.nativeElement.textContent).toContain('Recorded event');
     expect(fixture.nativeElement.textContent).not.toContain('Track 1');
     expect(fixture.nativeElement.textContent).not.toContain('Vehicle 1');

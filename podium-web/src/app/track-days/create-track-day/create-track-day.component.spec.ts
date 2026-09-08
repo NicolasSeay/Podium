@@ -224,6 +224,6 @@ describe('TrackDayCreateComponent', () => {
     fixture.detectChanges();
 
     const dates = fixture.nativeElement.querySelectorAll('dt + dd')[1] as HTMLElement;
-    expect(dates.textContent.trim()).toBe('2026-06-14');
+    expect(dates.textContent.trim()).toBe('Jun 14, 2026');
   });
 });

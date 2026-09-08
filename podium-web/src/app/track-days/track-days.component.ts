@@ -3,6 +3,7 @@ import { TrackDay } from './store/track-days.models';
 import { TrackDaysFacade } from './store/track-days.facade';
 import { AuthFacade } from '../store/auth.facade';
 import { DistanceUnit } from '../preferences';
+import { formatDateRange as formatTrackDayDateRange } from '../shared/date-format';
 
 @Component({
   selector: 'app-track-days',
@@ -56,9 +57,7 @@ export class TrackDaysComponent {
     return `${Math.floor(timeMillis / 60000)}:${((timeMillis % 60000) / 1000).toFixed(3).padStart(6, '0')}`;
   }
   protected formatDateRange(day: TrackDay): string {
-    return day.endDate && day.endDate !== day.startDate
-      ? `${day.startDate} - ${day.endDate}`
-      : day.startDate;
+    return formatTrackDayDateRange(day.startDate, day.endDate);
   }
   protected fastestLap(dayId: number): string {
     const time = this.stats()[dayId]?.fastestLapTimeMillis ?? 0;

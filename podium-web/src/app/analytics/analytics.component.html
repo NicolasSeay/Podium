@@ -46,7 +46,9 @@
           <span class="eyebrow">Selected session</span>
           <h2>{{ selectedSession()?.name }} lap trace</h2>
         </div>
-        <span class="chart-unit">{{ selectedSession()?.date }}</span>
+        <span class="chart-unit">{{
+          selectedSession() ? formatSessionDate(selectedSession()!.date) : ''
+        }}</span>
       </div>
       <div class="chart-container">
         <canvas #traceChart role="img" aria-label="Lap time by lap number chart"></canvas>
@@ -93,7 +95,7 @@
               [class.selected-row]="selectedSession()?.sessionId === session.sessionId"
               (click)="selectSession(session.sessionId)"
             >
-              <td>{{ session.date }}</td>
+              <td>{{ formatSessionDate(session.date) }}</td>
               <td>
                 <strong>{{ session.name }}</strong>
               </td>

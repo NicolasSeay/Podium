@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { Track, TrackDay, Vehicle } from '../store/track-days.models';
 import { TrackDaysFacade } from '../store/track-days.facade';
 import { AppHeaderComponent } from '../../app-header/app-header.component';
+import { formatDate, formatDateRange } from '../../shared/date-format';
 
 type DraftLap = { timeMillis: number; displayTime: string };
 type DraftSession = { name: string; notes: string | null; laps: DraftLap[] };
@@ -236,12 +237,14 @@ export class TrackDayCreateComponent {
   }
 
   protected dayLabel(date: string): string {
-    return new Date(`${date}T00:00:00`).toLocaleDateString(undefined, {
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    });
+    return formatDate(date);
+  }
+
+  protected eventDateRangeLabel(): string {
+    return formatDateRange(
+      this.eventForm.controls.startDate.value,
+      this.eventForm.controls.endDate.value,
+    );
   }
 
   private emptyLap(): DraftLap {
