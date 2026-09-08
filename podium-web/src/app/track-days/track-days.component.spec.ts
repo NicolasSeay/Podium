@@ -84,7 +84,7 @@ describe('TrackDaysComponent', () => {
     const fixture = TestBed.createComponent(TrackDaysComponent);
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain('2026-09-04 - 2026-09-05');
+    expect(fixture.nativeElement.textContent).toContain('Sep 4-5, 2026');
     expect(fixture.nativeElement.textContent).toContain('Road Atlanta · 2.54 mi');
     expect(fixture.nativeElement.textContent).toContain('1:32.350');
     expect(fixture.nativeElement.textContent).toContain('1:35.000');

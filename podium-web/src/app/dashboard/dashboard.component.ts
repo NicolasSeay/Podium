@@ -26,6 +26,7 @@ import { AnalyticsLap, AnalyticsSession } from './store/dashboard.models';
 import { DashboardFacade } from './store/dashboard.facade';
 import { TrackDaysFacade } from '../track-days/store/track-days.facade';
 import { DistanceUnit } from '../preferences';
+import { formatDate } from '../shared/date-format';
 
 Chart.register(CategoryScale, LineController, LineElement, LinearScale, PointElement, Tooltip);
 Chart.defaults.font.family = "'Manrope', sans-serif";
@@ -114,7 +115,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
       return {
         key: `${sessions[0].trackDayId}`,
         date: sessions[0].date,
-        label: sessions[0].date,
+        label: formatDate(sessions[0].date),
         timeMillis:
           this.graphMetric() === 'best'
             ? Math.min(...times)
@@ -311,7 +312,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     if (!context) return;
 
     const data: ChartConfiguration<'line'>['data'] = {
-      labels: points.map((point) => point.date),
+      labels: points.map((point) => formatDate(point.date)),
       datasets: [
         {
           data: points.map((point) => point.timeMillis),

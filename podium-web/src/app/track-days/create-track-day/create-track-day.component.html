@@ -197,13 +197,7 @@
           </div>
           <div>
             <dt>Dates</dt>
-            <dd>
-              @if (eventForm.controls.startDate.value === eventForm.controls.endDate.value) {
-                {{ eventForm.controls.startDate.value }}
-              } @else {
-                {{ eventForm.controls.startDate.value }} to {{ eventForm.controls.endDate.value }}
-              }
-            </dd>
+            <dd>{{ eventDateRangeLabel() }}</dd>
           </div>
           <div>
             <dt>Vehicle</dt>

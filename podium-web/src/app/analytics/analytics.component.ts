@@ -25,6 +25,7 @@ import {
 import { DashboardFacade } from '../dashboard/store/dashboard.facade';
 import { AnalyticsLap, AnalyticsSession } from '../dashboard/store/dashboard.models';
 import { SessionSummary } from '../dashboard/dashboard.component';
+import { formatDate } from '../shared/date-format';
 
 Chart.register(
   BarController,
@@ -99,6 +100,10 @@ export class AnalyticsComponent implements AfterViewInit, OnDestroy {
     return `${minutes}:${seconds}`;
   }
 
+  protected formatSessionDate(date: string): string {
+    return formatDate(date);
+  }
+
   protected retry(): void {
     this.dashboardFacade.load();
   }
@@ -137,7 +142,7 @@ export class AnalyticsComponent implements AfterViewInit, OnDestroy {
 
     this.charts.push(
       this.createLineChart(this.progressionCanvas, {
-        labels: progression.map((session) => session.date),
+        labels: progression.map((session) => formatDate(session.date)),
         datasets: [
           {
             label: 'Fastest lap',
